@@ -1,0 +1,211 @@
+<section class="contact-section bg-stone-50 py-20" id="contact">
+    <div class="container">
+        <!-- Section Header -->
+        <div class="text-center mb-16 fade-in">
+            <h2 class="section-title text-4xl md:text-5xl font-bold text-stone-800 mb-4">
+                Contact Me
+            </h2>
+            <div class="title-underline mx-auto w-20 h-1 bg-linear-to-r from-primary to-secondary rounded-full"></div>
+
+            <!-- Illustration -->
+            <div class="illustration-wrapper mb-8 flex justify-center">
+                <div class="absolute inset-0 bg-linear-to-br from-primary/20 to-secondary/20 rounded-full blur-3xl"></div>
+                <img src="https://illustrations.popsy.co/amber/telephone-call.svg" alt="Contact Illustration" class="relative w-64 h-64 md:w-80 md:h-80 object-contain">
+            </div>
+        </div>
+
+        <!-- Contact Content -->
+         <div class="contact-content grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <!-- Left Side Contact Form -->
+            <div class="contact-form-container fade-in-left">
+                <div class="bg-white rounded-2xl p-8 shadow=2xl border-t-4 border-primary">
+                    <h3 class="text-2xl font-bold text-stone-800 mb-6 flex items-center gap-2">
+                        <i data-lucide="send" class="w-6 h-6 text-primary"></i>
+                        Send Me a Message
+                    </h3>
+
+                    <form id="contact-form" class="space-y-5">
+                        <!-- Name Field -->
+                        <div class="form-group">
+                            <label for="name" class="block text-sm font-semibold text-stone-700 mb-2">
+                                Your Name <span class="text-primary">*</span>
+                            </label>
+                        
+
+                            <div class="relative">
+                                <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-stone-400">
+                                    <i data-lucide="user" class="w-5 h-5"></i>
+                                </div>
+
+                                <input 
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    required
+                                    placeholder="John Doe"
+                                    class="w-full pl-11 pr-4 py-3 border-2 border-stone-200 rounded-lg focus:border-primary focus:outline-none transition-colors"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="form-group">
+                            <label for="email" class="block text-sm font-semibold text-stone-700 mb-2">
+                                Your Email <span class="text-primary">*</span>
+                            </label>
+
+                            <div class="relative">
+                                <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-stone-400">
+                                    <i data-lucide="mail" class="w-5 h-5"></i>
+                                </div>
+
+                                <input 
+                                    type="text"
+                                    id="email"
+                                    name="email"
+                                    required
+                                    placeholder="john@example.com"
+                                    class="w-full pl-11 pr-4 py-3 border-2 border-stone-200 rounded-lg focus:border-primary focus:outline-none transition-colors"   
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Subject Field -->
+                        <div class="form-group">
+                            <label for="subject" class="block text-sm font-semibold text-stone-700 mb-2">
+                                Subject <span class="text-primary">*</span>
+                            </label>
+
+                            <div class="relative">
+                                <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-stone-400">
+                                    <i data-lucide="tag" class="w-5 h-5"></i>
+                                </div>
+
+                                <input 
+                                    type="text" 
+                                    id="subject" 
+                                    name="subject"
+                                    required
+                                    placeholder="Example Subject"
+                                    class="w-full pl-11 pr-4 py-3 border-2 border-stone-200 rounded-lg focus:border-primary focus:outline-none transition-colors"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Message Field -->
+                        <div class="form-group">
+                            <label for="message" class="block text-sm font-semibold text-stone-700 mb-2">
+                                Message <span class="text-primary">*</span>
+                            </label>
+
+                            <div class="relative">
+                                <div class="absolute left-3 top-3 text-stone-400">
+                                    <i data-lucide="message-square" class="w-5 h-5"></i>
+                                </div>
+
+                                <textarea 
+                                    id="message" 
+                                    name="message"
+                                    required
+                                    rows="5"
+                                    placeholder="Tell me about your project or idea..."
+                                    class="w-full pl-11 pr-4 py-3 border-2 border-stone-200 rounded-lg focus:border-primary focus:outline-none transition-colors resize-none"
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="submit-btn w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 group">
+                            <i data-lucide="send" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                            <span>Send Message</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Side Contact Info & Illustration -->
+             <div class="contact-info-container fade-in-right">
+                
+
+                <!-- Contact Information Card -->
+                <div class="space-y-4">
+                    <!-- Email Card -->
+                    <div class="info-card group bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border-l-4 border-primary">
+                        <div class="flex items-start gap-4">
+                            <div class="icon-wrapper shrink-0 w-12 h-12 bg-linear-to-br from-primary to-primary-light rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="mail" class="w-6 h-6 text-white"></i>
+                            </div>
+
+                            <div>
+                                <h4 class="text-sm font-bold text-stone-800 mb-1 uppercase tracking-wider">
+                                    Email
+                                </h4>
+
+                                <a href="mailto:kwenleow@gmail.com" class="text-stone-600 hover:text-primary transition-colors break-all">
+                                    kwenleow@gmail.com
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phone Card -->
+                    <div class="info-card group bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border-l-4 border-secondary">
+                        <div class="flex items-start gap-4">
+                            <div class="icon-wrapper hrink-0 w-12 h-12 bg-linear-to-br from-secondary to-primary rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="phone" class="w-6 h-6 text-white"></i>
+                            </div>
+
+                            <div>
+                                <h4 class="text-sm font-bold text-stone-800 mb-1 uppercase tracking-wider">
+                                    Phone
+                                </h4>
+
+                                <a href="tel:+60176782206" class="text-stone-600 hover:text-primary transition-colors">
+                                    +60 17-678 2206
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location Card -->
+                    <div class="info-card group bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border-l-4 border-accent">
+                        <div class="flex items-start gap-4">
+                            <div class="icon-wrapper shrink-0 w-12 h-12 bg-linear-to-br from-accent to-[#14b8a6] rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="map-pin" class="w-6 h-6 text-white"></i>
+                            </div>
+
+                            <div>
+                                <h4 class="text-sm font-bold text-stone-800 mb-1 uppercase tracking-wider">
+                                    Location
+                                </h4>
+
+                                <p class="text-stone-600">
+                                    Setapak, Kuala Lumpur, Malaysia
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Availability Badge -->
+                    <div class="availability-badge bg-linear-to-r from-primary to-primary-light rounded-xl p-6 text-white shadow-lg">
+                        <div class="flex items-center gap-3">
+                            <div class="hrink-0">
+                                <div class="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold text-sm uppercase tracking-wider mb-1">
+                                    Current Status
+                                </h4>
+
+                                <p class="text-white/90 text-lg font-semibold">
+                                    Open to Opportunities
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             </div>
+         </div>
+    </div>
+</section>

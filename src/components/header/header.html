@@ -1,0 +1,83 @@
+<header class="header bg-white shadow-sm sticky top-0 z-50">
+  <div class="container">
+    <div class="flex justify-between items-center py-5">
+      <!-- Logo -->
+      <a href="javascript:location.reload();" class="logo flex items-center hover:opacity-80 transition-opacity">
+        <img src="/images/kw-logo.png" alt="LKW Logo" class="w-12 h-12 object-contain">
+      </a>
+
+      <!-- Desktop Navigation - Centered -->
+      <nav class="hidden lg:flex items-center gap-10 absolute left-1/2 transform -translate-x-1/2">
+        <a href="#hero" class="nav-link text-stone-700 hover:text-primary font-semibold text-[15px] tracking-wide transition-colors duration-300">
+          Home
+        </a>
+        <a href="#about" class="nav-link text-stone-700 hover:text-primary font-semibold text-[15px] tracking-wide transition-colors duration-300">
+          About
+        </a>
+        <a href="#project" class="nav-link text-stone-700 hover:text-primary font-semibold text-[15px] tracking-wide transition-colors duration-300">
+          Project
+        </a>
+        <a href="#contact" class="nav-link text-stone-700 hover:text-primary font-semibold text-[15px] tracking-wide transition-colors duration-300">
+          Contact
+        </a>
+      </nav>
+
+      <!-- Icon Buttons - Right Side -->
+      <div class="hidden lg:flex items-center gap-4">
+        <a href="/documents/LeowKaiWen-Resume.pdf" target="_blank" 
+           class="icon-btn group rounded-full w-11 h-11 flex items-center justify-center border-2 border-stone-300 text-stone-700 hover:border-primary hover:bg-primary transition-all duration-300"
+           title="Download Resume">
+          <i data-lucide="download" class="w-5 h-5 group-hover:text-white transition-colors duration-300"></i>
+        </a>
+        <a href="https://github.com/the-KW22" target="_blank" 
+           class="icon-btn group rounded-full w-11 h-11 flex items-center justify-center border-2 border-stone-300 text-stone-700 hover:border-primary hover:bg-primary transition-all duration-300"
+           title="GitHub Profile">
+          <i data-lucide="github" class="w-5 h-5 group-hover:text-white transition-colors duration-300"></i>
+        </a>
+        <a href="mailto:kwenleow@gmail.com" 
+           class="icon-btn group rounded-full w-11 h-11 flex items-center justify-center border-2 border-stone-300 text-stone-700 hover:border-primary hover:bg-primary transition-all duration-300"
+           title="Email Me">
+          <i data-lucide="mail" class="w-5 h-5 group-hover:text-white transition-colors duration-300"></i>
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobile-menu-btn" class="lg:hidden text-stone-800 hover:text-primary transition-colors duration-300 p-2">
+        <i data-lucide="menu" class="w-7 h-7"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <nav id="mobile-menu" class="mobile-menu lg:hidden hidden pb-6 border-t border-stone-200 pt-6">
+      <div class="flex flex-col gap-5">
+        <a href="#home" class="nav-link text-stone-700 hover:text-primary font-semibold text-base transition-colors duration-300 py-2">
+          Home
+        </a>
+        <a href="#about" class="nav-link text-stone-700 hover:text-primary font-semibold text-base transition-colors duration-300 py-2">
+          About
+        </a>
+        <a href="#project" class="nav-link text-stone-700 hover:text-primary font-semibold text-base transition-colors duration-300 py-2">
+          Project
+        </a>
+        <a href="#contact" class="nav-link text-stone-700 hover:text-primary font-semibold text-base transition-colors duration-300 py-2">
+          Contact
+        </a>
+        
+        <div class="flex items-center gap-4 pt-4 border-t border-stone-200">
+          <a href="/resume.pdf" target="_blank" 
+             class="icon-btn group rounded-full w-11 h-11 flex items-center justify-center border-2 border-stone-300 text-stone-700 hover:border-primary hover:bg-primary transition-all duration-300">
+            <i data-lucide="download" class="w-5 h-5 group-hover:text-white transition-colors duration-300"></i>
+          </a>
+          <a href="https://github.com/the-KW22" target="_blank" 
+             class="icon-btn group rounded-full w-11 h-11 flex items-center justify-center border-2 border-stone-300 text-stone-700 hover:border-primary hover:bg-primary transition-all duration-300">
+            <i data-lucide="github" class="w-5 h-5 group-hover:text-white transition-colors duration-300"></i>
+          </a>
+          <a href="mailto:kwenleow@gmail.com" 
+             class="icon-btn group rounded-full w-11 h-11 flex items-center justify-center border-2 border-stone-300 text-stone-700 hover:border-primary hover:bg-primary transition-all duration-300">
+            <i data-lucide="mail" class="w-5 h-5 group-hover:text-white transition-colors duration-300"></i>
+          </a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>

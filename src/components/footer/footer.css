@@ -1,0 +1,109 @@
+.footer{
+    background: linear-gradient(to bottom, #ffffff 0%, #fafaf9 100%);
+    padding: 30px 0px 10px 0px;
+}
+
+/* Footer logo animation */
+.footer-logo {
+    transition: transform 0.3s ease;
+}
+
+/* Footer link with slide effect */
+.footer-link {
+    position: relative;
+    display: inline-block;
+    padding-left: 0;
+    transition: all 0.3s ease;
+}
+
+.footer-link::before {
+    content: '→';
+    position: absolute;
+    left: -20px;
+    opacity: 0;
+    color: #FE4D01;
+    transition: all 0.3s ease;
+}
+
+.footer-link:hover {
+    padding-left: 20px;
+}
+
+.footer-link:hover::before {
+    left: 0;
+    opacity: 1;
+}
+
+/* Footer icon button animations */
+.footer-icon-btn {
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.footer-icon-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #FE4D01 0%, #FF6B35 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 50%;
+    transform: scale(0);
+}
+
+.footer-icon-btn:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 16px rgba(254, 77, 1, 0.3);
+}
+
+.footer-icon-btn:hover::before {
+    transform: scale(1);
+}
+
+.footer-icon-btn:active {
+    transform: translateY(-2px) scale(1.02);
+}
+
+.footer-icon-btn i {
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s ease;
+}
+
+.footer-icon-btn:hover i {
+    transform: scale(1.1);
+}
+
+/* Smooth color transitions */
+.footer h3 {
+  position: relative;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+.footer h3::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, #FE4D01 0%, #FF6B35 100%);
+  border-radius: 2px;
+}
+
+/* Center the line under heading on mobile */
+@media (max-width: 767px) {
+  .footer h3::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .footer .container > div:first-child {
+    text-align: center;
+  }
+}

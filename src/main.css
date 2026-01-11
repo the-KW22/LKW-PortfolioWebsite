@@ -1,0 +1,82 @@
+/* Import Nunito font style from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap');
+
+@import "tailwindcss";
+
+/* Theme Preset */
+@theme {
+  /* Font Family */
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif; 
+
+  /* Custom Colors */
+  --color-primary: #FE4D01;
+  --color-primary-dark: #C93D00;
+  --color-primary-light: #FF6B35;
+
+  --color-secondary: #FFB627;
+  --color-accent: #0D7377;
+
+  /* Backgrounds */
+  --color-background-primary: #fafaf9;
+  --color-background-secondary: #ffffff;
+  --color-background-tertiary: #f5f5f4;
+
+  /* Text Colors */
+  --color-text-primary: #292524;
+  --color-text-secondary: #44403c;
+  --color-text-muted: #78716c;
+}
+
+/* Base Style */
+body{
+  font-family: var(--font-sans);
+  background-color: var(--color-background-primary);
+  color: var(--color-text-secondary);
+}
+
+.container{
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px){
+  .container{
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Custom utility classes */
+.text-primary {
+  color: var(--color-primary);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.border-primary {
+  border-color: var(--color-primary);
+}
+
+.hover\:text-primary:hover {
+  color: var(--color-primary);
+}
+
+.hover\:bg-primary:hover {
+  background-color: var(--color-primary);
+}
+
+.hover\:border-primary:hover {
+  border-color: var(--color-primary);
+}

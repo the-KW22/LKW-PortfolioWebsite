@@ -1,0 +1,286 @@
+<section class="projects-section bg-white py-20" id="project">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="text-center mb-16 fade-in">
+      <h2 class="section-title text-4xl md:text-5xl font-bold text-stone-800 mb-4">
+        Featured Projects
+      </h2>
+      <div class="title-underline mx-auto w-20 h-1 bg-linear-to-r from-primary to-secondary rounded-full"></div>
+      <p class="text-lg text-stone-600 mt-6 max-w-2xl mx-auto">
+        Here are some of my recent projects that showcase my skills and passion for development
+      </p>
+    </div>
+
+    <!-- Projects Container -->
+    <div class="projects-container space-y-20">
+      
+      <!-- Project 1: Mini Dashboard App -->
+      <div class="project-card fade-in-up">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          
+          <!-- Project Image - Left -->
+          <div class="project-image-container order-2 lg:order-1">
+            <div class="relative group">
+              <!-- Main Image Display with fixed height -->
+              <div class="main-image-wrapper relative rounded-2xl overflow-hidden shadow-2xl h-80 md:h-96 cursor-pointer" data-project="1">
+                <img id="project1-main-image" 
+                     src="/images/projects/mini-dashboard/LightTheme.jpeg" 
+                     alt="Mini Dashboard App Screenshot" 
+                     class="w-full h-full object-cover object-top">
+                <!-- Overlay on hover -->
+                <div class="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                  <div class="p-6 w-full">
+                    <div class="flex items-center justify-between text-white">
+                      <p class="text-sm font-medium">Click thumbnail to see different image</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Thumbnail Gallery -->
+              <div class="thumbnails-gallery mt-4 flex gap-2 overflow-x-auto pb-2">
+                <button class="thumbnail-btn active" data-project="1" data-index="0">
+                  <img src="/images/projects/mini-dashboard/LightTheme.jpeg" 
+                       alt="Screenshot 1" 
+                       class="w-20 h-14 object-cover rounded-lg border-2 border-primary">
+                </button>
+                <button class="thumbnail-btn" data-project="1" data-index="1">
+                  <img src="/images/projects/mini-dashboard/DarkTheme.jpeg" 
+                       alt="Screenshot 2" 
+                       class="w-20 h-14 object-cover rounded-lg border-2 border-transparent hover:border-primary transition-all">
+                </button>
+                <button class="thumbnail-btn" data-project="1" data-index="2">
+                  <img src="/images/projects/mini-dashboard/Notes.jpeg" 
+                       alt="Screenshot 3" 
+                       class="w-20 h-14 object-cover rounded-lg border-2 border-transparent hover:border-primary transition-all">
+                </button>
+                <button class="thumbnail-btn" data-project="1" data-index="3">
+                  <img src="/images/projects/mini-dashboard/Setting.jpeg" 
+                       alt="Screenshot 4" 
+                       class="w-20 h-14 object-cover rounded-lg border-2 border-transparent hover:border-primary transition-all">
+                </button>
+                <button class="thumbnail-btn" data-project="1" data-index="4">
+                  <img src="/images/projects/mini-dashboard/Tasks.jpeg" 
+                       alt="Screenshot 5" 
+                       class="w-20 h-14 object-cover rounded-lg border-2 border-transparent hover:border-primary transition-all">
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project Details - Right -->
+          <div class="project-details order-1 lg:order-2">
+            <!-- Project Number Badge -->
+            <div class="project-number inline-block px-4 py-1 bg-primary/10 text-primary font-bold rounded-full text-sm mb-4">
+              PROJECT 01
+            </div>
+            
+            <!-- Project Title -->
+            <h3 class="text-3xl md:text-4xl font-bold text-stone-800 mb-4">
+              Mini Dashboard App
+            </h3>
+            
+            <!-- Project Description -->
+            <p class="text-base md:text-lg text-stone-600 leading-relaxed mb-6">
+              A modern, feature-rich personal dashboard application built with Next.js, TypeScript, and TailwindCSS. 
+              Manage your tasks, take notes, and customize your experience with a beautiful dark mode theme.
+            </p>
+
+            <!-- Tech Stack -->
+            <div class="tech-stack mb-6">
+              <h4 class="text-sm font-bold text-stone-800 mb-3 uppercase tracking-wider">Tech Stack</h4>
+              <div class="flex flex-wrap gap-2">
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  Next.js
+                </span>
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  React
+                </span>
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  TypeScript
+                </span>
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  TailwindCSS
+                </span>
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  shadcn/ui
+                </span>
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  Zustand
+                </span>
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  localStorage
+                </span>
+              </div>
+            </div>
+
+            <!-- Challenges Overcome -->
+            <div class="challenges mb-6">
+              <h4 class="text-sm font-bold text-stone-800 mb-3 uppercase tracking-wider flex items-center gap-2">
+                <i data-lucide="zap" class="w-4 h-4 text-primary"></i>
+                Challenges Overcome
+              </h4>
+              <ul class="space-y-2">
+                <li class="flex items-start gap-2 text-stone-600">
+                  <i data-lucide="check-circle" class="w-5 h-5 text-primary shrink-0 mt-0.5"></i>
+                  <span>Configured light/dark mode theme switching with proper persistence</span>
+                </li>
+                <li class="flex items-start gap-2 text-stone-600">
+                  <i data-lucide="check-circle" class="w-5 h-5 text-primary shrink-0 mt-0.5"></i>
+                  <span>Implemented localStorage API for client-side data persistence</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="project-actions flex flex-wrap gap-3">
+              <a href="https://github.com/the-KW22/MiniDashboard" 
+                 target="_blank"
+                 class="project-btn primary-btn group flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl">
+                <i data-lucide="github" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+                <span>View on GitHub</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Project 2: Watch Tracker -->
+      <div class="project-card fade-in-up">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          
+          <!-- Project Details - Left (reversed order) -->
+          <div class="project-details order-1">
+            <!-- Project Number Badge -->
+            <div class="project-number inline-block px-4 py-1 bg-primary/10 text-primary font-bold rounded-full text-sm mb-4">
+              PROJECT 02
+            </div>
+            
+            <!-- Project Title -->
+            <h3 class="text-3xl md:text-4xl font-bold text-stone-800 mb-4">
+              Watch Tracker
+            </h3>
+            
+            <!-- Project Description -->
+            <p class="text-base md:text-lg text-stone-600 leading-relaxed mb-6">
+              Watch Tracker is a modern web application that helps to track your watching progress for movies, TV shows, 
+              and anime. Never forget where you stopped watching again!
+            </p>
+
+            <!-- Tech Stack -->
+            <div class="tech-stack mb-6">
+              <h4 class="text-sm font-bold text-stone-800 mb-3 uppercase tracking-wider">Tech Stack</h4>
+              <div class="flex flex-wrap gap-2">
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  React
+                </span>
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  TypeScript
+                </span>
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  Vite
+                </span>
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  TailwindCSS
+                </span>
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  shadcn/ui
+                </span>
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  Zustand
+                </span>
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  Supabase
+                </span>
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  TMDB API
+                </span>
+                <span class="tech-badge px-3 py-1.5 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium border border-stone-200">
+                  Vercel
+                </span>
+              </div>
+            </div>
+
+            <!-- Challenges Overcome -->
+            <div class="challenges mb-6">
+              <h4 class="text-sm font-bold text-stone-800 mb-3 uppercase tracking-wider flex items-center gap-2">
+                <i data-lucide="zap" class="w-4 h-4 text-primary"></i>
+                Challenges Overcome
+              </h4>
+              <ul class="space-y-2">
+                <li class="flex items-start gap-2 text-stone-600">
+                  <i data-lucide="check-circle" class="w-5 h-5 text-primary shrink-0 mt-0.5"></i>
+                  <span>Integrated Supabase for database management and user authentication</span>
+                </li>
+                <li class="flex items-start gap-2 text-stone-600">
+                  <i data-lucide="check-circle" class="w-5 h-5 text-primary shrink-0 mt-0.5"></i>
+                  <span>Successfully consumed TMDB API for fetching movie and TV show data</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="project-actions flex flex-wrap gap-3">
+              <a href="https://github.com/the-KW22/WatchTracker" 
+                 target="_blank"
+                 class="project-btn primary-btn group flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl">
+                <i data-lucide="github" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+                <span>View on GitHub</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Project Image - Right (reversed order) -->
+          <div class="project-image-container order-2">
+            <div class="relative group">
+              <!-- Main Image Display with fixed height -->
+              <div class="main-image-wrapper relative rounded-2xl overflow-hidden shadow-2xl h-80 md:h-96 cursor-pointer" data-project="2">
+                <img id="project2-main-image" 
+                     src="/images/projects/watch-tracker/Home.jpeg" 
+                     alt="Watch Tracker Screenshot" 
+                     class="w-full h-full object-cover object-top">
+                <!-- Overlay on hover -->
+                <div class="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                  <div class="p-6 w-full">
+                    <div class="flex items-center justify-between text-white">
+                      <p class="text-sm font-medium">Click thumbnail to see different image</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Thumbnail Gallery -->
+              <div class="thumbnails-gallery mt-4 flex gap-2 overflow-x-auto pb-2">
+                <button class="thumbnail-btn active" data-project="2" data-index="0">
+                  <img src="/images/projects/watch-tracker/Home.jpeg" 
+                       alt="Screenshot 1" 
+                       class="w-20 h-14 object-cover rounded-lg border-2 border-primary">
+                </button>
+                <button class="thumbnail-btn" data-project="2" data-index="1">
+                  <img src="/images/projects/watch-tracker/MovieDetail.jpeg" 
+                       alt="Screenshot 2" 
+                       class="w-20 h-14 object-cover rounded-lg border-2 border-transparent hover:border-primary transition-all">
+                </button>
+                <button class="thumbnail-btn" data-project="2" data-index="2">
+                  <img src="/images/projects/watch-tracker/Profile.jpeg" 
+                       alt="Screenshot 3" 
+                       class="w-20 h-14 object-cover rounded-lg border-2 border-transparent hover:border-primary transition-all">
+                </button>
+                <button class="thumbnail-btn" data-project="2" data-index="3">
+                  <img src="/images/projects/watch-tracker/Search.jpeg" 
+                       alt="Screenshot 4" 
+                       class="w-20 h-14 object-cover rounded-lg border-2 border-transparent hover:border-primary transition-all">
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
