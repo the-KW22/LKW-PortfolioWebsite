@@ -30,9 +30,9 @@ function LenisScrollTriggerSync() {
 
     const origPushState = history.pushState
 
-    history.pushState = function (this: History, ...args: Parameters<typeof history.pushState>) {
+    history.pushState = (...args: Parameters<typeof history.pushState>) => {
       const prevPathname = window.location.pathname
-      origPushState.apply(this, args)
+      origPushState.apply(history, args)
 
       setTimeout(() => {
         const hash = window.location.hash

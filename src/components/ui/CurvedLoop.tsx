@@ -29,11 +29,18 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
   const pathRef = useRef<SVGPathElement | null>(null);
   const [spacing, setSpacing] = useState(0);
   const [offset, setOffset] = useState(0);
+  // Offset that was last reset for; a new measured spacing resets the start offset to -spacing
+  const [offsetBase, setOffsetBase] = useState(0);
+  if (spacing && spacing !== offsetBase) {
+    setOffsetBase(spacing);
+    setOffset(-spacing);
+  }
   const uid = useId();
   const pathId = `curve-${uid}`;
   const pathD = `M-100,40 Q500,${40 + curveAmount} 1540,40`;
 
   const dragRef = useRef(false);
+  const [isDragging, setIsDragging] = useState(false);
   const lastXRef = useRef(0);
   const dirRef = useRef<'left' | 'right'>(direction);
   const velRef = useRef(0);
@@ -49,15 +56,6 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
   useEffect(() => {
     if (measureRef.current) setSpacing(measureRef.current.getComputedTextLength());
   }, [text, className]);
-
-  useEffect(() => {
-    if (!spacing) return;
-    if (textPathRef.current) {
-      const initial = -spacing;
-      textPathRef.current.setAttribute('startOffset', initial + 'px');
-      setOffset(initial);
-    }
-  }, [spacing]);
 
   useEffect(() => {
     if (!spacing || !ready) return;
@@ -84,6 +82,7 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
     dragRef.current = true;
     lastXRef.current = e.clientX;
     velRef.current = 0;
+    setIsDragging(true);
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
   };
 
@@ -104,10 +103,11 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
   const endDrag = () => {
     if (!interactive) return;
     dragRef.current = false;
+    setIsDragging(false);
     dirRef.current = velRef.current > 0 ? 'right' : 'left';
   };
 
-  const cursorStyle = interactive ? (dragRef.current ? 'grabbing' : 'grab') : 'auto';
+  const cursorStyle = interactive ? (isDragging ? 'grabbing' : 'grab') : 'auto';
 
   return (
     <div

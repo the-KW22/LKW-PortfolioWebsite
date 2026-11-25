@@ -8,7 +8,7 @@ import {
     siMongodb, siMysql, siFirebase,
     siGit, siGithub, siVscodium, siPostman, siDocker, siVercel, siNetlify, siLinux, siNpm,
 } from "simple-icons";
-import { CornerBracket, GlowingArc, MorseLine, PulseRing } from "@/components/layout/DecorativeElement";
+import { CornerBracket, GlowingArc, MorseLine } from "@/components/layout/DecorativeElement";
 import CurvedLoop from "@/components/ui/CurvedLoop";
 import { IconCloud } from "@/components/ui/icon-cloud";
 import { Ripple } from "@/components/layout/DecorativeAnimation";

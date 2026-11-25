@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
 // ─── ACCENT COLOR HELPER ───────────────────────────────────────────────
 const accent = (opacity: number) => `rgba(254, 77, 1, ${opacity})`;

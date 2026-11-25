@@ -86,9 +86,18 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [cursorAngle, setCursorAngle] = useState(45);
+  const [cursorAngle, setCursorAngle] = useState(animated ? 110 : 45);
   const [edgeProximity, setEdgeProximity] = useState(0);
-  const [sweepActive, setSweepActive] = useState(false);
+  const [sweepActive, setSweepActive] = useState(animated);
+  // Start the sweep state during render when `animated` turns on (avoids a setState inside the effect)
+  const [prevAnimated, setPrevAnimated] = useState(animated);
+  if (animated !== prevAnimated) {
+    setPrevAnimated(animated);
+    if (animated) {
+      setSweepActive(true);
+      setCursorAngle(110);
+    }
+  }
 
   const getCenterOfElement = useCallback((el: HTMLElement) => {
     const { width, height } = el.getBoundingClientRect();
@@ -131,8 +140,6 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
     if (!animated) return;
     const angleStart = 110;
     const angleEnd = 465;
-    setSweepActive(true);
-    setCursorAngle(angleStart);
 
     animateValue({ duration: 500, onUpdate: v => setEdgeProximity(v / 100) });
     animateValue({ ease: easeInCubic, duration: 1500, end: 50, onUpdate: v => {

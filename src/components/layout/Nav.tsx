@@ -10,7 +10,6 @@ import Link from "next/link";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
-import { ChevronDown } from "lucide-react";
 import { usePageTransition } from "./PageTransitionProvider";
 import Dither from "@/components/ui/Dither";
 
@@ -448,7 +447,6 @@ export default function Nav() {
   const container = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const tl = useRef<gsap.core.Timeline | null>(null);
   const transitionTo = usePageTransition();
 
@@ -480,11 +478,6 @@ export default function Nav() {
   // ── Menu open / close ────────────────────────────────────
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
-    setExpandedIndex(null);
-  };
-
-  const toggleSublinks = (index: number) => {
-    setExpandedIndex((prev) => (prev === index ? null : index));
   };
 
   useGSAP(() => {

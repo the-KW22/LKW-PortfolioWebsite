@@ -18,15 +18,17 @@ const StarBorder = <T extends React.ElementType = 'button'>({
   children,
   ...rest
 }: StarBorderProps<T>) => {
-  const Component = as || 'button';
+  // `as` can be any tag or component; props are forwarded untyped at runtime
+  const Component = (as || 'button') as React.ComponentType<Record<string, unknown>>;
+  const { style: restStyle, ...restProps } = rest as { style?: React.CSSProperties };
 
   return (
     <Component
       className={`relative inline-block overflow-hidden rounded-[20px] ${className}`}
-      {...(rest as any)}
+      {...restProps}
       style={{
         padding: `${thickness}px 0`,
-        ...(rest as any).style
+        ...restStyle
       }}
     >
       <div

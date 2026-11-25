@@ -12,10 +12,16 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     const nameRefs     = useRef<HTMLSpanElement[]>([]);
     const titleRef     = useRef<HTMLSpanElement>(null);
     const counterRef  = useRef<HTMLSpanElement>(null);
+    const onCompleteRef = useRef(onComplete);
+
+    // Keep the latest callback without restarting the animation when it changes
+    useEffect(() => {
+        onCompleteRef.current = onComplete;
+    }, [onComplete]);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            const tl = gsap.timeline({ onComplete: () => onComplete?.() });
+            const tl = gsap.timeline({ onComplete: () => onCompleteRef.current?.() });
 
             // 1. Count up 0 - 100 (loading feel)
             tl.to(counterRef.current, {
@@ -96,9 +102,6 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     const setNameRef = (el: HTMLSpanElement | null, i: number) => {
         if(el) nameRefs.current[i] = el;
     };
-
-    // "LEOW" = indices 0-3, space = 4, "KAI WEN" = indices 5-11
-    const isGhosted = (i: number) => i >= 5;
 
     return (
         <div

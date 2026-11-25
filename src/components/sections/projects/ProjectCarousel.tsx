@@ -372,6 +372,7 @@ export default function ProjectCarousel({ projects }: ProjectCarouselProps) {
 
                 {/* Image area */}
                 <div className="relative w-full aspect-video overflow-hidden rounded-xl bg-page group cursor-zoom-in">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- the cover-cropped, fade-transitioned img is kept as-is; next/image would change its sizing */}
                   <img
                     className={`w-full h-full object-cover block transition-opacity duration-300 ${imgTransition ? "opacity-0" : "opacity-100"}`}
                     src={project.images[imgIdx]}

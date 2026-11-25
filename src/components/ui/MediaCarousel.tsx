@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, type Variants } from "motion/react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLenis } from "lenis/react";
 import BorderGlow from "@/components/ui/BorderGlow";
 
@@ -96,6 +95,7 @@ function MediaSlide({ item }: { item: MediaItem }) {
   }
 
   return (
+    // eslint-disable-next-line @next/next/no-img-element -- next/image would add wrapper sizing that changes the object-cover crop; keep the plain img
     <img
       src={item.src}
       alt=""
@@ -105,10 +105,16 @@ function MediaSlide({ item }: { item: MediaItem }) {
   );
 }
 
+// ─── Mount detection (false on the server and during hydration, true afterwards) ─
+
+const subscribeNoop = () => () => {};
+function useIsMounted() {
+  return useSyncExternalStore(subscribeNoop, () => true, () => false);
+}
+
 // ─── DetailModal ──────────────────────────────────────────────────────────────
 
 function DetailModal({ item, onClose }: { item: CarouselItem; onClose: () => void }) {
-  const [mediaIdx, setMediaIdx] = useState(0);
   const lenis = useLenis();
 
   // Stop Lenis (page scroll) while modal is open, resume on close
@@ -120,14 +126,10 @@ function DetailModal({ item, onClose }: { item: CarouselItem; onClose: () => voi
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-      if (item.media.length > 1) {
-        if (e.key === "ArrowLeft") setMediaIdx(p => (p - 1 + item.media.length) % item.media.length);
-        if (e.key === "ArrowRight") setMediaIdx(p => (p + 1) % item.media.length);
-      }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [item.media.length, onClose]);
+  }, [onClose]);
 
   return (
     <motion.div
@@ -286,6 +288,7 @@ function DetailModal({ item, onClose }: { item: CarouselItem; onClose: () => voi
                 Full Page Preview
               </span>
               <div className="overflow-hidden rounded-xl border border-divider">
+                {/* eslint-disable-next-line @next/next/no-img-element -- full-page screenshot is sized by its natural height (h-auto); next/image would need fixed dimensions */}
                 <img
                   src={item.fullPageScreenshot}
                   alt={`${item.title} full page screenshot`}
@@ -346,12 +349,17 @@ export default function MediaCarousel({
   const [direction, setDirection] = useState<1 | -1>(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsMounted();
+  const [prevActiveIdx, setPrevActiveIdx] = useState(activeIdx);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const item = items[activeIdx];
 
-  useEffect(() => { setMounted(true); }, []);
+  // Restart the media cycle from the first item whenever the active card changes
+  if (activeIdx !== prevActiveIdx) {
+    setPrevActiveIdx(activeIdx);
+    setMediaIdx(0);
+  }
 
   // Auto-cycle images
   useEffect(() => {
@@ -363,8 +371,6 @@ export default function MediaCarousel({
     }, 5000);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [activeIdx, item.media]);
-
-  useEffect(() => { setMediaIdx(0); }, [activeIdx]);
 
   const navigate = useCallback((dir: "prev" | "next") => {
     if (isTransitioning || detailOpen) return;
