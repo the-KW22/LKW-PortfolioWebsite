@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Built static output (public/v1 is the original Vite site).
+    "public/**",
   ]),
 ]);
 
