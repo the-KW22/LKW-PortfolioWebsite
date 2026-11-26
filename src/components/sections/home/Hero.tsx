@@ -1,10 +1,11 @@
 "use client";
 
 import "./home.css";
-import { useRef } from "react";
+import { useEffect, useRef, useState, type ComponentType } from "react";
 import { gsap } from "@/lib/gsap";
 import { useMotion } from "@/hooks/useMotion";
 import { useFinePointer, useMediaQuery } from "@/hooks/useMediaQuery";
+import { deviceCanRunHeroScene } from "@/lib/heroCapability";
 import { whenPreloaderDone } from "@/components/shell/preloaderStore";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { heroCopy } from "@/content/home";
@@ -13,7 +14,7 @@ import { site } from "@/content/site";
 import { accentItalic, btnOutline, btnSolid } from "./ui";
 
 /**
- * 01 Hero, CSS version (the WebGL scene is Phase 6). Perspective grid floor, glow and floating
+ * 01 Hero. The CSS scene is the SSR/phone/fallback version; HeroScene (WebGL) replaces it on capable desktops. Perspective grid floor, glow and floating
  * chips at different depths. Cursor tilt and parallax run only with a mouse, from 768px up and
  * without reduced motion; everything else gets the same static scene.
  */
@@ -21,7 +22,42 @@ export function Hero() {
   const root = useRef<HTMLElement>(null);
   const fine = useFinePointer();
   const wide = useMediaQuery("(min-width: 768px)");
-  const tiltOn = fine && wide;
+  const reduced = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const wantGL = fine && wide && !reduced;
+
+  // WebGL scene: loaded after the preloader and first idle moment, only on capable devices.
+  // "off" = CSS hero stays (default, SSR, phones, failures); "loading"/"ready" = canvas mounted.
+  const [Scene, setScene] = useState<ComponentType<{ onReady: () => void; onFail: () => void }> | null>(null);
+  const [glReady, setGlReady] = useState(false);
+  const [glFailed, setGlFailed] = useState(false);
+  const glOn = wantGL && !glFailed && glReady;
+  const tiltOn = fine && wide && !glOn;
+
+  useEffect(() => {
+    if (!wantGL || glFailed || Scene) return;
+    let dead = false;
+    let idle = 0;
+    const start = () => {
+      if (dead || !deviceCanRunHeroScene()) return;
+      import("./HeroScene")
+        .then((m) => !dead && setScene(() => m.default))
+        .catch(() => !dead && setGlFailed(true));
+    };
+    const stop = whenPreloaderDone(() => {
+      const go = () => {
+        idle = window.requestIdleCallback
+          ? window.requestIdleCallback(start, { timeout: 2500 })
+          : window.setTimeout(start, 300);
+      };
+      if (document.readyState === "complete") go();
+      else window.addEventListener("load", go, { once: true });
+    });
+    return () => {
+      dead = true;
+      stop();
+      if (idle) (window.cancelIdleCallback ?? clearTimeout)(idle);
+    };
+  }, [wantGL, glFailed, Scene]);
 
   // Entrance: headline lines rise from a mask once the preloader is done.
   useMotion(
@@ -105,7 +141,26 @@ export function Hero() {
       aria-labelledby="hero-title"
       className="relative h-svh min-h-[640px] overflow-hidden [perspective:1100px]"
     >
-      <div data-stage aria-hidden="true" className="absolute inset-0 will-change-transform [transform-style:preserve-3d]">
+      {wantGL && Scene && !glFailed ? (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 transition-opacity duration-700"
+          style={{ opacity: glReady ? 1 : 0 }}
+        >
+          <Scene onReady={() => setGlReady(true)} onFail={() => setGlFailed(true)} />
+        </div>
+      ) : null}
+      <ul className="sr-only">
+        {heroCopy.chips.map((c) => (
+          <li key={c.label}>{c.label}</li>
+        ))}
+      </ul>
+      <div
+        data-stage
+        data-gl={glOn ? "on" : undefined}
+        aria-hidden="true"
+        className="absolute inset-0 will-change-transform [transform-style:preserve-3d]"
+      >
         <div className="hero-glow pointer-events-none absolute top-[44%] left-1/2 h-[30vw] w-[70vw] -translate-x-1/2 -translate-y-1/2" />
         <div data-floor className="hero-floor absolute top-[40%] -right-1/2 -left-1/2 h-[160%]" />
         {heroCopy.chips.map((c) => (
