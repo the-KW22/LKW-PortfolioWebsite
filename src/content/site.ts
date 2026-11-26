@@ -22,6 +22,11 @@ export const site: SiteConfig = {
     "freelance-only": "Open to freelance", // DRAFT
     closed: "Not taking new work", // DRAFT
   },
+  atlasNote: {
+    open: "Open to full-time, freelance and custom builds", // DRAFT
+    "freelance-only": "Open to freelance and custom builds", // DRAFT
+    closed: "Not taking new work right now", // DRAFT
+  },
   replyTime: null, // TODO(owner): reply-time line (draft idea: "I reply within 2 working days")
   pastVersions: [
     { label: "v1", href: "/v1" },
