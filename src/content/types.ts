@@ -21,6 +21,8 @@ export interface SiteConfig {
   };
   availability: Availability;
   availabilityCopy: Record<Availability, string>;
+  /** Note on the atlas board, per availability value (review decision 14). */
+  atlasNote: Record<Availability, string>;
   replyTime: string | null;
   pastVersions: { label: string; href: string }[];
 }
