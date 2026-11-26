@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ProjectCarouselSection from "@/components/sections/projects/ProjectCarouselSection";
 import ProjectHero from "@/components/sections/projects/ProjectHero";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://leowkaiwen.dev";
+import { SITE_URL as siteUrl } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Projects",
