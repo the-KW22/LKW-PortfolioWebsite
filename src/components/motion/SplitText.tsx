@@ -77,7 +77,7 @@ export function SplitText({
     [mode, by, waitForPreloader, stagger, text],
   );
 
-  const maskClass = mode === "rise" ? "inline-block overflow-hidden align-bottom" : "inline-block";
+  const maskClass = mode === "rise" ? "-mb-[0.14em] inline-block overflow-hidden pb-[0.14em] align-bottom" : "inline-block";
   return (
     <Comp ref={ref} className={className}>
       <span className="sr-only">{text}</span>

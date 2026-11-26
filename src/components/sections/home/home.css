@@ -1,0 +1,32 @@
+/* Home section styles that need real CSS (masks, keyframes). Imported only by (site) components. */
+
+.hero-floor {
+  background-image:
+    linear-gradient(rgba(139, 123, 255, 0.28) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 123, 255, 0.28) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: linear-gradient(#000 0%, transparent 70%);
+  transform: rotateX(72deg);
+  transform-origin: 50% 0;
+  animation: hero-floor 4s linear infinite;
+}
+@keyframes hero-floor {
+  to { background-position: 0 80px; }
+}
+.hero-glow {
+  background: radial-gradient(closest-side, rgba(139, 123, 255, 0.28), transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-floor { animation: none; }
+}
+
+.footer-wordmark {
+  background: linear-gradient(180deg, #ecebf3 0%, #2a2840 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.card-shine {
+  background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%), rgba(139, 123, 255, 0.18), transparent 45%);
+}
