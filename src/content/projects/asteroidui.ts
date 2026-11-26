@@ -9,12 +9,12 @@ export const asteroidui: Project = {
   name: "AsteroidUI",
   category: "component-library",
   status: "in-progress",
-  year: 2026, // DRAFT: git history runs 2026-10-13 to 2026-10-18 and the repo was last pushed 2026-10-22; owner to confirm
+  year: null, // hidden by owner decision (2026-11-26); nothing renders a year
   tagline: "React component library with a shadcn-compatible registry", // DRAFT
   summary:
     // DRAFT
     "A React and TypeScript component collection with a documentation-style catalog. Nine components have detail pages, live examples and a shadcn-compatible registry, checked against independent Next.js and Vite consumer apps. Still in progress.",
-  role: "Owned the design, architecture, review and tests while directing AI coding agents.", // DRAFT: same wording as CoreEx; owner to confirm it fits this project
+  role: "Design, architecture, review and tests.", // owner decision 2026-11-26: the working method is stated only in About
   stack: [
     { name: "React" },
     { name: "TypeScript" },
@@ -23,7 +23,8 @@ export const asteroidui: Project = {
     { name: "shadcn registry" },
   ],
   links: {
-    live: "https://asteroid-ui.vercel.app", // verified 2026-11-26: HTTP 200, and /registry/button.json serves; owner to confirm it is the intended public URL
+    live: "https://asteroid-ui.vercel.app", // verified 2026-11-26; owner confirmed the address on 2026-11-26
+    liveNote: "In progress", // shown next to the Live site link
     github: "https://github.com/the-KW22/AsteroidUI", // verified 2026-11-26: public repo, matches the README's source-repository line
   },
   stats: [
@@ -60,7 +61,7 @@ export const asteroidui: Project = {
         paragraphs: [
           "Each of the nine components has a detail page with a live preview, examples, copyable usage and install instructions, and the maintained source.", // DRAFT (README)
           "A shadcn-compatible registry delivers each component as its own installable item, with shared styles and the third-party notices. The registry file is maintained by hand and the published files are generated from it.", // DRAFT (README, registry.json)
-          "The work was directed with AI coding agents, with an AGENTS.md in the repository and a Playwright test suite for the catalog.", // DRAFT: owner to approve the AI-agent wording
+          "The catalog is covered by a Playwright test suite, and the repository documents its own conventions for contributors.", // DRAFT (README)
         ],
         draft: true,
       },

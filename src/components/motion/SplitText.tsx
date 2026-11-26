@@ -8,6 +8,9 @@ import { useMotion } from "@/hooks/useMotion";
 import { whenPreloaderDone } from "@/components/shell/preloaderStore";
 import { whenWarpRevealed } from "@/components/warp/warpStore";
 
+/** Starting opacity of the scroll-lit About paragraph on desktop (owner decision 2026-11-26: 0.3, was 0.13). */
+const DIM_START = 0.3;
+
 interface Props {
   text: string;
   as?: React.ElementType;
@@ -52,10 +55,10 @@ export function SplitText({
       if (mode === "scrub") {
         // Dim start of the scroll-lit reading effect. Phones start brighter so the large text keeps
         // 3:1 contrast (WCAG AA): 0.4 for ink, 0.65 for the darker violet accent word. Desktop keeps
-        // the full-strength 0.13 (owner rule: on desktop the effects win).
+        // DIM_START (owner decision 2026-11-26: 0.3, up from 0.13, for readability).
         const phone = window.matchMedia("(max-width: 767px)").matches;
         gsap.set(units, {
-          opacity: (_i: number, u: Element) => (!phone ? 0.13 : u.classList.contains("text-violet") ? 0.65 : 0.4),
+          opacity: (_i: number, u: Element) => (!phone ? DIM_START : u.classList.contains("text-violet") ? 0.65 : 0.4),
         });
         ctx.add(() => {
           gsap.to(units, {

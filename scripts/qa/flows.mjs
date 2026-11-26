@@ -5,11 +5,11 @@ let fails = 0;
 const check = (ok, msg) => { console.log(`${ok ? "PASS" : "FAIL"}  ${msg}`); if (!ok) fails++; };
 
 // status codes and headers
-for (const [path, want] of [["/", 200], ["/projects", 200], ["/projects/coreex", 200], ["/projects/nope", 404], ["/nope", 404], ["/resume", 200], ["/robots.txt", 200], ["/sitemap.xml", 200]]) {
+for (const [path, want] of [["/", 200], ["/projects", 200], ["/projects/coreex", 200], ["/projects/nope", 404], ["/nope", 404], ["/resume", 404], ["/robots.txt", 200], ["/sitemap.xml", 200]]) {
   const r = await fetch(BASE + path);
   check(r.status === want, `${path} -> ${r.status} (want ${want})`);
 }
-for (const p of ["/v1", "/v2", "/v2/projects", "/v2/about-me", "/v2/contact-me", "/resume"]) {
+for (const p of ["/v1", "/v2", "/v2/projects", "/v2/about-me", "/v2/contact-me"]) {
   const r = await fetch(BASE + p);
   const html = await r.text();
   check(/noindex/.test(r.headers.get("x-robots-tag") ?? "") , `${p} sends X-Robots-Tag noindex (${r.status})`);
@@ -35,7 +35,7 @@ check((home.match(/application\/ld\+json/g) ?? []).length >= 2, "home has Person
   check(await page.evaluate(() => document.documentElement.lang === "en" && !!document.querySelector("main h1")), "404 page: lang, main landmark and h1 present");
   check((await page.locator("h1").innerText()).toLowerCase().includes("not found"), "404 page: heading says not found");
   await page.goto(BASE + "/resume"); await page.waitForTimeout(500);
-  check((await page.locator("h1").innerText()).toLowerCase().includes("on request"), "/resume: honest fallback shown (no PDF supplied)");
+  check((await page.locator("h1").innerText()).toLowerCase().includes("not found"), "/resume: removed, shows the styled 404");
   await ctx.close();
 }
 

@@ -1,7 +1,6 @@
 import { SplitText } from "@/components/motion/SplitText";
 import { Reveal } from "@/components/motion/Reveal";
 import { contactCopy } from "@/content/home";
-import { HAS_RESUME } from "@/lib/resume";
 import { site } from "@/content/site";
 import { ContactForm } from "./ContactForm";
 import { MailLink } from "./MailLink";
@@ -35,15 +34,10 @@ export function Contact() {
             <a href={site.links.github} className={pill} rel="noopener noreferrer" target="_blank">
               GitHub ↗
             </a>
-            {/* TODO(owner): LinkedIn URL (assets checklist section 3). Hidden until it exists. */}
+            {/* The owner has no LinkedIn; hidden while site.links.linkedin is null. */}
             {site.links.linkedin ? (
               <a href={site.links.linkedin} className={pill} rel="noopener noreferrer" target="_blank">
                 LinkedIn ↗
-              </a>
-            ) : null}
-            {HAS_RESUME ? (
-              <a href={site.links.resume} className={pill}>
-                CV ↗
               </a>
             ) : null}
           </div>
@@ -51,7 +45,7 @@ export function Contact() {
             {contactCopy.availabilityLine[site.availability]}
             <br />
             Based in {site.location} (GMT+8).
-            {/* TODO(owner): reply-time line (site.replyTime) */}
+            {/* Reply-time line: site.replyTime is null by owner decision. */}
             {site.replyTime ? ` ${site.replyTime}` : null}
           </p>
         </Reveal>

@@ -78,7 +78,7 @@ Fixed, three zones, transparent with blurred pill backgrounds:
 - Full-screen overlay that opens as a circle growing from the Menu button (clip-path, about 0.9s).
 - Faint lime grid background. Left: huge links (Index, About, Projects, Experience, Stack, Services, Contact) with mono index numbers; links rise in with stagger; on hover the letters skew and turn violet with a small per-letter delay.
 - Header status ("Open to work"), the atlas note, the contact line and hero chips read from one flag: `availability: 'open' | 'freelance-only' | 'closed'` in `src/content/site.ts`, with copy per value. The copyright year is computed.
-- Right: a short "say hi" line, GitHub, LinkedIn, CV, and "Past versions: v1 · v2".
+- Right: a short "say hi" line, GitHub, LinkedIn, and "Past versions: v1 · v2".
 - Esc closes. Focus is trapped while open and returns to the button on close.
 
 ### 3.4 Cursor
@@ -116,7 +116,7 @@ One scrolling page. Order and ruler numbers:
 | 07 | Contact + footer | Contact |
 
 ### 01 Hero
-- Full viewport. Bottom-left content: mono eyebrow (lime dot, "Leow Kai Wen", "Full-stack developer", "AI engineer"), three-line headline "I design / and *build* / whole products.", one-sentence intro, buttons **See projects** (lime, solid) and **Download CV** (outline).
+- Full viewport. Bottom-left content: mono eyebrow (lime dot, "Leow Kai Wen", "Full-stack developer", "AI engineer"), three-line headline "I design / and *build* / whole products.", one-sentence intro, button **See projects** (lime, solid; the CV button was dropped on 2026-11-26).
 - Background scene: a violet perspective grid floor receding to a horizon with a soft violet glow, and floating tech chips (Claude API, MCP, pgvector in lime; Next.js, Spring Boot, PostgreSQL, TypeScript in neutral) at different depths.
 - **Cursor tilt:** the whole scene rotates toward the cursor (about ±10° X, ±14° Y, smoothed); chips shift by depth (parallax).
 - **Scroll:** headline lifts and fades; the floor flattens (rotateX 72° → 84°).
@@ -124,7 +124,7 @@ One scrolling page. Order and ruler numbers:
 
 ### 02 About
 - Statement paragraph in Instrument Serif that lights up word by word as you scroll (scrubbed opacity), one violet italic word ("production").
-- Four fact counters that count up on enter. Only facts from the CV: **90%+** messages auto-answered (AI auto-reply platform), **80+** patients on the portal, **24** CoreEx releases, **2025** graduation year.
+- Four fact counters that count up on enter. Only facts from the CV: **90%+** messages auto-answered (AI auto-reply platform), **80+** patients on the portal, **30** CoreEx tagged releases (dated), **2025** graduation year.
 
 ### 03 Personal projects (Atlas)
 - Tall section (about 280vh) with a sticky full-viewport stage.
@@ -146,7 +146,7 @@ One scrolling page. Order and ruler numbers:
 ### 05 Tech stack (new, not in the mockup yet)
 - Title idea: "The *stack* I build with".
 - Grouped by category (Languages, Frontend, Backend, Data, AI, DevOps and tools), content from CV v5 "Technical Skills".
-- Interaction: tiles enter with a scramble-decode of their label; hovering a tech highlights which projects use it ("Used in: CoreEx, Patient Portal") and can deep-link to the atlas card.
+- Interaction: tiles enter with a scramble-decode of their label; [REMOVED 2026-11-26: the hover "Used in" feature was dropped; tiles are plain labels] hovering a tech highlights which projects use it ("Used in: CoreEx, Patient Portal") and can deep-link to the atlas card.
 - **Decided:** build the 3D ring for desktop: tiles on a slowly rotating 3D ring or cylinder scrubbed by scroll while the section is pinned, flattening into the grid at the end. Below 1024px, on touch and with reduced motion, show the plain grid. Ring and grid use the same data; tiles are real focusable elements in DOM order; "Used in: ..." works on tap and keyboard focus. The owner judges the ring at the Phase 2 checkpoint and may swap it for the grid; the agent reports fps, CLS and Lighthouse numbers there to support that call.
 - No percentage bars or skill levels.
 
@@ -156,7 +156,7 @@ One scrolling page. Order and ruler numbers:
 
 ### 07 Contact and footer
 - Huge headline "Let's build / something *great.*" rising from masks.
-- Left: email as a big link (decode effect on hover), GitHub, LinkedIn, CV pills, location and reply-time line.
+- Left: email as a big link (decode effect on hover), GitHub and LinkedIn pills (no CV, 2026-11-26), location and reply-time line.
 - Right: form (Resend server action, see plan). Fields: reason chips (A full-time role, Freelance, A custom build, Just saying hi), name, email, message, Send. Success and error states inline and announced via `aria-live`.
 - Spam protection: hidden honeypot, a minimum time-to-submit check, and a rate limit of 3 submissions per hour (6 per day) per visitor, hashed IP. It uses Upstash Redis when both Upstash variables are set; otherwise a best-effort in-memory limiter per server instance. Env vars live in Vercel and `.env.local` only; only `RESEND_API_KEY` and `CONTACT_TO_EMAIL` are required. If `lkw22studio.com` is not verified in Resend by Phase 8, send from Resend's test sender to the owner's address; the visible `mailto:` link stays. Destination email and reply-time line (draft: "I reply within 2 working days") come from one content file.
 - Footer: giant "LKW22" wordmark (gradient fill) rising with scroll; copyright, "Past versions: v1 · v2", "Built with Next.js, GSAP and Three.js", back to top.
@@ -175,9 +175,9 @@ Real routes (SEO, shareable links). Opened from the atlas, the list view, or the
 
 ### 5.2 Page layout
 1. Sticky top bar (blend mode difference): "← Back to projects", `01 / 05 — CoreEx`, "X-ray [X]" toggle.
-2. Hero: case-study label and year, giant title (letters rise in), meta row (Role, What, Stack, Links).
+2. Hero: case-study label (year hidden since 2026-11-26), giant title (letters rise in), meta row (Role, What, Stack, Links).
 3. Main screenshot on a 3D plate that starts tilted back (about 38° rotateX, scale 0.82) and flattens as you scroll.
-4. Stats row with counters (real numbers only; CoreEx: 44 MCP tools, 24 releases, 13 ADRs).
+4. Stats row with counters (real numbers only; CoreEx: 49 MCP tools, 30 tagged releases as of November 2026, 14 ADRs).
 5. Story sections (problem, approach, decisions, outcome) with word-by-word reveal on the key sentences.
 6. Pinned horizontal gallery of screenshots scrubbed by vertical scroll.
 7. Architecture diagram whose connection lines draw on scroll (CoreEx: Browser → Next.js → Spring Boot API → Postgres + pgvector; MCP server; Claude API; AI links in lime).

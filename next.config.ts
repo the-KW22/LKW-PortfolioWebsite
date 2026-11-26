@@ -1,14 +1,8 @@
 import type { NextConfig } from "next";
-import { existsSync } from "node:fs";
-import { join } from "node:path";
 
 const nextConfig: NextConfig = {
   // Styled 404 for URLs that match no route (the app has two root layouts, so no root not-found).
   experimental: { globalNotFound: true },
-  env: {
-    // "1" once the owner has put the CV at public/resume.pdf; the CV buttons are hidden until then.
-    NEXT_PUBLIC_HAS_RESUME: existsSync(join(process.cwd(), "public", "resume.pdf")) ? "1" : "",
-  },
   async redirects() {
     return [
       // Old ver 2.0 pages are sections of the ver 3.0 one-page home. Sources are exact
@@ -26,7 +20,6 @@ const nextConfig: NextConfig = {
       { source: "/v1/:path*", headers: noindex },
       { source: "/v2", headers: noindex },
       { source: "/v2/:path*", headers: noindex },
-      { source: "/resume", headers: noindex },
     ];
   },
   async rewrites() {

@@ -3,7 +3,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 
 /**
- * Full-height message page (404, error, resume fallback). The heading takes focus on mount so
+ * Full-height message page (404, error). The heading takes focus on mount so
  * keyboard and screen-reader users land on the message instead of the top of the page.
  * No animation here: it must work when everything else is broken.
  */

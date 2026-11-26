@@ -17,7 +17,6 @@ export interface SiteConfig {
   links: {
     github: string;
     linkedin: string | null;
-    resume: string;
   };
   availability: Availability;
   availabilityCopy: Record<Availability, string>;
@@ -150,7 +149,7 @@ export interface Project {
   name: string;
   category: ProjectCategory;
   status: "live" | "in-progress";
-  /** null until the owner confirms it. */
+  /** Hidden by owner decision (2026-11-26): keep null, nothing renders it. */
   year: number | null;
   tagline: string;
   summary: string;

@@ -12,9 +12,9 @@ export const moonwave: Project = {
   name: "Moonwave",
   category: "web-design",
   status: "live",
-  year: 2026, // DRAFT: the public repo was created 2026-04-17; owner to confirm
+  year: null, // hidden by owner decision (2026-11-26); nothing renders a year
   tagline: "Creative studio marketing site with scroll-driven animation", // DRAFT
-  summary: "A responsive marketing site for a fictional creative studio, built around a full-screen animated hero and smooth scrolling. A design and front-end exercise rather than a client project.", // DRAFT: the studio is sample content in the media; owner to confirm "fictional"
+  summary: "A responsive marketing site for a fictional creative studio, built around a full-screen animated hero and smooth scrolling. A self-initiated design and build exercise with sample content, not a client project.",
   role: "Designed and built the site, using AI tools for the hero imagery and video.", // DRAFT: from the CV ("UI and marketing site designs") and the v2 tags (Nano Banana, Kling)
   stack: [
     { name: "React" },
@@ -62,9 +62,9 @@ export const moonwave: Project = {
       {
         id: "problem",
         title: "The brief",
-        lead: "TODO(owner): what was the brief for Moonwave? Was it a self-set exercise or for someone?",
+        lead: "A self-initiated design and build exercise, not client work. The studio, its work and its copy are sample content.",
         paragraphs: [],
-        draft: true,
+        draft: false, // owner confirmed 2026-11-26
       },
       {
         id: "approach",

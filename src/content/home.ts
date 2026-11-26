@@ -11,7 +11,6 @@ export const heroCopy = {
   intro:
     "I take products from idea to production: interfaces, APIs, databases and the AI that ties them together.",
   ctaPrimary: "See projects", // DRAFT
-  ctaSecondary: "Download CV", // DRAFT
   // Floating chips at different depths. `ai` chips are lime (spec: lime marks AI things).
   // They name tech used in the owner's own projects (see src/content/projects).
   chips: [
@@ -36,7 +35,7 @@ export const aboutCopy = {
   facts: [
     { value: 90, suffix: "%+", label: "Messages auto-answered by an AI reply platform I built", ai: true }, // DRAFT label
     { value: 80, suffix: "+", label: "Patients on a portal I started and built" }, // DRAFT label
-    { value: 30, suffix: "", label: "Tagged releases of CoreEx, my own product" }, // DRAFT label; 30 = git tags v0.1.0 to v0.23.1, counted 2026-11-26 (the CV still says 24)
+    { value: 30, suffix: "", label: "Tagged releases of CoreEx (Nov 2026), my own product" }, // 30 = git tags v0.1.0 to v0.23.1, counted 2026-11-26; owner wants it dated
     { value: 2025, suffix: "", from: 1990, label: "Graduated in Software Engineering, TARUMT" }, // DRAFT label
   ] as { value: number; suffix: string; from?: number; label: string; ai?: boolean }[],
 };
@@ -47,8 +46,6 @@ export const experienceCopy = {
 
 export const stackCopy = {
   titleLines: ["The stack", "I build with"], // DRAFT
-  hint: "Pick a tool to see where it shows up in my work.", // DRAFT
-  noMatch: "On my CV; not tied to one listed project yet.", // DRAFT
 };
 
 export const servicesCopy = {
