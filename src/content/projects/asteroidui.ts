@@ -1,5 +1,6 @@
 import type { Project } from "../types";
 import { placeholderMedia } from "./media";
+import { asteroidDetailXray, asteroidHeroXray, asteroidRegistryXray } from "./xray";
 
 // Sources: AsteroidUI README, implementation plan section 4. Label as in progress.
 export const asteroidui: Project = {
@@ -29,12 +30,12 @@ export const asteroidui: Project = {
   xray: "deep",
   caseStudy: {
     // TODO(owner): 3-5 screenshots (or approve capturing them from the live site).
-    hero: placeholderMedia("AsteroidUI catalog (screenshot coming)"),
+    hero: { ...placeholderMedia("AsteroidUI catalog (screenshot coming)"), xray: asteroidHeroXray },
     // DRAFT captions
     gallery: [
       { caption: "Component catalog", media: placeholderMedia("AsteroidUI catalog page (screenshot coming)") },
-      { caption: "A component page with live examples", media: placeholderMedia("AsteroidUI component detail (screenshot coming)") },
-      { caption: "Registry install", media: placeholderMedia("AsteroidUI registry install (screenshot coming)") },
+      { caption: "A component page with live examples", media: { ...placeholderMedia("AsteroidUI component detail (screenshot coming)"), xray: asteroidDetailXray } },
+      { caption: "Registry install", media: { ...placeholderMedia("AsteroidUI registry install (screenshot coming)"), xray: asteroidRegistryXray } },
     ],
     story: [
       { id: "problem", title: "The problem", lead: "TODO(owner): why build a component library, and for whom.", paragraphs: [], draft: true },

@@ -27,7 +27,7 @@ export const moonwave: Project = {
     github: null, // TODO(owner): public repo or none
   },
   stats: null,
-  xray: "simple",
+  xray: "none", // TODO(owner): simple X-ray annotations need the real section and technique list (review decision 5: "or none")
   caseStudy: {
     hero: {
       src: "/images/projects/moonwave/moonwave-poster.webp",

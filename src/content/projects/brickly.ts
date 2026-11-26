@@ -20,7 +20,7 @@ export const brickly: Project = {
     github: null, // TODO(owner): public repo or none
   },
   stats: null,
-  xray: "simple",
+  xray: "none", // TODO(owner): simple X-ray annotations need the real section and technique list (review decision 5: "or none")
   caseStudy: {
     hero: {
       src: "/images/projects/brickly/brickly-poster.webp",

@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ShellProvider } from "@/components/shell/ShellProvider";
 import { ScrollProvider } from "@/components/motion/ScrollProvider";
+import { WarpProvider } from "@/components/warp/WarpProvider";
 import { Preloader } from "@/components/shell/Preloader";
 import { Cursor } from "@/components/shell/Cursor";
 import { Header } from "@/components/shell/Header";
@@ -110,12 +111,14 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: PRELOAD_SCRIPT }} />
         <ShellProvider>
           <ScrollProvider>
+            <WarpProvider>
             <Preloader />
             <Cursor />
             <SkipLink />
             <Header />
             <Menu />
             <PageFrame footer={<Footer />}>{children}</PageFrame>
+            </WarpProvider>
           </ScrollProvider>
         </ShellProvider>
 

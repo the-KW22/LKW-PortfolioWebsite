@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Project } from "@/content/types";
 
 /** Closing block: huge name of the next project, violet on hover. */
-export function NextProject({ next }: { next: Project }) {
+export function NextProject({ next, currentName }: { next: Project; currentName: string }) {
   return (
     <section
       id="next"
@@ -11,9 +11,11 @@ export function NextProject({ next }: { next: Project }) {
       aria-label="Next project"
       className="border-t border-line px-[5vw]"
     >
-      {/* Phase 5: this link starts the kinetic warp into the next project. Plain link until then. */}
+      {/* A real link; the warp provider turns a plain click into the kinetic warp (data-warp). */}
       <Link
         href={`/projects/${next.slug}`}
+        data-warp="enter"
+        data-warp-name={next.name}
         data-cursor="label"
         data-cursor-label="OPEN"
         className="group flex min-h-[70svh] flex-col justify-center rounded-lg"
@@ -26,6 +28,8 @@ export function NextProject({ next }: { next: Project }) {
       </Link>
       <Link
         href="/projects"
+        data-warp="back"
+        data-warp-name={currentName}
         className="mono-label mb-16 inline-block rounded-md py-2 text-mute transition-colors hover:text-violet focus-visible:text-violet"
       >
         ← All projects

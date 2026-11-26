@@ -6,6 +6,7 @@ type ElTag = React.ComponentType<React.HTMLAttributes<HTMLElement> & { ref?: Rea
 import { gsap } from "@/lib/gsap";
 import { useMotion } from "@/hooks/useMotion";
 import { whenPreloaderDone } from "@/components/shell/preloaderStore";
+import { whenWarpRevealed } from "@/components/warp/warpStore";
 
 interface Props {
   text: string;
@@ -71,7 +72,17 @@ export function SplitText({
             scrollTrigger: { trigger: el, start: "top 90%", once: true },
           });
         });
-      if (waitForPreloader) return whenPreloaderDone(play);
+      if (waitForPreloader) {
+        // Also wait for a kinetic warp to finish covering the page, so the letters rise as it fades.
+        let off2: (() => void) | undefined;
+        const off1 = whenPreloaderDone(() => {
+          off2 = whenWarpRevealed(play);
+        });
+        return () => {
+          off1();
+          off2?.();
+        };
+      }
       play();
     },
     [mode, by, waitForPreloader, stagger, text],

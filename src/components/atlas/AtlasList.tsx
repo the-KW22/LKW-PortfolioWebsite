@@ -9,6 +9,8 @@ export function AtlasList({ projects }: { projects: Project[] }) {
         <li key={p.slug} className="border-t border-line">
           <a
             href={`/projects/${p.slug}`}
+            data-warp="enter"
+            data-warp-name={p.name}
             data-cursor="label"
             data-cursor-label="OPEN"
             className="grid grid-cols-[44px_1fr] items-baseline gap-x-4 gap-y-1 py-4 transition-colors hover:text-violet sm:grid-cols-[60px_1.1fr_1.6fr_0.8fr]"

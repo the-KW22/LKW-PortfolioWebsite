@@ -72,9 +72,11 @@ function ProjectCard({ project, index, total }: { project: Project; index: numbe
   };
   return (
     <Item id={project.slug} at={at} decorative={false} card>
-      {/* Real link: works without JS and for crawlers. The case-study route arrives in Phase 4. */}
+      {/* Real link: works without JS and for crawlers; the warp provider adds the kinetic transition on a plain click. */}
       <a
         href={`/projects/${project.slug}`}
+        data-warp="enter"
+        data-warp-name={project.name}
         className="atlas-card"
         data-cursor="label"
         data-cursor-label="OPEN"

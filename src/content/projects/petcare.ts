@@ -1,5 +1,6 @@
 import type { Project } from "../types";
 import { shot } from "./media";
+import { petcareHeroXray } from "./xray";
 
 // Sources: CV v5 ("UI and marketing site designs"), v2 project data, plan section 4.
 // Media: copied from the v2 assets into public/images/projects/petcare/.
@@ -26,9 +27,12 @@ export const petcare: Project = {
     github: null, // TODO(owner): public repo or none
   },
   stats: null,
-  xray: "simple",
+  xray: "simple", // hero screenshot carries petcareHeroXray
   caseStudy: {
-    hero: shot("/images/projects/petcare/petcare-1.webp", "Screenshot of the PetCare landing page, first screen", 1600, 775),
+    hero: {
+      ...shot("/images/projects/petcare/petcare-1.webp", "Screenshot of the PetCare landing page, first screen", 1600, 775),
+      xray: petcareHeroXray,
+    },
     // TODO(owner): describe each section in the alt text and caption.
     gallery: [2, 3, 4, 5, 6].map((n) => ({
       caption: `Landing page, screen ${n} of 6`,
