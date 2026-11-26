@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SITE_URL } from "@/content/site";
 import { projects } from "@/content/projects";
+import { jsonLdString, pageMeta } from "@/lib/seo";
 import { AtlasList } from "@/components/atlas/AtlasList";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Projects",
   description:
-    "Projects by Leow Kai Wen: full-stack and AI applications, a component library and web design work.",
-  alternates: { canonical: `${SITE_URL}/projects` },
-  openGraph: { url: `${SITE_URL}/projects`, title: "Projects | Leow Kai Wen" },
-};
+    "Projects by Leow Kai Wen: a full-stack AI workspace, a component library and web design work, each with a case study.",
+  path: "/projects",
+});
 
 /** Plain, fast, server-rendered list of every project: the no-JS and crawler view, and the "Back to projects" target. */
 export default function ProjectsPage() {
@@ -26,7 +26,7 @@ export default function ProjectsPage() {
   };
   return (
     <section className="px-[5vw] pt-36 pb-24">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
       <p className="mono-label mb-6 text-mute">Personal projects</p>
       <h1 className="font-display text-[clamp(44px,8vw,120px)] leading-[0.95] font-black tracking-display">
         Selected <em className="font-serif font-normal text-violet">work</em>

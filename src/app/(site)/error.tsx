@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
+import { StatusPage, statusLink } from "@/components/shell/StatusPage";
 
 export default function Error({
   error,
@@ -15,26 +16,26 @@ export default function Error({
   }, [error]);
 
   return (
-    <section className="flex min-h-svh flex-col justify-center px-[5vw] py-32">
-      <p className="mono-label mb-6 text-lime">Unexpected error</p>
-      <h1 className="font-display text-[clamp(48px,9vw,150px)] leading-[0.9] font-black tracking-display">
-        Something went <em className="font-serif font-normal text-violet">wrong</em>
-      </h1>
-      <p className="mt-6 max-w-md text-mute">
-        An unexpected error occurred. You can try again or go back.
-        {error.digest ? <span className="mono-label mt-2 block">ID: {error.digest}</span> : null}
-      </p>
-      <div className="mono-label mt-10 flex gap-6">
-        <button type="button" onClick={unstable_retry} className="text-ink underline-offset-4 hover:text-violet hover:underline">
-          Try again
-        </button>
-        <Link href="/" className="text-ink underline-offset-4 hover:text-violet hover:underline">
-          Go home
-        </Link>
-        <Link href="/projects" className="text-ink underline-offset-4 hover:text-violet hover:underline">
-          View projects
-        </Link>
-      </div>
-    </section>
+    <StatusPage
+      label="Unexpected error"
+      title="Something went"
+      accent="wrong"
+      actions={
+        <>
+          <button type="button" onClick={unstable_retry} className={statusLink}>
+            Try again
+          </button>
+          <Link href="/" className={statusLink}>
+            Go home
+          </Link>
+          <Link href="/projects" className={statusLink}>
+            View projects
+          </Link>
+        </>
+      }
+    >
+      <p>An unexpected error occurred. You can try again or go back.</p>
+      {error.digest ? <p className="mono-label mt-2">ID: {error.digest}</p> : null}
+    </StatusPage>
   );
 }

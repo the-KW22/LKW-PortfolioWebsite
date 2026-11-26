@@ -29,7 +29,8 @@ export function CaseTopBar({
       >
         ← Back to projects
       </Link>
-      <p className="mono-label hidden sm:block" aria-label={`Project ${order} of ${total}: ${name}`}>
+      <p className="mono-label hidden sm:block">
+        <span className="sr-only">{`Project ${order} of ${total}: ${name}`}</span>
         <span aria-hidden="true">
           {pad(order)} / {pad(total)} — {name}
         </span>

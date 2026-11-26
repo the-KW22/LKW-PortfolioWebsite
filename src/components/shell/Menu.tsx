@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { HAS_RESUME } from "@/lib/resume";
 import { site } from "@/content/site";
 import { homeSections, menuCopy } from "@/content/sections";
 import { gsap } from "@/lib/gsap";
@@ -182,9 +183,11 @@ export function Menu() {
               LinkedIn ↗
             </a>
           ) : null /* TODO(owner): LinkedIn URL in src/content/site.ts */}
-          <a href={site.links.resume} className="hover:text-violet">
-            CV (PDF) ↗
-          </a>
+          {HAS_RESUME ? (
+            <a href={site.links.resume} className="hover:text-violet">
+              CV (PDF) ↗
+            </a>
+          ) : null}
         </p>
         {/* Plain <a>: /v1 and /v2 are separate documents, not routes of this app. */}
         <p data-menu-side className="mono-label text-mute">
@@ -192,7 +195,7 @@ export function Menu() {
           {site.pastVersions.map((v, i) => (
             <span key={v.href}>
               {i > 0 ? " · " : null}
-              <a href={v.href} className="text-ink hover:text-violet">
+              <a href={v.href} className="text-ink underline underline-offset-4 hover:text-violet">
                 {v.label}
               </a>
             </span>

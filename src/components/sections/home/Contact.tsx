@@ -1,6 +1,7 @@
 import { SplitText } from "@/components/motion/SplitText";
 import { Reveal } from "@/components/motion/Reveal";
 import { contactCopy } from "@/content/home";
+import { HAS_RESUME } from "@/lib/resume";
 import { site } from "@/content/site";
 import { ContactForm } from "./ContactForm";
 import { MailLink } from "./MailLink";
@@ -40,9 +41,11 @@ export function Contact() {
                 LinkedIn ↗
               </a>
             ) : null}
-            <a href={site.links.resume} className={pill}>
-              CV ↗
-            </a>
+            {HAS_RESUME ? (
+              <a href={site.links.resume} className={pill}>
+                CV ↗
+              </a>
+            ) : null}
           </div>
           <p data-c-in className="mt-10 max-w-sm leading-relaxed text-mute">
             {contactCopy.availabilityLine[site.availability]}

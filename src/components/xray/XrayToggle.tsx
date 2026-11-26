@@ -39,7 +39,7 @@ export function XrayToggle() {
         type="button"
         aria-pressed={on}
         aria-keyshortcuts="X"
-        aria-label="X-ray view: show the engineering layer under the screenshots"
+        aria-describedby="xray-toggle-help"
         onClick={toggle}
         data-cursor="hover"
         className="mono-label flex min-h-11 items-center gap-2 rounded-full border border-white/70 px-4 py-2 whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white aria-pressed:bg-white aria-pressed:text-black"
@@ -49,6 +49,9 @@ export function XrayToggle() {
           [X]
         </kbd>
       </button>
+      <span id="xray-toggle-help" className="sr-only">
+        Shows the engineering layer under the screenshots.
+      </span>
       <span role="status" className="sr-only">
         {on
           ? fine

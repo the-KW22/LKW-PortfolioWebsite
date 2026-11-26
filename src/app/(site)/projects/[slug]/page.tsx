@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SITE_URL, site } from "@/content/site";
 import { getNextProject, getProject, projectDescription, projects, xrayLayersFor } from "@/content/projects";
+import { jsonLdString, pageMeta } from "@/lib/seo";
 import { XrayNotes } from "@/components/xray/XrayNotes";
 import { CaseTopBar } from "@/components/case/CaseTopBar";
 import { CaseHero } from "@/components/case/CaseHero";
@@ -15,6 +16,9 @@ import { NextProject } from "@/components/case/NextProject";
 
 type Params = { slug: string };
 
+// Unknown slugs are a hard 404 (not a streamed 200), which is what crawlers should see.
+export const dynamicParams = false;
+
 export function generateStaticParams(): Params[] {
   return projects.map((p) => ({ slug: p.slug }));
 }
@@ -23,16 +27,12 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) return {};
-  const url = `${SITE_URL}/projects/${project.slug}`;
-  const description = projectDescription(project);
-  const title = `${project.name}: ${project.tagline}`;
-  return {
-    title,
-    description,
-    alternates: { canonical: url },
-    openGraph: { type: "article", url, title: `${title} | Leow Kai Wen`, description },
-    twitter: { card: "summary_large_image", title: `${title} | Leow Kai Wen`, description },
-  };
+  return pageMeta({
+    title: `${project.name}: ${project.tagline}`,
+    description: projectDescription(project),
+    path: `/projects/${project.slug}`,
+    type: "article",
+  });
 }
 
 export default async function ProjectPage({ params }: { params: Promise<Params> }) {
@@ -62,12 +62,18 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
     <article>
       <script
         type="application/ld+json"
-        // "<" is escaped so content can never close the script tag.
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }}
       />
       <CaseTopBar order={project.order} total={projects.length} name={project.name} hasXray={xr.any} />
 
-      <section id="overview" data-case-section data-case-label="Overview" aria-label={`${project.name} overview`}>
+      {/* overflow-x-clip: the tilted hero plate is wider than the viewport at 1920px while it flattens; clip, not hidden, keeps sticky and Lenis intact. */}
+      <section
+        id="overview"
+        data-case-section
+        data-case-label="Overview"
+        aria-label={`${project.name} overview`}
+        className="overflow-x-clip"
+      >
         <CaseHero project={project} />
         <div className="mt-[10vh] px-[5vw]">
           <Plate3D>

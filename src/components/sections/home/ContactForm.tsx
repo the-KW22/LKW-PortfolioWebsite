@@ -21,7 +21,7 @@ const subscribe = () => () => {};
 const FIELDS = ["name", "email", "message"] as const;
 
 const fieldCls =
-  "w-full border-0 border-b border-[#2e2d3a] bg-transparent py-2.5 text-xl text-ink outline-none transition-colors placeholder:text-[#4b4a5b] focus:border-lime aria-[invalid=true]:border-[#ff6b7a]";
+  "w-full border-0 border-b border-[#2e2d3a] bg-transparent py-2.5 text-xl text-ink outline-none transition-colors placeholder:text-mute focus:border-lime focus:shadow-[0_1px_0_0_var(--lime)] aria-[invalid=true]:border-[#ff6b7a]";
 
 function Field({
   label,

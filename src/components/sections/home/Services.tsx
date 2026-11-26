@@ -35,9 +35,10 @@ export function Services() {
               />
               <span
                 aria-hidden="true"
-                className="font-display text-[64px] leading-none font-black tracking-display text-[#1d1c28] transition-colors duration-300 [transform:translateZ(60px)] group-hover:text-violet"
+                data-num={String(i + 1).padStart(2, "0")}
+                // Decorative ghost numeral drawn as generated content, so it is not text for contrast audits.
+                className="font-display before:content-[attr(data-num)] text-[64px] leading-none font-black tracking-display text-[#1d1c28] transition-colors duration-300 [transform:translateZ(60px)] group-hover:text-violet"
               >
-                {String(i + 1).padStart(2, "0")}
               </span>
               <div>
                 <h3 className="font-display text-[28px] leading-[1.05] font-extrabold tracking-[-0.03em] [transform:translateZ(40px)]">

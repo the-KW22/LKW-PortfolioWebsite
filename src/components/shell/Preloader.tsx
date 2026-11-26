@@ -29,10 +29,16 @@ export function Preloader() {
     let loaded = document.readyState === "complete";
     let cancelled = false;
     let raf = 0;
+    let skip = false;
     let tl: gsap.core.Timeline | null = null;
 
     document.fonts.ready.then(() => (fontsReady = true));
     const onLoad = () => (loaded = true);
+    // Keyboard users never wait: Tab, Enter, Space or Escape ends the loader at once.
+    const onKey = (e: KeyboardEvent) => {
+      if (["Tab", "Enter", " ", "Escape"].includes(e.key)) skip = true;
+    };
+    window.addEventListener("keydown", onKey);
     if (!loaded) window.addEventListener("load", onLoad, { once: true });
 
     const start = performance.now();
@@ -55,7 +61,7 @@ export function Preloader() {
       const target = (fontsReady ? 40 : 0) + (loaded ? 60 : 0);
       const paced = Math.min(target, (t / MIN_MS) * 100);
       const forced = Math.max(0, ((t - (MAX_MS - 300)) / 300) * 100);
-      const value = Math.min(100, Math.floor(Math.max(paced, forced)));
+      const value = skip ? 100 : Math.min(100, Math.floor(Math.max(paced, forced)));
       if (numRef.current) numRef.current.textContent = String(value).padStart(3, "0");
       if (value >= 100) exit();
       else raf = requestAnimationFrame(tick);
@@ -66,6 +72,7 @@ export function Preloader() {
       cancelled = true;
       cancelAnimationFrame(raf);
       window.removeEventListener("load", onLoad);
+      window.removeEventListener("keydown", onKey);
       tl?.kill();
       gsap.set(root, { clearProps: "transform" });
       unlock("preloader");
