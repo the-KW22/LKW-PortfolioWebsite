@@ -64,7 +64,8 @@ A custom display face or logo font may replace Inter Tight later (see assets che
 ### 3.1 Preloader
 - Huge counter `000%` → `100%` (bottom left, violet `%`), small mono label top left.
 - Then the panel slides up (expo in-out, about 1s) and the hero headline lines rise in from a mask.
-- Show only on the first visit of a session (sessionStorage). Must not delay content for crawlers or users without JS: render the page underneath and overlay the loader client-side. Cap at about 2s total.
+- The counter reflects real readiness (fonts and hero assets), finishes as soon as they are ready, and is capped at 1.2s total.
+- Show only on the first visit of a session (sessionStorage). Skip it on repeat visits, with reduced motion, and on direct hits to `/projects/*`. Must not delay content for crawlers or users without JS: render the page underneath and overlay the loader client-side.
 
 ### 3.2 Header (the "ruler")
 Fixed, three zones, transparent with blurred pill backgrounds:
@@ -76,6 +77,7 @@ Fixed, three zones, transparent with blurred pill backgrounds:
 ### 3.3 Menu
 - Full-screen overlay that opens as a circle growing from the Menu button (clip-path, about 0.9s).
 - Faint lime grid background. Left: huge links (Index, About, Projects, Experience, Stack, Services, Contact) with mono index numbers; links rise in with stagger; on hover the letters skew and turn violet with a small per-letter delay.
+- Header status ("Open to work"), the atlas note, the contact line and hero chips read from one flag: `availability: 'open' | 'freelance-only' | 'closed'` in `src/content/site.ts`, with copy per value. The copyright year is computed.
 - Right: a short "say hi" line, GitHub, LinkedIn, CV, and "Past versions: v1 · v2".
 - Esc closes. Focus is trapped while open and returns to the button on close.
 
@@ -90,14 +92,14 @@ Primary buttons, pills and the Menu button pull slightly toward the cursor and s
 ### 3.6 Smooth scroll
 Lenis driving GSAP ScrollTrigger (one scroll system for the whole site). Disabled with reduced motion.
 
-### 3.7 Sound (optional, phase "polish")
-Off by default, toggle in the header. Subtle UI sounds only: soft tick on hover of projects, a whoosh on the warp, low room tone. Never autoplay.
+### 3.7 Sound (out of scope for v1)
+Cut from the first launch (review decision 10). No sound toggle in the header. May return after launch: off by default, subtle UI sounds only, never autoplay.
 
 ### 3.8 Easter eggs
 - Notes hidden at the far edges of the atlas ("You found the edge of the map").
 - A note in the atlas: "press X inside any project".
-- **X** key toggles full X-ray on case-study pages.
-- Later ideas (optional): a terminal mode, Konami code.
+- **X** key toggles full X-ray on case-study pages that have a bones layer. It is ignored when focus is in an input, textarea, select or contenteditable, when the menu is open, or when a modifier key is held.
+- Out of scope until after launch: terminal mode, Konami code.
 
 ## 4. Home page (`/`)
 
@@ -128,7 +130,7 @@ One scrolling page. Order and ruler numbers:
 - Tall section (about 280vh) with a sticky full-viewport stage.
 - **Intro scrubbed by scroll:** the camera starts zoomed in on the title card "Personal *projects*" and pulls back while the board tilts back about 14°; items fade in from the centre outward.
 - **Board:** about 3600×2400px, dotted grid. Items: the 5 project cards (thumbnail, name, number, tagline, stack tags with AI tags in lime), plus texture items (quote note, lime "Open to full-time, freelance and custom builds" note, code snippets, a "ver 1.0" polaroid linking to `/v1`, easter-egg notes). Items sit at different Z depths and slight rotations.
-- **Interaction:** drag to pan with inertia; the board tilts with drag velocity **and** with cursor position. Zoom with +/− buttons and Ctrl+wheel (plain wheel keeps scrolling the page). Recenter button, minimap with viewport frame, coordinate and zoom readout.
+- **Interaction:** drag to pan with inertia; the board tilts with drag velocity **and** with cursor position. Zoom with +/− buttons, keyboard +/− when the atlas has focus, and Ctrl+wheel only while the pointer is over the atlas stage (elsewhere native browser zoom is untouched; plain wheel keeps scrolling the page). Recenter button, minimap with viewport frame, coordinate and zoom readout.
 - **List view** toggle: a plain, fast list of all projects (number, name, tagline, main tech). Also the default on small screens.
 - Clicking a card (click = less than about 6px of movement) runs the warp into that project.
 - **Build:** DOM + CSS 3D (crisp text, real links, accessible), not WebGL. Project cards are real `<a href="/projects/[slug]">` links so they work without JS and for crawlers. Keyboard: Tab moves between cards and pans the board to the focused card.
@@ -137,6 +139,7 @@ One scrolling page. Order and ruler numbers:
 ### 04 Experience
 - Section title "Where I've *shipped*".
 - Vertical timeline: a violet line draws itself with scroll; each node turns lime when reached.
+- The auto-reply figure on the About counters is shown without a caption (owner decision), so the AI Auto-Reply Platform tile and the NM Media entry must state that the rate was measured on replayed real conversations. Owner reviews this at Phase 7. No unqualified claim may appear anywhere it can be questioned.
 - Entries (from CV v5): Junior Software Developer at NM Media (May–Oct 2026) with four or five project tiles (AI Auto-Reply Platform, Patient Portal, Social Media Platform, Marketing Sites and Blog Admin, WhatsApp Community Scheduler) where key numbers are lime; IT Intern at Elite Expo (Jun–Dec 2025); B.Sc. Software Engineering at TARUMT (2021–2025).
 - No client names. Generic project names only.
 
@@ -144,7 +147,7 @@ One scrolling page. Order and ruler numbers:
 - Title idea: "The *stack* I build with".
 - Grouped by category (Languages, Frontend, Backend, Data, AI, DevOps and tools), content from CV v5 "Technical Skills".
 - Interaction: tiles enter with a scramble-decode of their label; hovering a tech highlights which projects use it ("Used in: CoreEx, Patient Portal") and can deep-link to the atlas card.
-- 3D option (recommended): tiles arranged on a slowly rotating 3D ring or cylinder that is scrubbed by scroll while the section is pinned, flattening into the grid at the end. Must collapse to a simple grid on mobile and reduced motion.
+- **Decided:** build the 3D ring for desktop: tiles on a slowly rotating 3D ring or cylinder scrubbed by scroll while the section is pinned, flattening into the grid at the end. Below 1024px, on touch and with reduced motion, show the plain grid. Ring and grid use the same data; tiles are real focusable elements in DOM order; "Used in: ..." works on tap and keyboard focus. The owner judges the ring at the Phase 2 checkpoint and may swap it for the grid; the agent reports fps, CLS and Lighthouse numbers there to support that call.
 - No percentage bars or skill levels.
 
 ### 06 Services
@@ -154,7 +157,8 @@ One scrolling page. Order and ruler numbers:
 ### 07 Contact and footer
 - Huge headline "Let's build / something *great.*" rising from masks.
 - Left: email as a big link (decode effect on hover), GitHub, LinkedIn, CV pills, location and reply-time line.
-- Right: form (Resend server action, see plan). Fields: reason chips (A full-time role, Freelance, A custom build, Just saying hi), name, email, message, Send. Success and error states inline; honeypot; rate limit.
+- Right: form (Resend server action, see plan). Fields: reason chips (A full-time role, Freelance, A custom build, Just saying hi), name, email, message, Send. Success and error states inline and announced via `aria-live`.
+- Spam protection: hidden honeypot, a minimum time-to-submit check, and a rate limit of 3 submissions per hour per IP using Upstash Redis (env vars in Vercel and `.env.local` only). If `lkw22studio.com` is not verified in Resend by Phase 8, send from Resend's test sender to the owner's address; the visible `mailto:` link stays. Destination email and reply-time line (draft: "I reply within 2 working days") come from one content file.
 - Footer: giant "LKW22" wordmark (gradient fill) rising with scroll; copyright, "Past versions: v1 · v2", "Built with Next.js, GSAP and Three.js", back to top.
 - No phone number anywhere.
 
@@ -163,6 +167,7 @@ One scrolling page. Order and ruler numbers:
 Real routes (SEO, shareable links). Opened from the atlas, the list view, or the "Next project" link.
 
 ### 5.1 Kinetic warp transition
+- Built as DOM/CSS layers, not a canvas (keeps "one WebGL canvas on home" true). Runs only for in-site clicks; direct links load normally. Browser Back/Forward, any key press or a second click fast-forwards to the destination. Navigation starts at the warp midpoint so total time stays about 1.2s; a slow route waits behind the violet flood. If the tab is hidden mid-warp, complete immediately.
 - On click: the project name (uppercase, Inter Tight 900) appears as about 16 layers receding into depth; layers rush toward the viewer with accelerating ease (about 1.2s); outline layers in white, every fourth filled violet; the last part floods the screen violet with the name in dark ink scaling up.
 - Then navigate to the route; the overlay fades out and the title letters rise in.
 - Back to projects: the same warp in reverse, returning to the atlas at the same camera position.
@@ -181,7 +186,9 @@ Real routes (SEO, shareable links). Opened from the atlas, the list view, or the
 ### 5.3 X-ray
 - Every screenshot or diagram marked as X-ray-capable has two layers: the real image on top, and a "bones" layer below: a lime grid, dashed boxes around UI regions labelled with component names, and short mono notes (data flow, queries, security rules).
 - The cursor lens (circle, about 130px radius) reveals the bones layer through a clip-path that follows the cursor.
-- **X** key or the top-bar toggle opens the bones layer over everything with a circle wipe; press again to close.
+- **X** key or the top-bar toggle opens the bones layer over everything with a circle wipe; press again to close. The toggle exposes `aria-pressed`.
+- **Scope for v1:** CoreEx and AsteroidUI get the lens and toggle on the hero plus two or three more screens each. Moonwave, Brickly and PetCare get simple section and technique annotations on one hero screenshot, or none; where a page has no bones layer the toggle is hidden and the X key does nothing.
+- **Touch:** the top-bar "X-ray" button switches the screenshot to a fixed-radius lens that follows a finger drag on the screenshot only; the page scrolls normally elsewhere. A second tap turns it off.
 - The bones content must be real and accurate for each project (owner supplies or approves; see assets checklist). Keyboard and screen-reader users get the same information as plain text (for example a "Show the engineering notes" disclosure).
 
 ## 6. Motion rules
@@ -194,15 +201,22 @@ Real routes (SEO, shareable links). Opened from the atlas, the list view, or the
 
 ## 7. Performance and accessibility targets
 
-- Lighthouse mobile on `/`: Performance 90+, Accessibility 95+, Best Practices 95+, SEO 100.
+- **Desktop and laptop: effects win.** The full experience always ships on desktop and laptop (WebGL hero, atlas, warp, X-ray, scroll scenes). Desktop Lighthouse scores and LCP/CLS are tracked, but they are not a gate and never a reason to cut an effect. Fix slowness by optimising (lazy-loading, preloading, smaller assets, fewer draw calls), not by removing effects. Animations must still run smoothly (see "How we verify" below).
+- **Phones: speed wins.** Lighthouse mobile on `/`: Performance 90+, Accessibility 95+, Best Practices 95+, SEO 100; LCP under 2.5s and CLS under 0.1. Phones and low-power devices get the static hero and the grid and list fallbacks. Any effect that breaks these limits on mobile degrades or is cut there only.
 - One WebGL canvas on the home page (hero), lazy-loaded, paused when off screen or the tab is hidden, device pixel ratio capped at 2.
 - Atlas renders only while its section is in view.
 - All interactive items reachable by keyboard with visible focus; menu focus trap; skip link; landmarks; alt text on all screenshots.
 - Responsive checks at 375, 768, 1280 and 1920px.
+- **How we verify (pending owner confirmation, review decision 12):** reference device is the owner's laptop in Chrome with a 4x CPU slowdown trace for the warp and atlas drag (95% of frames under 20ms); Lighthouse mobile runs on the Vercel preview URL; Safari and Firefox get a smoke check only.
+
+### 7.1 States
+- Styled 404 and error pages in the dark system, with links home and to `/projects`. An unknown project slug calls `notFound()`.
+- A missing screenshot shows a dotted-grid placeholder card (never a broken image) and fails the production build.
+- JS off: all content is visible, the atlas shows as the list, and the contact form falls back to a plain POST or the visible `mailto:` link.
+- Form success and error messages are inline and announced via `aria-live`.
 
 ## 8. Open design items (decide during the build)
 
-- Exact copy for hero intro, About statement and Services cards (current mockup text is a draft).
+- Copy (hero intro, About statement, Services cards, tech grouping, reply line): the agent drafts in `src/content/*.ts`, each string marked `DRAFT`; the production build fails while any marker remains; the owner reviews all copy in one pass at Phase 7.
 - Final logo and whether to use a custom display font.
-- Whether sound ships in v1 of ver 3.0 or later.
-- Tech stack section final design (3D ring vs grid-only) after a quick prototype.
+- Still undecided: mobile "Explore the map" close control and minimap; atlas keyboard model for non-project items (suggest decorative and `aria-hidden`, only the five cards in tab order); ruler and menu contents on inner pages; whether the stats row is dropped for the three web-design projects. See `docs/v3-design-spec-review.md`.

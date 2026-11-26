@@ -134,7 +134,7 @@ Commit per phase on `redesign-v3` (or one branch and PR per issue), so any phase
 ## 8. Risks
 
 - **Content is the real bottleneck.** The strongest claims need your confirmation; unverified numbers will be left out rather than guessed.
-- **Motion versus performance and usability.** The design is heavy on motion; the Lighthouse and accessibility targets in the design spec (section 7) are hard requirements, and every effect needs its fallback.
+- **Motion versus performance and usability.** The design is heavy on motion; on desktop and laptop the effects win (optimise, don't cut), while on phones the Lighthouse targets in the design spec (section 7) are hard requirements. Accessibility targets apply everywhere, and every effect needs its mobile and reduced-motion fallback.
 - **Atlas on touch devices** can block page scrolling if built carelessly; the spec requires a separate full-screen map mode on mobile.
 - **Resend:** free tier limits and domain verification (sending from your own domain needs DNS records; otherwise Resend's test sender only mails your own account address). Plan to verify `lkw22studio.com` in Resend.
 - **Private details in screenshots** (CoreEx data, emails). Each screenshot needs a quick privacy check before it goes public.
