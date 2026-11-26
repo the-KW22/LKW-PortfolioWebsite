@@ -20,7 +20,7 @@ const n = (kind: XrayNote["kind"], x: number, y: number, text: string): XrayNote
 });
 
 // ---------------------------------------------------------------- CoreEx
-// Sources: CoreEx README, docs/adr/0001-0013, frontend/app/(app) file names.
+// Sources: CoreEx README, docs/adr/0001-0014, frontend/app/(app) file names.
 
 export const coreexHeroXray: XrayLayer = {
   title: "Main screen",
@@ -76,7 +76,7 @@ export const coreexTokensXray: XrayLayer = {
     n("security", 52, 30, "Tokens expire (90 days by default), can be revoked, and are limited to 60 calls a minute."), // ADR 0007
     n("flow", 3, 6, "The MCP server runs inside the Spring Boot API at /mcp and calls the same services as the REST controllers."), // ADR 0007, README
     n("security", 52, 48, "Agents can move things to the Trash and restore them, never delete for good."), // ADR 0007
-    n("build", 3, 92, "TODO(owner): confirm the tool count shown in the stats row (44) against the repo before launch."), // plan, unverified
+    n("build", 3, 92, "The server registers 49 tools, defined once and shared with Chat. A backend test fails if the in-app tool list differs from the server."), // ToolCatalogue.java, McpDocsTest, counted 2026-11-26
   ],
 };
 
