@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Nunito_Sans } from "next/font/google";
+import { Nunito_Sans, Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import LenisProvider from "@/components/layout/LenisProvider";
@@ -9,9 +9,35 @@ import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
+import { SITE_URL as siteUrl } from "@/content/site";
 
+// ver 3.0 fonts (design spec section 2). Mapped to Tailwind in globals.css:
+// font-display (Inter Tight), font-serif (Instrument Serif), font-mono (JetBrains Mono).
+const interTight = Inter_Tight({
+  subsets: ["latin"],
+  variable: "--font-inter-tight",
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-instrument-serif",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+});
+
+// Legacy ver 2.0 fonts, still used by the old components on / and /projects.
+// Remove together with those components when Phase 1 and 2 replace them.
+// `display: "swap"` is the default; it is spelled out so this call differs from the
+// identical one in src/app/v2/layout.tsx. Identical next/font calls in both root layouts
+// make Turbopack share one font CSS chunk, which made /v2 preload the ver 3.0 fonts.
 const nunitoSans = Nunito_Sans({
   subsets: ["latin"],
+  display: "swap",
   variable: "--font-sans",
   weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
 });
@@ -31,7 +57,6 @@ const chromaSans = localFont({
   variable: "--font-chroma",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://leowkaiwen.dev";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -97,6 +122,9 @@ export default function RootLayout({
         "h-full antialiased",
         nunitoSans.variable,
         chromaSans.variable,
+        interTight.variable,
+        instrumentSerif.variable,
+        jetbrainsMono.variable,
       )}
     >
       <body className="min-h-full flex flex-col">
