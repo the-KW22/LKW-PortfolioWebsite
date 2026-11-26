@@ -1,12 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Nunito_Sans, Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
-import localFont from "next/font/local";
+import { Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import LenisProvider from "@/components/layout/LenisProvider";
-import { PageTransitionProvider } from "@/components/layout/PageTransitionProvider";
 import { cn } from "@/lib/utils";
-import Nav from "@/components/layout/Nav";
-import Footer from "@/components/layout/Footer";
+import { ShellProvider } from "@/components/shell/ShellProvider";
+import { ScrollProvider } from "@/components/motion/ScrollProvider";
+import { Preloader } from "@/components/shell/Preloader";
+import { Cursor } from "@/components/shell/Cursor";
+import { Header } from "@/components/shell/Header";
+import { Menu } from "@/components/shell/Menu";
+import { PageFrame, SkipLink } from "@/components/shell/PageFrame";
+import { Footer } from "@/components/shell/Footer";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import { SITE_URL as siteUrl } from "@/content/site";
@@ -29,34 +32,6 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
 });
-
-// Legacy ver 2.0 fonts, still used by the old components on / and /projects.
-// Remove together with those components when Phase 1 and 2 replace them.
-// `display: "swap"` is the default; it is spelled out so this call differs from the
-// identical one in src/app/v2/layout.tsx. Identical next/font calls in both root layouts
-// make Turbopack share one font CSS chunk, which made /v2 preload the ver 3.0 fonts.
-const nunitoSans = Nunito_Sans({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-sans",
-  weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
-});
-
-
-const chromaSans = localFont({
-  src: [
-    { path: "../../../public/font/chroma-sans-font/ChromaSans-Thin.otf", weight: "100" },
-    { path: "../../../public/font/chroma-sans-font/ChromaSans-ExtraLight.otf", weight: "200" },
-    { path: "../../../public/font/chroma-sans-font/ChromaSans-Light.otf", weight: "300" },
-    { path: "../../../public/font/chroma-sans-font/ChromaSans-Regular.otf", weight: "400" },
-    { path: "../../../public/font/chroma-sans-font/ChromaSans-Medium.otf", weight: "500" },
-    { path: "../../../public/font/chroma-sans-font/ChromaSans-Bold.otf", weight: "700" },
-    { path: "../../../public/font/chroma-sans-font/ChromaSans-UltraBold.otf", weight: "800" },
-    { path: "../../../public/font/chroma-sans-font/ChromaSans-Black.otf", weight: "900" },
-  ],
-  variable: "--font-chroma",
-});
-
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -110,6 +85,11 @@ export const metadata: Metadata = {
   },
 };
 
+// Runs before first paint. Decides whether the preloader shows: first visit of the session only,
+// never with reduced motion, never on direct hits to /projects/*. Without JS it never runs, and the
+// overlay stays display:none, so the page is never blocked.
+const PRELOAD_SCRIPT = `try{var d=document.documentElement;if(!sessionStorage.getItem("lkw-preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches&&location.pathname.indexOf("/projects/")!==0){d.setAttribute("data-preload","1");sessionStorage.setItem("lkw-preloaded","1")}}catch(e){}`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -118,25 +98,26 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn(
         "h-full antialiased",
-        nunitoSans.variable,
-        chromaSans.variable,
         interTight.variable,
         instrumentSerif.variable,
         jetbrainsMono.variable,
       )}
     >
-      <body className="min-h-full flex flex-col">
-        <PageTransitionProvider>
-          <Nav />
-
-          <LenisProvider>
-            {children}
-          </LenisProvider>
-          
-          <Footer />
-        </PageTransitionProvider>
+      <body className="min-h-full">
+        <script dangerouslySetInnerHTML={{ __html: PRELOAD_SCRIPT }} />
+        <ShellProvider>
+          <ScrollProvider>
+            <Preloader />
+            <Cursor />
+            <SkipLink />
+            <Header />
+            <Menu />
+            <PageFrame footer={<Footer />}>{children}</PageFrame>
+          </ScrollProvider>
+        </ShellProvider>
 
         <SpeedInsights />
         <Analytics />
