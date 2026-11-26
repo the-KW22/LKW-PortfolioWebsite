@@ -1,5 +1,6 @@
 import type { Project } from "../types";
 import { placeholderMedia } from "./media";
+import { coreexEditorXray, coreexHeroXray, coreexSearchXray, coreexTokensXray } from "./xray";
 
 // Sources: CV v5 (Projects), CoreEx README, implementation plan section 4.
 // Re-check stats against the repo before launch (assets checklist section 4).
@@ -42,14 +43,14 @@ export const coreex: Project = {
   xray: "deep",
   caseStudy: {
     // TODO(owner): hero screenshot and 4-7 gallery screens (assets checklist section 4, CoreEx).
-    hero: placeholderMedia("CoreEx main screen (screenshot coming)"),
+    hero: { ...placeholderMedia("CoreEx main screen (screenshot coming)"), xray: coreexHeroXray },
     // DRAFT captions: this screen list is the suggestion in the assets checklist, not confirmed screens.
     gallery: [
-      { caption: "Notes editor", media: placeholderMedia("CoreEx notes editor (screenshot coming)") },
+      { caption: "Notes editor", media: { ...placeholderMedia("CoreEx notes editor (screenshot coming)"), xray: coreexEditorXray } },
       { caption: "Knowledge graph", media: placeholderMedia("CoreEx knowledge graph (screenshot coming)") },
-      { caption: "Semantic search", media: placeholderMedia("CoreEx search (screenshot coming)") },
+      { caption: "Semantic search", media: { ...placeholderMedia("CoreEx search (screenshot coming)"), xray: coreexSearchXray } },
       { caption: "Chat with tools", media: placeholderMedia("CoreEx chat (screenshot coming)") },
-      { caption: "MCP access tokens", media: placeholderMedia("CoreEx MCP token screen (screenshot coming)") },
+      { caption: "MCP access tokens", media: { ...placeholderMedia("CoreEx MCP token screen (screenshot coming)"), xray: coreexTokensXray } },
     ],
     story: [
       {

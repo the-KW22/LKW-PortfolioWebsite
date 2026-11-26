@@ -4,6 +4,7 @@ import { useEffect, useRef, type RefObject } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { setCursorOverride } from "@/components/shell/cursorStore";
 import { isTypingTarget } from "@/hooks/useShortcut";
+import { registerAtlasCamera, takeAtlasCamera } from "./atlasMemory";
 import { useScroll } from "@/components/motion/ScrollProvider";
 import { BOARD, BOARD_CENTRE, ZOOM, projectPlacements, textureItems } from "@/content/atlas";
 import type { Project } from "@/content/types";
@@ -81,6 +82,15 @@ export function AtlasBoard({ projects, mode, sectionRef, reduced, onShowList, on
     // c = camera as drawn, t = where input wants it.
     const c = { x: BOARD_CENTRE.x, y: BOARD_CENTRE.y, z: pinned ? ZOOM.introFrom : restZoom, rx: 0, ry: 0 };
     const t = { x: BOARD_CENTRE.x, y: BOARD_CENTRE.y, z: c.z };
+    // Coming back from a case study: restore the camera the visitor left (design spec 5.1). In the
+    // pinned board the zoom belongs to the scroll intro, so only the pan position is restored.
+    const saved = takeAtlasCamera(mode);
+    if (saved) {
+      c.x = t.x = saved.x;
+      c.y = t.y = saved.y;
+      if (!pinned) c.z = t.z = saved.z;
+    }
+    const unregisterCamera = registerAtlasCamera(() => ({ x: t.x, y: t.y, z: t.z, mode }));
     let vx = 0;
     let vy = 0;
     let mx = 0;
@@ -275,7 +285,11 @@ export function AtlasBoard({ projects, mode, sectionRef, reduced, onShowList, on
       if (!dragging) return;
       dragging = false;
       suppressClick = moved > 6;
-      setTimeout(() => (suppressClick = false), 0);
+      stage.dataset.justDragged = suppressClick ? "1" : ""; // read by the warp so a drag never starts it
+      setTimeout(() => {
+        suppressClick = false;
+        stage.dataset.justDragged = "";
+      }, 0);
       if (suppressClick) setCursorOverride(null);
       if (reduced || performance.now() - lastT > 70) {
         vx = 0;
@@ -408,6 +422,7 @@ export function AtlasBoard({ projects, mode, sectionRef, reduced, onShowList, on
 
     return () => {
       gsap.ticker.remove(tick);
+      unregisterCamera();
       io.disconnect();
       ro.disconnect();
       st?.kill();

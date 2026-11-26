@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SITE_URL, site } from "@/content/site";
-import { getNextProject, getProject, projectDescription, projects } from "@/content/projects";
+import { getNextProject, getProject, projectDescription, projects, xrayLayersFor } from "@/content/projects";
+import { XrayNotes } from "@/components/xray/XrayNotes";
 import { CaseTopBar } from "@/components/case/CaseTopBar";
 import { CaseHero } from "@/components/case/CaseHero";
 import { Plate3D } from "@/components/case/Plate3D";
@@ -41,6 +42,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
   const { caseStudy: cs } = project;
   const next = getNextProject(project.slug);
+  const xr = xrayLayersFor(project);
   const url = `${SITE_URL}/projects/${project.slug}`;
 
   const jsonLd = {
@@ -63,7 +65,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         // "<" is escaped so content can never close the script tag.
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
-      <CaseTopBar order={project.order} total={projects.length} name={project.name} />
+      <CaseTopBar order={project.order} total={projects.length} name={project.name} hasXray={xr.any} />
 
       <section id="overview" data-case-section data-case-label="Overview" aria-label={`${project.name} overview`}>
         <CaseHero project={project} />
@@ -71,12 +73,25 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
           <Plate3D>
             <MediaView media={cs.hero} label={project.name} priority />
           </Plate3D>
+          {xr.hero ? <XrayNotes layer={xr.hero} /> : null}
         </div>
       </section>
 
       <StatRow stats={project.stats} />
       <StorySections story={cs.story} decisions={cs.decisions} />
       {cs.gallery.length ? <PinnedGallery screens={cs.gallery} name={project.name} /> : null}
+
+      {/* Plain-text X-ray notes for the gallery screens. Kept out of the pinned gallery so keyboard focus never scrolls the scrubbed track. */}
+      {xr.gallery.length ? (
+        <section aria-labelledby="xray-notes-title" className="px-[5vw] pb-[8vh]">
+          <h2 id="xray-notes-title" className="mono-label text-mute">
+            Engineering notes for the screens
+          </h2>
+          {xr.gallery.map((layer) => (
+            <XrayNotes key={layer.title} layer={layer} />
+          ))}
+        </section>
+      ) : null}
 
       {cs.diagram ? (
         <section
@@ -96,7 +111,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         </section>
       ) : null}
 
-      <NextProject next={next} />
+      <NextProject next={next} currentName={project.name} />
     </article>
   );
 }

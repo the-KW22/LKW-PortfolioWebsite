@@ -43,3 +43,10 @@ export function caseSectionsFor(p: Project): { id: string; num: string; label: s
   ids.push(["next", "Next"]);
   return ids.map(([id, label], i) => ({ id, label, num: String(i + 1).padStart(2, "0") }));
 }
+
+/** Every X-ray layer on a case-study page, hero first. Empty = the page has no X-ray (toggle hidden). */
+export function xrayLayersFor(p: Project) {
+  const hero = p.caseStudy.hero.xray ?? null;
+  const gallery = p.caseStudy.gallery.flatMap((g) => (g.media.xray ? [g.media.xray] : []));
+  return { hero, gallery, any: !!hero || gallery.length > 0 };
+}

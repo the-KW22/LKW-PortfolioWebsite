@@ -38,6 +38,39 @@ export interface Stat {
   label: string;
 }
 
+/** A dashed box on the X-ray "bones" layer, around one UI region. Positions are percentages of the picture. */
+export interface XrayBox {
+  /** Component or section name, as it appears in the source (never invented). */
+  label: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/** A short mono note on the bones layer: data flow, a query, a security rule or a build fact. */
+export interface XrayNote {
+  /** Anchor (top-left) in percent of the picture. */
+  x: number;
+  y: number;
+  /** Plain text. Starts with `TODO(owner)` when a fact could not be verified from the repo. */
+  text: string;
+  kind: "flow" | "data" | "security" | "build";
+  /** true = drafted by the agent from the repo; the owner must approve it. Every note is DRAFT for now. */
+  draft: boolean;
+}
+
+/**
+ * The engineering layer under one screenshot (spec 5.3). The same data feeds the lens, the full
+ * "X-ray" view and the plain-text "Show the engineering notes" disclosure.
+ */
+export interface XrayLayer {
+  /** Short name used in the disclosure heading, e.g. "Notes editor". */
+  title: string;
+  boxes: XrayBox[];
+  notes: XrayNote[];
+}
+
 /** A picture or video on a case-study page. `src: null` renders a generated placeholder plate. */
 export interface Media {
   /** Public path under /images/projects/<slug>/, or null while the owner has not supplied it. */
@@ -49,6 +82,8 @@ export interface Media {
   video?: string;
   /** Marks a real screenshot as a placeholder-quality stand-in. Rare; prefer src: null. */
   note?: string;
+  /** X-ray bones for this picture. Absent = not X-ray capable. */
+  xray?: XrayLayer;
 }
 
 export interface GalleryScreen {
@@ -128,7 +163,10 @@ export interface Project {
   };
   /** Real numbers only. null = no stats row. */
   stats: Stat[] | null;
-  /** X-ray depth for v1 (spec review decision 5). */
+  /**
+   * X-ray depth for v1 (spec review decision 5): "deep" = lens on the hero plus a few screens,
+   * "simple" = section and technique notes on one screenshot, "none" = no X-ray (toggle hidden).
+   */
   xray: "deep" | "simple" | "none";
   caseStudy: CaseStudy;
 }
