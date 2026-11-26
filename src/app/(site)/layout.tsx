@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { fontVariables } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import { ShellProvider } from "@/components/shell/ShellProvider";
 import { ScrollProvider } from "@/components/motion/ScrollProvider";
@@ -11,42 +11,27 @@ import { Header } from "@/components/shell/Header";
 import { Menu } from "@/components/shell/Menu";
 import { PageFrame, SkipLink } from "@/components/shell/PageFrame";
 import { Footer } from "@/components/shell/Footer";
+import { ConsoleHello } from "@/components/shell/ConsoleHello";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import { SITE_URL as siteUrl } from "@/content/site";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE } from "@/lib/seo";
 
-// ver 3.0 fonts (design spec section 2). Mapped to Tailwind in globals.css:
-// font-display (Inter Tight), font-serif (Instrument Serif), font-mono (JetBrains Mono).
-const interTight = Inter_Tight({
-  subsets: ["latin"],
-  variable: "--font-inter-tight",
-});
-
-const instrumentSerif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  variable: "--font-instrument-serif",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains-mono",
-});
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#07070a",
+  colorScheme: "dark",
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Leow Kai Wen — Full Stack Developer",
+    default: SITE_TITLE,
     template: "%s | Leow Kai Wen",
   },
-  description:
-    "Portfolio of Leow Kai Wen, a fresh graduate Full Stack Developer from Kuala Lumpur, Malaysia.",
+  description: SITE_DESCRIPTION,
   keywords: [
     "Full Stack Developer",
     "Next.js",
@@ -69,10 +54,11 @@ export const metadata: Metadata = {
     shortcut: "/icons/kw22-logo.ico",
   },
   openGraph: {
-    siteName: "Leow Kai Wen Portfolio",
+    siteName: SITE_NAME,
     locale: "en_MY",
     type: "website",
   },
+  twitter: { card: "summary_large_image" },
   robots: {
     index: true,
     follow: true,
@@ -102,9 +88,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(
         "h-full antialiased",
-        interTight.variable,
-        instrumentSerif.variable,
-        jetbrainsMono.variable,
+        fontVariables,
       )}
     >
       <body className="min-h-full">
@@ -122,6 +106,7 @@ export default function RootLayout({
           </ScrollProvider>
         </ShellProvider>
 
+        <ConsoleHello />
         <SpeedInsights />
         <Analytics />
       </body>

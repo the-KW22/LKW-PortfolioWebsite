@@ -66,7 +66,6 @@ function Logo({ inert }: { inert: boolean }) {
     <Link
       href="/"
       inert={inert}
-      aria-label={`${site.brand}, home`}
       className="group col-start-1 flex items-center gap-3 justify-self-start rounded-xl"
       onPointerEnter={() => run(nameRef.current, site.name)}
       onPointerLeave={() => run(nameRef.current, site.brand)}
@@ -75,9 +74,10 @@ function Logo({ inert }: { inert: boolean }) {
     >
       {/* Placeholder tile; the final logo replaces it (assets checklist). */}
       <span className="relative grid size-10 place-items-center overflow-hidden rounded-[10px] border border-[#2d2c3a] bg-bg/60 text-[13px] font-black tracking-[-0.03em] backdrop-blur-md">
-        LKW
+        <span aria-hidden="true">LKW</span>
         <span aria-hidden="true" className="logo-scan" />
       </span>
+      <span className="sr-only">{site.brand}, home</span>
       <span ref={nameRef} aria-hidden="true" className="hidden min-w-[130px] text-sm font-semibold sm:block">
         {site.brand}
       </span>
@@ -135,7 +135,6 @@ function Ruler({ inert, sections }: { inert: boolean; sections: HomeSection[] })
         <a
           key={s.id}
           href={`#${s.id}`}
-          aria-label={`Go to ${s.label}`}
           aria-current={active === i ? "true" : undefined}
           onClick={(e) => {
             e.preventDefault();
@@ -143,16 +142,17 @@ function Ruler({ inert, sections }: { inert: boolean; sections: HomeSection[] })
           }}
           className={cn(
             "relative flex-1 pt-[18px] text-center font-mono text-[10px] font-medium transition-colors duration-300",
-            active === i ? "text-ink" : "text-[#5e5d6e] hover:text-ink",
+            active === i ? "text-ink" : "text-mute hover:text-ink",
           )}
         >
           {s.num}
+          <span className="sr-only"> {s.label}</span>
         </a>
       ))}
       <span
         ref={markerRef}
         aria-hidden="true"
-        className="absolute top-1.5 left-3.5 h-4 w-0.5 bg-lime shadow-[0_0_10px_var(--lime)] transition-[left] duration-150 ease-linear"
+        className="pointer-events-none absolute top-1.5 left-3.5 h-4 w-0.5 bg-lime shadow-[0_0_10px_var(--lime)] transition-[left] duration-150 ease-linear"
       >
         <span className="mono-label absolute top-[-1px] left-1/2 -translate-x-1/2 -translate-y-full pb-1.5 whitespace-nowrap text-lime">
           <ScrambleText text={(sections[active] ?? sections[0]).label} />

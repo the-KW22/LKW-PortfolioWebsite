@@ -56,7 +56,12 @@ export function ArchDiagram({ diagram, name }: { diagram: Diagram; name: string 
 
   return (
     <div ref={ref}>
-      <div className="overflow-x-auto rounded-2xl border border-line bg-card">
+      <div
+        tabIndex={0}
+        role="region"
+        aria-label={`${name} architecture diagram, scrollable`}
+        className="overflow-x-auto rounded-2xl border border-line bg-card"
+      >
         <svg
           viewBox={`0 0 ${W} ${H}`}
           role="img"

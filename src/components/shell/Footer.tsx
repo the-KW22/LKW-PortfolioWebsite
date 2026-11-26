@@ -31,11 +31,11 @@ export function Footer() {
       <div
         data-wordmark
         aria-hidden="true"
-        className="footer-wordmark text-center font-display text-[23vw] leading-[0.78] font-black tracking-[-0.07em]"
+        className="footer-wordmark pointer-events-none text-center font-display text-[23vw] leading-[0.78] font-black tracking-[-0.07em]"
       >
         LKW22
       </div>
-      <div className="mono-label mt-[30px] flex flex-wrap items-center justify-between gap-5 text-mute">
+      <div className="mono-label relative mt-[30px] flex flex-wrap items-center justify-between gap-5 text-mute">
         <span>
           © {new Date().getFullYear()} {site.name}
         </span>
@@ -45,14 +45,13 @@ export function Footer() {
             <span key={v.href}>
               {i > 0 ? " · " : null}
               {/* Plain <a>: separate documents, not routes of this app. */}
-              <a href={v.href} className="text-ink transition-colors hover:text-lime">
+              <a href={v.href} className="text-ink underline underline-offset-4 transition-colors hover:text-lime">
                 {v.label}
               </a>
             </span>
           ))}
         </span>
-        {/* TODO(Phase 6): add "and Three.js" once the WebGL hero ships. */}
-        <span>Built with Next.js and GSAP</span>
+        <span>Built with Next.js, GSAP and Three.js</span>
         <a
           href="#hero"
           onClick={(e) => {
