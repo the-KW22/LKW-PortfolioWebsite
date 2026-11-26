@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signal hero mockup (ver 3.0)</title>
+<style>
+  :root { --bg:#07070A; --violet:#8B7BFF; --lime:#C6F432; --text:#F5F5F5; --muted:#8A8A93; --line:#26262E; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { background:var(--bg); }
+  body { background:var(--bg); color:var(--text); font-family:"Segoe UI",system-ui,Arial,sans-serif; height:700vh; overflow-x:hidden; }
+  canvas#gl { position:fixed; inset:0; width:100vw; height:100vh; display:block; }
+  .layer { position:fixed; inset:0; pointer-events:none; }
+  nav { position:fixed; top:0; left:0; right:0; display:flex; justify-content:space-between; align-items:center; padding:20px clamp(16px,4vw,56px); z-index:5; }
+  nav .logo { font-weight:800; letter-spacing:.22em; font-size:14px; }
+  nav .logo b { color:var(--violet); }
+  nav ul { display:flex; gap:28px; list-style:none; font-size:13px; color:var(--muted); }
+  nav .talk { border:1px solid var(--line); border-radius:999px; padding:8px 16px; font-size:13px; }
+  .hero { position:fixed; left:clamp(16px,4vw,56px); bottom:16vh; max-width:min(640px,88vw); z-index:3; }
+  .eyebrow { font-size:12px; letter-spacing:.28em; color:var(--muted); margin-bottom:18px; display:flex; align-items:center; gap:10px; }
+  .dot { width:8px; height:8px; border-radius:50%; background:var(--lime); box-shadow:0 0 12px var(--lime); }
+  h1 { font-weight:800; text-transform:uppercase; letter-spacing:-.035em; line-height:.92; font-size:clamp(2.6rem,6.4vw,6.2rem); }
+  h1 .acc { color:var(--violet); }
+  .role { margin-top:22px; font-size:clamp(14px,1.5vw,18px); color:var(--muted); letter-spacing:.04em; }
+  .role b { color:var(--text); font-weight:500; }
+  .btns { margin-top:28px; display:flex; gap:12px; flex-wrap:wrap; pointer-events:auto; }
+  .btn { font-size:14px; font-weight:600; border-radius:999px; padding:12px 22px; text-decoration:none; transition:transform .2s; display:inline-block; }
+  .btn.p { background:var(--violet); color:#0B0B10; }
+  .btn.g { border:1px solid #3A3A44; color:var(--text); }
+  .btn:hover { transform:translateY(-2px); }
+  .ticker { position:fixed; left:0; right:0; bottom:0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:#0B0B10; overflow:hidden; z-index:3; height:52px; display:flex; align-items:center; }
+  .ticker .track { display:flex; gap:36px; white-space:nowrap; animation:tick 38s linear infinite; font-weight:800; letter-spacing:.06em; font-size:18px; text-transform:uppercase; }
+  .ticker .track span:nth-child(3n+1) { color:var(--violet); }
+  .ticker .track span:nth-child(3n) { color:var(--lime); }
+  @keyframes tick { to { transform:translateX(-50%); } }
+  .lbl { position:fixed; left:0; top:0; font-size:11px; letter-spacing:.08em; color:#B9B6FF; white-space:nowrap; transform:translate(-50%,-140%); transition:opacity .25s, color .2s; text-shadow:0 0 8px #07070A; }
+  .lbl.proj { font-size:13px; font-weight:700; color:var(--text); letter-spacing:.12em; text-transform:uppercase; }
+  .lbl.ai { color:var(--lime); }
+  .lbl.hot { color:#fff; opacity:1 !important; }
+  .legend { position:fixed; right:clamp(16px,4vw,56px); top:84px; font-size:11px; color:var(--muted); display:flex; flex-direction:column; gap:6px; z-index:3; text-align:right; }
+  .legend i { display:inline-block; width:8px; height:8px; border-radius:50%; margin-left:8px; vertical-align:middle; }
+  .panelcap { position:fixed; left:clamp(16px,4vw,56px); bottom:84px; z-index:3; opacity:0; transition:opacity .3s; max-width:520px; }
+  .panelcap .n { font-size:12px; letter-spacing:.3em; color:var(--lime); }
+  .panelcap .t { font-size:clamp(28px,4vw,52px); font-weight:800; text-transform:uppercase; letter-spacing:-.03em; margin:6px 0; }
+  .panelcap .s { font-size:13px; color:var(--muted); }
+  .progress { position:fixed; right:clamp(16px,4vw,56px); bottom:84px; width:2px; height:120px; background:var(--line); z-index:3; }
+  .progress i { position:absolute; left:0; top:0; width:2px; background:var(--violet); height:0; }
+  .end { position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:4; opacity:0; pointer-events:none; text-align:center; padding:24px; }
+  .end h2 { font-size:clamp(2.4rem,7vw,6rem); font-weight:800; text-transform:uppercase; letter-spacing:-.03em; line-height:.95; }
+  .end h2 span { color:var(--lime); }
+  .end p { color:var(--muted); margin-top:16px; max-width:520px; font-size:14px; }
+  .note { position:fixed; left:50%; top:78px; transform:translateX(-50%); font-size:11px; color:var(--muted); border:1px solid var(--line); border-radius:999px; padding:5px 12px; z-index:6; background:#0B0B10CC; }
+  .hint { position:fixed; left:50%; bottom:70px; transform:translateX(-50%); font-size:11px; letter-spacing:.25em; color:var(--muted); z-index:3; }
+  @media (max-width:700px){ nav ul{display:none} .legend{display:none} }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+
+<nav>
+  <div class="logo">KW<b>22</b></div>
+  <ul><li>Work</li><li>Experience</li><li>About</li><li>Contact</li></ul>
+  <div class="talk">Let&rsquo;s talk &#8599;</div>
+</nav>
+<div class="note">Mockup only: placeholder fonts and motion, not final code</div>
+
+<div class="legend">
+  <span>Project<i style="background:#8B7BFF"></i></span>
+  <span>Stack<i style="background:#D9D6FF"></i></span>
+  <span>AI<i style="background:#C6F432"></i></span>
+</div>
+
+<section class="hero" id="hero">
+  <div class="eyebrow"><span class="dot"></span> OPEN TO WORK &middot; KUALA LUMPUR</div>
+  <h1>Full-Stack<br>Developer<br><span class="acc">/ AI Engineer</span></h1>
+  <p class="role">Hi, I&rsquo;m <b>Leow Kai Wen</b>. I build and ship web products end to end, from Spring Boot APIs to LLM features.</p>
+  <div class="btns"><a class="btn p" href="#">View my work &#8599;</a><a class="btn g" href="#">Download CV</a></div>
+</section>
+
+<div class="hint" id="hint">SCROLL &#8595;</div>
+
+<div class="panelcap" id="cap"><div class="n" id="capn"></div><div class="t" id="capt"></div><div class="s" id="caps"></div></div>
+<div class="progress"><i id="prog"></i></div>
+<div class="end" id="end"><h2>Let&rsquo;s build<br>something <span>great.</span></h2><p>In the real site each panel links to its case study, and this scene runs only on desktop. Phones and reduced-motion get a static image.</p></div>
+
+<div class="ticker" id="ticker"><div class="track" id="track"></div></div>
+<div id="labels"></div>
+
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from "three";
+
+const PROJECTS = [
+  { id:"coreex", name:"CoreEx", cat:"Full-stack", stack:"Next.js · Spring Boot · Postgres RLS · pgvector · MCP", tech:["Next.js","TypeScript","Spring Boot","Java","PostgreSQL","Supabase","pgvector","MCP","Claude API","Docker","GitHub Actions","Tailwind"] },
+  { id:"asteroid", name:"AsteroidUI", cat:"Component library", stack:"React · TypeScript · shadcn registry · Playwright", tech:["React","TypeScript","Next.js","Vite","Tailwind","shadcn/ui","Playwright"] },
+  { id:"moonwave", name:"Moonwave", cat:"Web design", stack:"Vite · React · GSAP · Lenis", tech:["Vite","React","TypeScript","Tailwind","GSAP","Lenis"] },
+  { id:"brickly", name:"Brickly", cat:"Web design", stack:"Vite · React · Framer Motion · GSAP", tech:["Vite","React","Tailwind","Framer Motion","GSAP"] },
+  { id:"petcare", name:"PetCare", cat:"Web design", stack:"Next.js · Tailwind · shadcn/ui · Lenis", tech:["Next.js","Tailwind","shadcn/ui","Lenis"] },
+];
+const AI = new Set(["MCP","Claude API","pgvector"]);
+
+/* ticker */
+const words = ["TypeScript","Next.js","Spring Boot","PostgreSQL","LLM APIs","MCP","React","Supabase","Docker","GitHub Actions","Playwright","pgvector"];
+const track = document.getElementById("track");
+track.innerHTML = [...words,...words].map(w=>`<span>${w} /</span>`).join("");
+
+/* renderer */
+const canvas = document.getElementById("gl");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:false });
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));
+renderer.setClearColor(0x07070A,1);
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x07070A, 0.02);
+const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 200);
+
+function resize(){ renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); }
+addEventListener("resize", resize); resize();
+
+/* seeded random */
+let seed = 7; const rnd = () => (seed = (seed*16807)%2147483647)/2147483647;
+
+/* glow sprite texture */
+function glowTex(){
+  const c = document.createElement("canvas"); c.width=c.height=128;
+  const g = c.getContext("2d"); const gr = g.createRadialGradient(64,64,0,64,64,64);
+  gr.addColorStop(0,"rgba(255,255,255,1)"); gr.addColorStop(.25,"rgba(255,255,255,.55)"); gr.addColorStop(1,"rgba(255,255,255,0)");
+  g.fillStyle = gr; g.fillRect(0,0,128,128);
+  return new THREE.CanvasTexture(c);
+}
+const GLOW = glowTex();
+
+/* graph data */
+const nodes = [], edges = [];
+const byName = new Map();
+PROJECTS.forEach(p => { const n={ type:"proj", name:p.name, pos:new THREE.Vector3(), links:[] }; nodes.push(n); byName.set("P:"+p.name,n); });
+PROJECTS.forEach(p => p.tech.forEach(t => {
+  let n = byName.get("T:"+t);
+  if(!n){ n={ type: AI.has(t)?"ai":"tech", name:t, pos:new THREE.Vector3(), links:[] }; nodes.push(n); byName.set("T:"+t,n); }
+  const pn = byName.get("P:"+p.name); edges.push([pn,n]); pn.links.push(n); n.links.push(pn);
+}));
+nodes.forEach(n => { n.pos.set(rnd()-.5, rnd()-.5, rnd()-.5).normalize().multiplyScalar(2+rnd()*2.5); n.vel = new THREE.Vector3(); });
+for(let it=0; it<220; it++){
+  for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++){
+    const d = nodes[i].pos.clone().sub(nodes[j].pos); const l = Math.max(d.length(),.3);
+    const f = d.normalize().multiplyScalar(.35/(l*l)); nodes[i].vel.add(f); nodes[j].vel.sub(f);
+  }
+  edges.forEach(([a,b]) => { const d = b.pos.clone().sub(a.pos); const l = d.length(); const f = d.normalize().multiplyScalar((l-2.4)*.02); a.vel.add(f); b.vel.sub(f); });
+  nodes.forEach(n => { n.vel.addScaledVector(n.pos,-.004); n.pos.add(n.vel.multiplyScalar(.6)); n.vel.multiplyScalar(.5); });
+}
+let maxR = 0; nodes.forEach(n => maxR = Math.max(maxR,n.pos.length()));
+nodes.forEach(n => n.pos.multiplyScalar(4.2/maxR));
+
+const graph = new THREE.Group(); scene.add(graph);
+const COL = { proj:0x8B7BFF, tech:0xD9D6FF, ai:0xC6F432 };
+nodes.forEach(n => {
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map:GLOW, color:COL[n.type], transparent:true, depthWrite:false, blending:THREE.AdditiveBlending }));
+  const size = n.type==="proj" ? 1.9 : n.type==="ai" ? 0.95 : 0.7;
+  s.scale.setScalar(size); s.position.copy(n.pos); graph.add(s); n.sprite = s; n.size = size;
+  const core = new THREE.Mesh(new THREE.SphereGeometry(n.type==="proj"?.13:.06,16,16), new THREE.MeshBasicMaterial({ color: n.type==="proj"?0xffffff:COL[n.type] }));
+  core.position.copy(n.pos); graph.add(core);
+});
+const pts = []; edges.forEach(([a,b]) => pts.push(a.pos.x,a.pos.y,a.pos.z,b.pos.x,b.pos.y,b.pos.z));
+const eg = new THREE.BufferGeometry(); eg.setAttribute("position", new THREE.Float32BufferAttribute(pts,3));
+graph.add(new THREE.LineSegments(eg, new THREE.LineBasicMaterial({ color:0x8B7BFF, transparent:true, opacity:.28 })));
+
+/* labels */
+const labelsEl = document.getElementById("labels");
+nodes.forEach(n => {
+  const d = document.createElement("div");
+  d.className = "lbl " + (n.type==="proj" ? "proj" : n.type==="ai" ? "ai" : "");
+  d.textContent = n.name; labelsEl.appendChild(d); n.el = d;
+});
+
+/* stars */
+const sp = []; for(let i=0;i<900;i++) sp.push((rnd()-.5)*60,(rnd()-.5)*40,-rnd()*110+15);
+const sg = new THREE.BufferGeometry(); sg.setAttribute("position", new THREE.Float32BufferAttribute(sp,3));
+scene.add(new THREE.Points(sg, new THREE.PointsMaterial({ color:0x9C93FF, size:.06, transparent:true, opacity:.7, sizeAttenuation:true })));
+
+/* tunnel panels */
+function panelTex(i,p){
+  const c = document.createElement("canvas"); c.width=1280; c.height=720; const g = c.getContext("2d");
+  g.fillStyle="#0E0E15"; g.fillRect(0,0,1280,720);
+  g.strokeStyle="#1C1C28"; g.lineWidth=1;
+  for(let x=0;x<1280;x+=64){ g.beginPath(); g.moveTo(x,0); g.lineTo(x,720); g.stroke(); }
+  for(let y=0;y<720;y+=64){ g.beginPath(); g.moveTo(0,y); g.lineTo(1280,y); g.stroke(); }
+  g.fillStyle="#8B7BFF"; g.font="700 40px Segoe UI, Arial"; g.fillText("0"+(i+1)+" / 05",64,100);
+  g.fillStyle="#C6F432"; g.font="600 30px Segoe UI, Arial"; g.fillText(p.cat.toUpperCase(),64,156);
+  g.fillStyle="#F5F5F5"; g.font="800 118px Segoe UI, Arial"; g.fillText(p.name.toUpperCase(),64,420);
+  g.fillStyle="#8A8A93"; g.font="500 32px Segoe UI, Arial"; g.fillText(p.stack,64,640);
+  g.strokeStyle="#8B7BFF"; g.lineWidth=4; g.strokeRect(2,2,1276,716);
+  g.fillStyle="#8B7BFF"; g.fillRect(64,470,160,8);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t;
+}
+const panels = [];
+const Z0 = -16, GAP = 10;
+PROJECTS.forEach((p,i) => {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(7.2,4.05), new THREE.MeshBasicMaterial({ map:panelTex(i,p), transparent:true }));
+  const side = i%2===0 ? -1 : 1;
+  m.position.set(side*5.4, (i%3-1)*.6, Z0 - i*GAP);
+  m.rotation.y = -side*.42;
+  scene.add(m); panels.push({ m, base:m.position.y, i });
+});
+
+/* scroll + camera */
+let target=0, cur=0, mx=0, my=0, tmx=0, tmy=0;
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+addEventListener("scroll", () => { const h = document.documentElement.scrollHeight - innerHeight; target = h>0 ? scrollY/h : 0; });
+addEventListener("pointermove", e => { tmx = e.clientX/innerWidth*2-1; tmy = e.clientY/innerHeight*2-1; mouseX=e.clientX; mouseY=e.clientY; });
+let mouseX=-999, mouseY=-999;
+const smooth = x => x*x*(3-2*x);
+const clamp01 = x => Math.min(1,Math.max(0,x));
+
+const heroEl = document.getElementById("hero"), hint = document.getElementById("hint"), tickEl = document.getElementById("ticker");
+const cap = document.getElementById("cap"), capn = document.getElementById("capn"), capt = document.getElementById("capt"), caps = document.getElementById("caps");
+const prog = document.getElementById("prog"), endEl = document.getElementById("end");
+const v = new THREE.Vector3();
+const lastZ = Z0 - (PROJECTS.length-1)*GAP;
+const camStart = 11, camEnd = lastZ - 5;
+const clock = new THREE.Clock();
+
+function frame(){
+  const t = clock.getElapsedTime();
+  cur += (target-cur)*.07; mx += (tmx-mx)*.05; my += (tmy-my)*.05;
+  const p = cur;
+  const fly = smooth(clamp01((p-.08)/.84));
+  const camZ = camStart + (camEnd-camStart)*fly;
+  camera.position.set(mx*1.1*(1-fly*.6), -my*.7*(1-fly*.6), camZ);
+  camera.lookAt(mx*.6, -my*.4, camZ-10);
+  graph.position.x = (innerWidth > 900 ? 3.1 : 0) * (1 - smooth(clamp01(p/.1)));
+  graph.updateMatrixWorld(true);
+  if(!reduce) graph.rotation.y = t*.07 + mx*.35;
+  graph.rotation.x = my*.15;
+  graph.scale.setScalar(1 + Math.sin(t*.6)*.01);
+  panels.forEach(({m,base,i}) => { m.position.y = base + Math.sin(t*.7+i)*.12; });
+
+  const heroA = 1 - clamp01(p/.07);
+  heroEl.style.opacity = heroA; heroEl.style.transform = `translateY(${(1-heroA)*-40}px)`;
+  hint.style.opacity = heroA; tickEl.style.opacity = heroA; tickEl.style.transform = `translateY(${(1-heroA)*60}px)`;
+
+  const gA = 1 - clamp01((p-.11)/.1);
+  nodes.forEach(n => {
+    v.copy(n.pos).applyMatrix4(graph.matrixWorld).project(camera);
+    const sx = (v.x*.5+.5)*innerWidth, sy = (-v.y*.5+.5)*innerHeight;
+    const vis = v.z<1 && v.z>-1 ? gA : 0;
+    const dx = sx-mouseX, dy = sy-mouseY; const hot = Math.hypot(dx,dy) < 70 && vis>0.3;
+    n.el.style.transform = `translate(${sx}px,${sy}px) translate(-50%,-140%)`;
+    n.el.style.left = 0; n.el.style.top = 0;
+    n.el.style.opacity = vis * (n.type==="proj" ? 1 : .55);
+    n.el.classList.toggle("hot", hot);
+    n.sprite.scale.setScalar(n.size * (hot ? 1.5 : 1));
+  });
+
+  let idx = -1, best = 1e9;
+  panels.forEach(({m},i) => { const d = Math.abs(camZ - m.position.z - 6); if(d<best){ best=d; idx=i; } });
+  const inTunnel = p>.2 && p<.94 && best<5.5;
+  cap.style.opacity = inTunnel ? 1 : 0;
+  if(inTunnel){ const pr = PROJECTS[idx]; capn.textContent = `0${idx+1} / 05 · ${pr.cat.toUpperCase()}`; capt.textContent = pr.name; caps.textContent = pr.stack; }
+  prog.style.height = (clamp01((p-.08)/.84)*120)+"px";
+  endEl.style.opacity = clamp01((p-.93)/.06);
+
+  renderer.render(scene,camera);
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
+</body>
+</html>
