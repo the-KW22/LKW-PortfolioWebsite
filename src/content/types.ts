@@ -38,6 +38,74 @@ export interface Stat {
   label: string;
 }
 
+/** A picture or video on a case-study page. `src: null` renders a generated placeholder plate. */
+export interface Media {
+  /** Public path under /images/projects/<slug>/, or null while the owner has not supplied it. */
+  src: string | null;
+  alt: string;
+  width: number;
+  height: number;
+  /** When set, the media is a looping muted video (lazy-loaded) and `src` is its poster image. */
+  video?: string;
+  /** Marks a real screenshot as a placeholder-quality stand-in. Rare; prefer src: null. */
+  note?: string;
+}
+
+export interface GalleryScreen {
+  media: Media;
+  caption: string;
+}
+
+export interface StorySection {
+  id: "problem" | "approach" | "decisions" | "outcome";
+  title: string;
+  /** The key sentence; revealed word by word on scroll. */
+  lead: string;
+  paragraphs: string[];
+  /** true = agent-written or unknown text the owner must replace (shown with a DRAFT tag). */
+  draft: boolean;
+}
+
+export interface Decision {
+  title: string;
+  body: string;
+  draft: boolean;
+}
+
+export interface DiagramNode {
+  id: string;
+  label: string;
+  sub?: string;
+  /** Centre, in a 0-100 grid (x = left to right, y = top to bottom). */
+  x: number;
+  y: number;
+  ai?: boolean;
+}
+
+export interface DiagramLink {
+  from: string;
+  to: string;
+  label?: string;
+  /** AI links draw in lime. */
+  ai?: boolean;
+}
+
+export interface Diagram {
+  description: string;
+  nodes: DiagramNode[];
+  links: DiagramLink[];
+}
+
+export interface CaseStudy {
+  hero: Media;
+  /** Pinned-gallery screens. Empty = no gallery section. */
+  gallery: GalleryScreen[];
+  story: StorySection[];
+  decisions: Decision[];
+  /** null = no architecture section. */
+  diagram: Diagram | null;
+}
+
 export type ProjectCategory = "full-stack" | "component-library" | "web-design";
 
 export interface Project {
@@ -62,6 +130,7 @@ export interface Project {
   stats: Stat[] | null;
   /** X-ray depth for v1 (spec review decision 5). */
   xray: "deep" | "simple" | "none";
+  caseStudy: CaseStudy;
 }
 
 export interface ExperienceProject {

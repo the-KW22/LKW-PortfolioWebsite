@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState, useSyncExternalStore } from "react";
+import { useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { site } from "@/content/site";
-import { homeSections } from "@/content/sections";
+import { homeSections, type HomeSection } from "@/content/sections";
+import { caseSectionsFor, getProject } from "@/content/projects";
 import { ScrambleText } from "@/components/motion/ScrambleText";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { useScramble } from "@/components/motion/useScramble";
@@ -86,12 +87,12 @@ function Logo({ inert }: { inert: boolean }) {
 
 /* ---------- section ruler ---------- */
 
-function Ruler({ inert }: { inert: boolean }) {
+function Ruler({ inert, sections }: { inert: boolean; sections: HomeSection[] }) {
   const rulerRef = useRef<HTMLElement>(null);
   const markerRef = useRef<HTMLSpanElement>(null);
   const [active, setActive] = useState(0);
   const { scrollTo } = useScroll();
-  const count = homeSections.length;
+  const count = sections.length;
 
   useGSAP(
     () => {
@@ -100,7 +101,7 @@ function Ruler({ inert }: { inert: boolean }) {
       const place = (i: number, p: number) => {
         marker.style.left = `calc(14px + (100% - 28px) * ${(i + p) / count})`;
       };
-      const triggers = homeSections.flatMap((s, i) => {
+      const triggers = sections.flatMap((s, i) => {
         const el = document.getElementById(s.id);
         if (!el) return [];
         return [
@@ -119,7 +120,7 @@ function Ruler({ inert }: { inert: boolean }) {
       });
       return () => triggers.forEach((t) => t.kill());
     },
-    { scope: rulerRef, dependencies: [count] },
+    { scope: rulerRef, dependencies: [sections] },
   );
 
   return (
@@ -130,7 +131,7 @@ function Ruler({ inert }: { inert: boolean }) {
       className="relative hidden h-11 w-[min(440px,36vw)] items-center rounded-xl border border-[#23222e] bg-bg/60 px-3.5 backdrop-blur-md md:flex"
     >
       <div aria-hidden="true" className="ruler-ticks" />
-      {homeSections.map((s, i) => (
+      {sections.map((s, i) => (
         <a
           key={s.id}
           href={`#${s.id}`}
@@ -154,7 +155,7 @@ function Ruler({ inert }: { inert: boolean }) {
         className="absolute top-1.5 left-3.5 h-4 w-0.5 bg-lime shadow-[0_0_10px_var(--lime)] transition-[left] duration-150 ease-linear"
       >
         <span className="mono-label absolute top-[-1px] left-1/2 -translate-x-1/2 -translate-y-full pb-1.5 whitespace-nowrap text-lime">
-          <ScrambleText text={homeSections[active].label} />
+          <ScrambleText text={(sections[active] ?? sections[0]).label} />
         </span>
       </span>
     </nav>
@@ -167,12 +168,24 @@ export function Header() {
   const pathname = usePathname();
   const { menuOpen, toggleMenu } = useShell();
   const isHome = pathname === "/";
+  // Case-study pages get a ruler of their own sections (spec 3.2); other inner pages get none.
+  const caseSlug = pathname.startsWith("/projects/") ? pathname.split("/")[2] : undefined;
+  const caseSections = useMemo(() => {
+    const project = caseSlug ? getProject(caseSlug) : undefined;
+    return project ? caseSectionsFor(project) : null;
+  }, [caseSlug]);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 grid grid-cols-[1fr_auto_1fr] items-center px-4 py-4 sm:px-7 sm:py-5 [&>*]:pointer-events-auto">
       <Logo inert={menuOpen} />
-      {isHome ? <Ruler inert={menuOpen} /> : <span />}
+      {isHome ? (
+        <Ruler key="home" inert={menuOpen} sections={homeSections} />
+      ) : caseSections ? (
+        <Ruler key={caseSlug} inert={menuOpen} sections={caseSections} />
+      ) : (
+        <span />
+      )}
       <div className="col-start-3 flex items-center gap-4 justify-self-end">
         <Clock />
         <Magnetic>
