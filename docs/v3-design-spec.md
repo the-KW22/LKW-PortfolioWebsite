@@ -158,7 +158,7 @@ One scrolling page. Order and ruler numbers:
 - Huge headline "Let's build / something *great.*" rising from masks.
 - Left: email as a big link (decode effect on hover), GitHub, LinkedIn, CV pills, location and reply-time line.
 - Right: form (Resend server action, see plan). Fields: reason chips (A full-time role, Freelance, A custom build, Just saying hi), name, email, message, Send. Success and error states inline and announced via `aria-live`.
-- Spam protection: hidden honeypot, a minimum time-to-submit check, and a rate limit of 3 submissions per hour per IP using Upstash Redis (env vars in Vercel and `.env.local` only). If `lkw22studio.com` is not verified in Resend by Phase 8, send from Resend's test sender to the owner's address; the visible `mailto:` link stays. Destination email and reply-time line (draft: "I reply within 2 working days") come from one content file.
+- Spam protection: hidden honeypot, a minimum time-to-submit check, and a rate limit of 3 submissions per hour (6 per day) per visitor, hashed IP. It uses Upstash Redis when both Upstash variables are set; otherwise a best-effort in-memory limiter per server instance. Env vars live in Vercel and `.env.local` only; only `RESEND_API_KEY` and `CONTACT_TO_EMAIL` are required. If `lkw22studio.com` is not verified in Resend by Phase 8, send from Resend's test sender to the owner's address; the visible `mailto:` link stays. Destination email and reply-time line (draft: "I reply within 2 working days") come from one content file.
 - Footer: giant "LKW22" wordmark (gradient fill) rising with scroll; copyright, "Past versions: v1 · v2", "Built with Next.js, GSAP and Three.js", back to top.
 - No phone number anywhere.
 

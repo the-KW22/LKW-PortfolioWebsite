@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { validateContact, sanitizeSubject, escapeHtml, buildEmail, normalizeMessage } from "./rules.ts";
-import { signToken, verifyToken, isHoneypotFilled, hashIp, decideRate, MIN_FILL_MS, MAX_AGE_MS, type Limiter } from "./guard.ts";
+import { signToken, verifyToken, isHoneypotFilled, hashIp, decideRate, memoryLimiter, MIN_FILL_MS, MAX_AGE_MS, type Limiter } from "./guard.ts";
 
 const good = { reason: "freelance", name: "  Jane   Tan ", email: " jane@company.com ", message: "Hello there, a project idea." };
 
@@ -92,4 +92,23 @@ test("daily cap blocks when hourly allows", async () => {
   await decideRate(ls, "k");
   await decideRate(ls, "k");
   assert.deepEqual(await decideRate(ls, "k"), { allowed: false, blockedBy: "day" });
+});
+
+test("in-memory limiter: per-key window, expiry and global cap", async () => {
+  let t = 1_000_000;
+  const clock = () => t;
+  const hour = memoryLimiter("hour", 3, 3_600_000, false, clock);
+  const site = memoryLimiter("site", 5, 86_400_000, true, clock);
+  for (let i = 0; i < 3; i++) assert.equal((await hour.limit("a")).success, true);
+  assert.equal((await hour.limit("a")).success, false);
+  assert.equal((await hour.limit("b")).success, true); // other visitor unaffected
+  t += 3_600_001;
+  assert.equal((await hour.limit("a")).success, true); // window slid
+  for (let i = 0; i < 5; i++) assert.equal((await site.limit(`k${i}`)).success, true);
+  assert.equal((await site.limit("new")).success, false); // global cap ignores key
+});
+test("in-memory limiters compose through decideRate", async () => {
+  const ls = [memoryLimiter("hour", 3, 3_600_000), memoryLimiter("day", 6, 86_400_000)];
+  for (let i = 0; i < 3; i++) assert.deepEqual(await decideRate(ls, "ip"), { allowed: true });
+  assert.deepEqual(await decideRate(ls, "ip"), { allowed: false, blockedBy: "hour" });
 });

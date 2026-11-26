@@ -5,7 +5,8 @@ import { Resend } from "resend";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { buildEmail, validateContact, type FieldErrors } from "./rules";
-import { decideRate, hashIp, isHoneypotFilled, signToken, verifyToken, type Limiter } from "./guard";
+import { createHmac } from "node:crypto";
+import { decideRate, hashIp, isHoneypotFilled, memoryLimiter, signToken, verifyToken, type Limiter } from "./guard";
 
 export type ContactState =
   | { status: "idle" }
@@ -19,14 +20,25 @@ const isDev = () => process.env.NODE_ENV === "development";
 const isDryRun = () => isDev() && process.env.CONTACT_DRY_RUN === "1";
 
 function missingEnv(): string[] {
-  const need = isDryRun()
-    ? []
-    : ["RESEND_API_KEY", "CONTACT_TO_EMAIL", "CONTACT_FROM_EMAIL", "UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN", "CONTACT_FORM_SECRET"];
+  // Only these two are required. Everything else (CONTACT_FROM_EMAIL, CONTACT_FORM_SECRET, Upstash) is optional.
+  const need = isDryRun() ? [] : ["RESEND_API_KEY", "CONTACT_TO_EMAIL"];
   return need.filter((k) => !process.env[k]?.trim());
 }
+/** Signing key for the fill-time token and IP hash: CONTACT_FORM_SECRET if set, else derived from RESEND_API_KEY (never exposed). */
 function secret(): string | null {
-  return process.env.CONTACT_FORM_SECRET?.trim() || (isDev() ? DEV_SECRET : null);
+  const explicit = process.env.CONTACT_FORM_SECRET?.trim();
+  if (explicit) return explicit;
+  const key = process.env.RESEND_API_KEY?.trim();
+  if (key) return createHmac("sha256", key).update("lkw22-contact-form-signing-v1").digest("hex");
+  return isDev() ? DEV_SECRET : null;
 }
+
+/**
+ * Resend's shared test sender. Without a verified domain, Resend only delivers to the email address of the
+ * Resend account itself, so the account must be registered with the same address as CONTACT_TO_EMAIL.
+ * Set CONTACT_FROM_EMAIL (a sender on a verified domain) to lift that limit.
+ */
+const DEFAULT_FROM = "LKW22 Studio Contact <onboarding@resend.dev>";
 let warned = false;
 function warnMissing(names: string[]) {
   if (warned) return;
@@ -43,7 +55,19 @@ export async function issueFormToken(): Promise<string> {
 let limiters: Limiter[] | null = null;
 function getLimiters(): Limiter[] {
   if (limiters) return limiters;
-  const redis = new Redis({ url: process.env.UPSTASH_REDIS_REST_URL!, token: process.env.UPSTASH_REDIS_REST_TOKEN! });
+  const url = process.env.UPSTASH_REDIS_REST_URL?.trim();
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
+  if (!url || !token) {
+    // Best effort only: this memory is per server instance and resets on cold starts, so on a serverless host
+    // it slows casual abuse but is not a hard limit. Configure both Upstash variables for a shared limit.
+    limiters = [
+      memoryLimiter("hour", 3, 60 * 60 * 1000),
+      memoryLimiter("day", 6, 24 * 60 * 60 * 1000),
+      memoryLimiter("site", 40, 24 * 60 * 60 * 1000, true),
+    ];
+    return limiters;
+  }
+  const redis = new Redis({ url, token });
   const mk = (name: string, n: number, window: "1 h" | "1 d") =>
     new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(n, window), prefix: `contact:${name}` });
   const [hour, day, site] = [mk("hour", 3, "1 h"), mk("day", 6, "1 d"), mk("site", 40, "1 d")];
@@ -88,7 +112,7 @@ export async function sendContact(_prev: ContactState, formData: FormData): Prom
 
   if (isDryRun()) return { status: "success", dryRun: true };
 
-  // 5. Rate limit by hashed IP (fails closed: if the store is down, nothing is sent).
+  // 5. Rate limit by hashed IP (fails closed: if a configured Upstash store errors, nothing is sent).
   try {
     const decision = await decideRate(getLimiters(), hashIp(await clientIp(), sec));
     if (!decision.allowed) return { status: "error", reason: "rate-limited" };
@@ -101,8 +125,8 @@ export async function sendContact(_prev: ContactState, formData: FormData): Prom
   try {
     const mail = buildEmail(v.values);
     const { error } = await new Resend(process.env.RESEND_API_KEY).emails.send({
-      from: process.env.CONTACT_FROM_EMAIL!,
-      to: process.env.CONTACT_TO_EMAIL!,
+      from: process.env.CONTACT_FROM_EMAIL?.trim() || DEFAULT_FROM,
+      to: process.env.CONTACT_TO_EMAIL!.trim(),
       replyTo: v.values.email,
       subject: mail.subject,
       text: mail.text,

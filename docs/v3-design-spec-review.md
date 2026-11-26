@@ -14,7 +14,7 @@ Date: 2026-11-26. Reviewed: `docs/v3-design-spec.md`, with `docs/v3-implementati
 | 6 | X-ray on touch | Toggle button plus draggable lens |
 | 7 | Input conflicts | Scoped shortcuts |
 | 8 | Tech ring | Build for desktop, judged by the owner |
-| 9 | Contact infra | Honeypot, min-fill-time, Upstash rate limit |
+| 9 | Contact infra | Honeypot, min-fill-time, rate limit (Upstash optional; in-memory fallback, see decision 9 note) |
 | 10 | Scope cuts | Sound, terminal mode, Konami cut from v1 |
 | 11 | Copy ownership | Agent drafts, owner approves in one pass |
 | 12 | Test device | Left to the agent (see risk note) |
@@ -124,6 +124,7 @@ Date: 2026-11-26. Reviewed: `docs/v3-design-spec.md`, with `docs/v3-implementati
 - If `lkw22studio.com` is not verified in Resend by Phase 8, mail goes from Resend's test sender to the owner's own address, and the visible `mailto:` link stays.
 - Destination email and the reply-time line (draft: "I reply within 2 working days") live in one content file. The owner still needs to supply both (assets checklist §2).
 - Add the Upstash account and keys to the assets checklist §6.
+- **Owner update (Phase 8):** Upstash is now optional. The form needs only `RESEND_API_KEY` and `CONTACT_TO_EMAIL`. Without Upstash a best-effort in-memory limiter (3/hour and 6/day per visitor, 40/day sitewide, per server instance, reset on cold start) is used; setting both Upstash variables switches to the shared limit. The sender defaults to Resend's test sender, so `CONTACT_TO_EMAIL` must be the Resend account's own address until a domain is verified. This overrides the Upstash requirement above.
 
 ## 10. Scope cuts
 

@@ -51,3 +51,27 @@ export async function decideRate(limiters: Limiter[], key: string): Promise<{ al
   }
   return { allowed: true };
 }
+
+/**
+ * In-memory sliding-window limiter, used only when Upstash is not configured. Per server instance, resets
+ * on restart/cold start. `global` ignores the key (one shared bucket, for the whole-site cap).
+ */
+export function memoryLimiter(name: string, max: number, windowMs: number, global = false, now: () => number = Date.now): Limiter {
+  const hits = new Map<string, number[]>();
+  return {
+    name,
+    async limit(key) {
+      const t = now();
+      const k = global ? "all" : key;
+      const recent = (hits.get(k) ?? []).filter((x) => t - x < windowMs);
+      if (recent.length >= max) {
+        hits.set(k, recent);
+        return { success: false };
+      }
+      recent.push(t);
+      hits.set(k, recent);
+      if (hits.size > 5000) for (const [kk, v] of hits) if (v.every((x) => t - x >= windowMs)) hits.delete(kk);
+      return { success: true };
+    },
+  };
+}
