@@ -13,6 +13,10 @@
 @keyframes hero-floor {
   to { background-position: 0 80px; }
 }
+/* WebGL scene took over: fade the CSS scene out and stop its animation. */
+[data-stage] { transition: opacity 0.7s ease, visibility 0s linear 0.7s; }
+[data-stage][data-gl="on"] { opacity: 0; visibility: hidden; }
+[data-stage][data-gl="on"] .hero-floor { animation-play-state: paused; }
 .hero-glow {
   background: radial-gradient(closest-side, rgba(139, 123, 255, 0.28), transparent);
 }
