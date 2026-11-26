@@ -26,18 +26,17 @@ export const heroCopy = {
 };
 
 export const aboutCopy = {
-  // DRAFT: owner approves. Wording follows plan section 2 flag 4 (directed AI agents, owned the
-  // architecture, review and deploy). "software engineer" vs the site headline "Full-Stack Developer |
-  // AI Engineer" is the owner's call (plan section 10, decision 1).
+  // DRAFT: owner approves. Wording follows plan section 2 flag 4 and the CV summary (directed AI agents,
+  // owned the architecture, review, tests and deployment), and matches the site headline.
   statement:
-    "I'm a software engineer in Kuala Lumpur who builds production web and AI products end to end. I plan in phases, direct AI coding agents, and keep ownership of the architecture, the review and the deploy.",
+    "I'm a full-stack developer and AI engineer in Kuala Lumpur who builds production web and AI products end to end. I plan in phases, direct AI coding agents, and keep ownership of the architecture, the review, the tests and the deploy.",
   accent: ["production"],
   // Spec section 4 (02 About): only these four CV facts. The owner chose to show them without
   // captions beyond the short label (review decision 4); the 90% basis is stated in Experience.
   facts: [
     { value: 90, suffix: "%+", label: "Messages auto-answered by an AI reply platform I built", ai: true }, // DRAFT label
     { value: 80, suffix: "+", label: "Patients on a portal I started and built" }, // DRAFT label
-    { value: 24, suffix: "", label: "Releases shipped on CoreEx, my own product" }, // DRAFT label (24: confirm against repo)
+    { value: 30, suffix: "", label: "Tagged releases of CoreEx, my own product" }, // DRAFT label; 30 = git tags v0.1.0 to v0.23.1, counted 2026-11-26 (the CV still says 24)
     { value: 2025, suffix: "", from: 1990, label: "Graduated in Software Engineering, TARUMT" }, // DRAFT label
   ] as { value: number; suffix: string; from?: number; label: string; ai?: boolean }[],
 };

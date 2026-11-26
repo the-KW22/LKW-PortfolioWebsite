@@ -10,7 +10,7 @@ export const site: SiteConfig = {
   headline: "Full-Stack Developer | AI Engineer",
   location: "Kuala Lumpur, Malaysia",
   timezone: "Asia/Kuala_Lumpur",
-  email: "kwenleow@gmail.com",
+  email: "kwenleow@gmail.com", // from the CV; the phone number is deliberately not published
   links: {
     github: "https://github.com/the-KW22",
     linkedin: null, // TODO(owner): LinkedIn URL (assets checklist section 3)
