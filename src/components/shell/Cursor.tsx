@@ -56,7 +56,7 @@ export function Cursor() {
     const show = () => {
       if (shown) return;
       shown = true;
-      gsap.to([dot, ring], { opacity: 1, duration: 0.25, overwrite: true });
+      gsap.to([dot, ring], { opacity: 1, duration: 0.25, overwrite: "auto" });
     };
     const onMove = (e: PointerEvent) => {
       if (e.pointerType === "touch") return;
@@ -78,7 +78,7 @@ export function Cursor() {
     const onLeaveWindow = (e: MouseEvent) => {
       if (e.relatedTarget) return;
       shown = false;
-      gsap.to([dot, ring], { opacity: 0, duration: 0.2, overwrite: true });
+      gsap.to([dot, ring], { opacity: 0, duration: 0.2, overwrite: "auto" });
     };
 
     document.addEventListener("pointermove", onMove, { passive: true });

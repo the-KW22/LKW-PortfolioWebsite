@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
-import { homeSections } from "@/content/sections";
-import { MotionKit } from "@/components/shell/MotionKit";
+import { Hero } from "@/components/sections/home/Hero";
+import { About } from "@/components/sections/home/About";
+import { Projects } from "@/components/sections/home/Projects";
+import { Experience } from "@/components/sections/home/Experience";
+import { TechStack } from "@/components/sections/home/TechStack";
+import { Services } from "@/components/sections/home/Services";
+import { Contact } from "@/components/sections/home/Contact";
 
 import { SITE_URL as siteUrl } from "@/content/site";
 
@@ -83,24 +88,14 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
       />
-      {/* PLACEHOLDER (Phase 1): one tall section per home section so the ruler, menu and anchors
-          can be tried. Phase 2 replaces each with the real section, keeping the same ids. */}
-      {homeSections.map((s, i) => (
-        <section
-          key={s.id}
-          id={s.id}
-          className="relative flex min-h-svh flex-col justify-center px-[5vw] py-32"
-        >
-          <p className="mono-label mb-6 text-mute">
-            {s.num} — {s.label}
-          </p>
-          <h2 className="font-display text-[clamp(40px,7vw,110px)] leading-[0.95] font-black tracking-display">
-            {s.label}
-          </h2>
-          <p className="mt-6 max-w-md text-mute">Placeholder. The real section is built in Phase 2.</p>
-          {i === 0 ? <MotionKit /> : null}
-        </section>
-      ))}
+      {/* Section ids come from src/content/sections.ts; the ruler and menu depend on them. */}
+      <Hero />
+      <About />
+      <Projects />
+      <Experience />
+      <TechStack />
+      <Services />
+      <Contact />
     </>
   );
 }
