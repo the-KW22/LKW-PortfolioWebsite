@@ -5,6 +5,27 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* ---- ver 3.0 design tokens (docs/v3-design-spec.md section 2) ---- */
+  /* Colours: bg-bg, bg-card, text-ink, text-mute, border-line, text-violet, bg-lime ... */
+  --color-bg:     var(--bg);
+  --color-ink:    var(--ink);
+  --color-mute:   var(--mute);
+  --color-line:   var(--line);
+  --color-violet: var(--violet);
+  --color-lime:   var(--lime);
+  /* --color-card is mapped below and now holds the ver 3.0 card value (see :root). */
+
+  /* Fonts: font-display, font-serif, font-mono (next/font variables set in layout.tsx) */
+  --font-display: var(--font-inter-tight);
+  --font-serif:   var(--font-instrument-serif);
+  --font-mono:    var(--font-jetbrains-mono);
+
+  /* Headline tracking and the mono micro label (11px, tracking 0.08em) */
+  --tracking-display: -0.05em;
+  --tracking-label:   0.08em;
+  --text-label:       11px;
+
+  /* ---- Legacy ver 2.0 theme (old components on / and /projects; remove in Phase 1-2) ---- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
@@ -93,10 +114,18 @@
 }
 
 :root {
+  /* ver 3.0 colour tokens (dark only) */
+  --bg:     #07070a;
+  --ink:    #ecebf3;
+  --mute:   #8b8a99;
+  --line:   #1f1e29;
+  --violet: #8b7bff;
+  --lime:   #c6f432;
+
   /* Dark palette — always active */
   --background: #0A0A0A;
   --foreground: #F5F5F5;
-  --card: #141414;
+  --card: #0f0f16; /* ver 3.0 token (was #141414 in the ver 2.0 palette) */
   --card-foreground: #F5F5F5;
   --popover: #141414;
   --popover-foreground: #F5F5F5;

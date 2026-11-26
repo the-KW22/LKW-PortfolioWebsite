@@ -1,35 +1,23 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/content/site";
 
 // Update this date when site content meaningfully changes.
-const LAST_MODIFIED = new Date("2026-11-25");
+const LAST_MODIFIED = new Date("2026-11-26");
 
+// /about-me and /contact-me now redirect to /#about and /#contact, so they are not listed.
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://leowkaiwen.dev";
-
   return [
     {
-      url: base,
+      url: SITE_URL,
       lastModified: LAST_MODIFIED,
       changeFrequency: "monthly",
       priority: 1,
     },
     {
-      url: `${base}/about-me`,
-      lastModified: LAST_MODIFIED,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${base}/projects`,
+      url: `${SITE_URL}/projects`,
       lastModified: LAST_MODIFIED,
       changeFrequency: "monthly",
       priority: 0.9,
-    },
-    {
-      url: `${base}/contact-me`,
-      lastModified: LAST_MODIFIED,
-      changeFrequency: "yearly",
-      priority: 0.6,
     },
   ];
 }

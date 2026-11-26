@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import HomeClient from "@/components/layout/HomeClient";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://leowkaiwen.dev";
+import { SITE_URL as siteUrl } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Leow Kai Wen — Full Stack Developer",
