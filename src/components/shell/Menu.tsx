@@ -130,7 +130,7 @@ export function Menu() {
               data-menu-link
               href={`/#${s.id}`}
               onClick={(e) => onSectionClick(e, s.id)}
-              className="group flex items-baseline gap-5 rounded-lg text-[clamp(44px,8vw,118px)] leading-[0.98] font-black tracking-display"
+              className="group flex items-baseline gap-5 rounded-lg text-[clamp(36px,min(8vw,10.5svh),118px)] leading-[0.98] font-black tracking-display"
             >
               <span aria-hidden="true" className="mono-label text-mute">
                 {s.num}
