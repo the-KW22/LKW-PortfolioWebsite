@@ -1,7 +1,7 @@
 ---
 type: overview
 updated: 2026-11-27
-sources: [raw/sessions/2026-11-25-lint-webp-cleanup.md, raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-agent-workflow.md, raw/sessions/2026-11-27-agents-md-nextjs-warning.md, raw/sessions/2026-11-27-hero-scene-rebuild.md]
+sources: [raw/sessions/2026-11-25-lint-webp-cleanup.md, raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-agent-workflow.md, raw/sessions/2026-11-27-agents-md-nextjs-warning.md, raw/sessions/2026-11-27-hero-scene-rebuild.md, raw/sessions/2026-11-27-issues-2-to-10.md]
 ---
 # Wiki index
 
@@ -30,3 +30,4 @@ Schema and operations: `vault/CLAUDE.md`. Chronology: [[log]].
 - [[2026-11-27-agent-workflow]]
 - [[2026-11-27-agents-md-nextjs-warning]]
 - [[2026-11-27-hero-scene-rebuild]]
+- [[2026-11-27-issues-2-to-10]]

@@ -1,7 +1,7 @@
 ---
 type: decision
 updated: 2026-11-27
-sources: [raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-hero-scene-rebuild.md]
+sources: [raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-hero-scene-rebuild.md, raw/sessions/2026-11-27-issues-2-to-10.md]
 ---
 # Ver 3.0 owner decisions
 
@@ -27,6 +27,12 @@ Decisions made by the owner while designing and reviewing [[ver3-redesign]].
 - **Preloader removed** (the first-visit 0 → 100 counter), so the dust gathering is the first thing visitors see.
 - Tech chips are a row under the intro. Floating CSS chips were removed everywhere.
 - No grid floor in WebGL mode. The CSS fallback hero (grid floor and glow) is kept.
+
+## Issue defaults (2026-11-27)
+Defaults the main agent picked where the issue left details open; the owner accepted them by proceeding ([[2026-11-27-issues-2-to-10]]).
+- Ruler (#2): live scrub with no snapping.
+- Atlas scroll cue (#4): bottom-centre, bobbing lime arrow. Hidden during the zoom-out intro, fades in after it and out at about 90% of the pin. Not shown in the phone map, list view or below 1024px. No bob with reduced motion. The owner was told it is subtle; not changed.
+- #5 (Experience), #6 (Tech Stack) and #7 (Services) skipped for now. #11 (Atlas background) not started.
 
 ## Contact
 Form needs only two env vars ([[contact-form]]); a rate-limit service is optional.

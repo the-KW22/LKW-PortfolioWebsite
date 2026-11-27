@@ -1,7 +1,7 @@
 ---
 type: how-to
 updated: 2026-11-27
-sources: [raw/sessions/2026-11-27-ver3-redesign-build.md]
+sources: [raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-issues-2-to-10.md]
 ---
 # Ver 3.0 build process
 
@@ -28,6 +28,9 @@ One planning session designs and orchestrates; **separate coding sessions** each
 2. Archive diff empty: `git diff --stat redesign-v3 <branch> -- public/v1 public/v2 src/app/v2` ([[versioning-and-archives]]).
 3. `package.json` diff (no unexplained dependencies) and a scan for secrets and the phone number before pushing.
 4. Run the branch in the preview and look at it; then merge and run `tsc`, tests and build on the merged code.
+
+## Issue sessions (2026-11-27)
+GitHub issues #2 to #10 used a smaller loop than the phases: the main agent reproduced each bug with a scratch Playwright script (headless Chromium via `scripts/qa/browser.mjs`, dev server on port 3200), found the cause and wrote a brief. A Haiku subagent implemented each fix in its own commit. The main agent reviewed the diff, re-ran the measurement, and ran `npx eslint src scripts`, `npx tsc --noEmit`, `npm test` and `npm run build`. See [[2026-11-27-issues-2-to-10]].
 
 ## Gotchas
 - **Preview server:** a `.claude/launch.json` entry (`v3-dev`, port 3100) runs the worktree's `next dev`; the app stops idle servers, restart when needed. `.claude/` is git-ignored.

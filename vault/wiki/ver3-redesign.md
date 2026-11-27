@@ -1,7 +1,7 @@
 ---
 type: architecture
 updated: 2026-11-27
-sources: [raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-hero-scene-rebuild.md]
+sources: [raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-hero-scene-rebuild.md, raw/sessions/2026-11-27-issues-2-to-10.md]
 ---
 # Ver 3.0 redesign
 
@@ -21,6 +21,14 @@ Hero (dust-to-blueprint WebGL scene with an X-ray lens cursor, CSS fallback; see
 
 ## Stack and layout
 Next.js App Router, React 19, Tailwind 4, GSAP, Lenis, three + @react-three/fiber (hero only, lazy loaded). New site in `src/app/(site)/`; components in `src/components/{shell,motion,atlas,case,xray,warp,sections/home}`; typed content in `src/content` (projects, experience, skills, home copy, site config). See [[site-structure]].
+
+## Interaction details (2026-11-27)
+- Header ruler: dragging along it scrubs the page live, with no snapping. A plain click still jumps smoothly. Hidden below 768px.
+- Menu: link size scales with height as well as width, so the full menu fits one laptop screen without scrolling.
+- Menu links and `/#id` links land on the section top, from the home page, inside the Atlas and from case studies.
+- Atlas intro: the start zoom fits the title card to the screen, so it is no longer cropped on narrow laptops.
+- Atlas: the "Scroll to continue" cue shows at the bottom of the pinned Atlas on desktop widths (1024px and up) only.
+- Case-study Screens gallery: in desktop pinned mode the wheel scrolls the page again.
 
 ## Rules
 - Performance: on desktop and laptop effects win (optimise, never cut); on phones speed wins (Lighthouse mobile Performance 90+, LCP under 2.5 s, CLS under 0.1).

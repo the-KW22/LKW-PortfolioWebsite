@@ -24,3 +24,8 @@
 - Created: sources/2026-11-27-hero-scene-rebuild
 - Updated: ver3-owner-decisions, ver3-redesign, site-structure, open-follow-ups, index
 - Notes: ver3-redesign and site-structure earlier claims (WebGL grid floor, preloader in shell/) are recorded under `## History`.
+
+## [2026-11-27] ingest | 2026-11-27-issues-2-to-10
+- Created: sources/2026-11-27-issues-2-to-10
+- Updated: ver3-redesign, ver3-owner-decisions, ver3-build-process, agent-workflow, open-follow-ups, index
+- Notes: "#1 not committed and not closed" in open-follow-ups is recorded under `## History`.
