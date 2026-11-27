@@ -3,8 +3,17 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Tilt } from "@/components/motion/Tilt";
 import { servicesCopy } from "@/content/home";
 import { SectionHead } from "./SectionHead";
+import { ServiceArt } from "./ServiceArt";
 
-/** 06 Services: four cards that tilt toward the cursor, with a moving violet light. */
+// Bento placement: 3 columns on desktop (web wide, AI tall), 2 on tablet, 1 on mobile.
+const span = {
+  web: "md:col-span-2",
+  ai: "lg:row-span-2",
+  motion: "",
+  build: "md:col-span-2 lg:col-span-1",
+} as const;
+
+/** 06 Services: a bento grid of four tiles, each with a line-art diagram of what it delivers. */
 export function Services() {
   return (
     <section id="services" aria-labelledby="services-title" className="px-[5vw] py-[16vh]">
@@ -21,13 +30,13 @@ export function Services() {
         y={80}
         stagger={0.1}
         start="top 80%"
-        className="grid list-none gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        className="grid list-none gap-4 md:grid-cols-2 lg:grid-cols-3"
       >
         {servicesCopy.cards.map((c, i) => (
-          <li key={c.title} data-card>
+          <li key={c.id} data-card className={span[c.id as keyof typeof span]}>
             <Tilt
-              max={9}
-              className="group relative flex min-h-[320px] flex-col justify-between overflow-hidden rounded-[18px] border border-[#23222e] bg-[#0c0c12] p-[26px] transition-colors duration-300 hover:border-violet focus-within:border-violet lg:min-h-[380px]"
+              max={4}
+              className="group relative flex h-full min-h-[340px] flex-col overflow-hidden rounded-[18px] border border-[#23222e] bg-[#0c0c12] p-[26px] transition-colors duration-300 hover:border-violet focus-within:border-violet"
             >
               <span
                 aria-hidden="true"
@@ -36,18 +45,23 @@ export function Services() {
               <span
                 aria-hidden="true"
                 data-num={String(i + 1).padStart(2, "0")}
-                // Decorative ghost numeral drawn as generated content, so it is not text for contrast audits.
-                className="font-display before:content-[attr(data-num)] text-[64px] leading-none font-black tracking-display text-[#1d1c28] transition-colors duration-300 [transform:translateZ(60px)] group-hover:text-violet"
-              >
-              </span>
-              <div>
-                <h3 className="font-display text-[28px] leading-[1.05] font-extrabold tracking-[-0.03em] [transform:translateZ(40px)]">
-                  {c.title}
-                </h3>
-                <p className="mt-3.5 text-[14.5px] leading-[1.55] text-mute [transform:translateZ(25px)]">
-                  {c.body}
-                </p>
+                // Generated content, so the numeral is not text for contrast audits.
+                className="mono-label before:content-[attr(data-num)] text-mute"
+              />
+              <div className="my-5 max-h-72 min-h-40 flex-1 lg:max-h-none">
+                <ServiceArt id={c.id as keyof typeof span} />
               </div>
+              <h3 className="font-display text-[28px] leading-[1.05] font-extrabold tracking-[-0.03em]">
+                {c.title}
+              </h3>
+              <p className="mt-3 max-w-xl text-[14.5px] leading-[1.55] text-mute">{c.body}</p>
+              <ul className="mt-4 flex flex-wrap gap-1.5" aria-label="Tools">
+                {c.tags.map((t) => (
+                  <li key={t} className="rounded-full border border-[#2a2935] px-2.5 py-0.5 text-[11px] text-[#b9b8c6]">
+                    {t}
+                  </li>
+                ))}
+              </ul>
             </Tilt>
           </li>
         ))}

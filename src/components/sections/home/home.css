@@ -34,3 +34,34 @@
 .card-shine {
   background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%), rgba(139, 123, 255, 0.18), transparent 45%);
 }
+
+/* Services bento diagrams (ServiceArt). Structure strokes use currentColor, so the tile recolours them on hover. */
+.svc-art { color: #4d4b63; overflow: visible; transition: color 0.3s; }
+.group:hover .svc-art { color: var(--violet); }
+.svc-art :is(.svc-spin, .svc-float, .svc-snap, .svc-out, .svc-packet) { transform-box: fill-box; transform-origin: center; }
+.svc-flow { animation: svc-flow 1.2s linear infinite; }
+.svc-float { animation: svc-float 5s ease-in-out infinite; }
+.svc-spin { animation: svc-spin 14s linear infinite; }
+.svc-snap { animation: svc-snap 4s cubic-bezier(0.7, 0, 0.2, 1) infinite; }
+.svc-out { animation: svc-out 3.9s ease-in-out infinite; opacity: 0.45; }
+.svc-packet { animation: svc-packet 3.9s ease-in-out infinite; }
+@keyframes svc-flow { to { stroke-dashoffset: -20; } }
+@keyframes svc-float { 50% { transform: translateY(-7px); } }
+@keyframes svc-spin { to { transform: rotate(360deg); } }
+@keyframes svc-snap {
+  0%, 12% { transform: translateY(-34px); opacity: 0; }
+  30% { opacity: 1; }
+  48%, 78% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+@keyframes svc-out { 0%, 40%, 100% { opacity: 0.45; color: inherit; } 12%, 28% { opacity: 1; color: var(--lime); } }
+@keyframes svc-packet {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 1; }
+  70%, 100% { transform: translateY(183px); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .svc-art * { animation: none !important; }
+  .svc-out { opacity: 1; }
+  .svc-packet { display: none; }
+}

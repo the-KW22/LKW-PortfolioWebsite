@@ -52,20 +52,28 @@ export const servicesCopy = {
   titleLines: ["What I can", "build for you"], // DRAFT
   cards: [
     {
+      id: "web",
       title: "Web apps and SaaS",
       body: "Full products with auth, databases and dashboards. Next.js, Spring Boot, Postgres.", // DRAFT
+      tags: ["Next.js", "Spring Boot", "PostgreSQL", "Supabase"], // DRAFT, all from the CV
     },
     {
+      id: "ai",
       title: "AI features and automation",
       body: "LLM pipelines, retrieval over your own data and MCP servers, with server-side gates on what gets sent automatically.", // DRAFT
+      tags: ["LLM APIs", "RAG and LLM evaluation", "MCP servers"], // DRAFT, all from the CV
     },
     {
+      id: "motion",
       title: "Sites with motion",
       body: "Marketing and portfolio sites with scroll animation, 3D and a lot of care.", // DRAFT
+      tags: ["React", "Astro", "Tailwind CSS"], // DRAFT, all from the CV
     },
     {
+      id: "build",
       title: "Custom builds",
       body: "Integrations, internal tools and the odd idea that doesn't fit a box.", // DRAFT
+      tags: ["REST APIs", "Fastify", "Docker"], // DRAFT, all from the CV
     },
   ],
 };
