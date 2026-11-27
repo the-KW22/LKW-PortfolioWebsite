@@ -12,6 +12,7 @@ export function SectionHead({
   lines,
   accent,
   compact = false,
+  tight = false,
 }: {
   num: string;
   label: string;
@@ -19,18 +20,21 @@ export function SectionHead({
   lines: string[];
   accent: string;
   compact?: boolean;
+  tight?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useReveal(ref, { y: 60, duration: 1.2, start: "top 85%" });
   return (
     <div
       ref={ref}
-      className={`flex flex-col justify-between gap-6 md:flex-row md:items-end ${compact ? "mb-[4vh]" : "mb-[9vh]"}`}
+      className={`flex flex-col justify-between gap-6 md:flex-row md:items-end ${tight ? "mb-[4vh] lg:mb-[2.5svh]" : compact ? "mb-[4vh]" : "mb-[9vh]"}`}
     >
       <h2
         id={id}
         className={`font-display leading-[0.9] font-black tracking-display ${
-          compact ? "text-[clamp(40px,5.2vw,84px)]" : "text-[clamp(44px,8vw,130px)]"
+          tight
+            ? "text-[clamp(44px,8vw,130px)] lg:text-[clamp(32px,min(5.2vw,7.5svh),84px)]"
+            : compact ? "text-[clamp(40px,5.2vw,84px)]" : "text-[clamp(44px,8vw,130px)]"
         }`}
       >
         {lines.map((line) => (
