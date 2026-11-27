@@ -79,8 +79,21 @@ export function AtlasBoard({ projects, mode, sectionRef, reduced, onShowList, on
         hidden: false,
       }));
 
+    // The intro starts zoomed in on the title card; on small stages it must shrink so the card still fits.
+    // shortcut: falls back to ZOOM.introFrom if the title is missing or unsized.
+    const titleEl = root.querySelector<HTMLElement>('[data-atlas-item="title"]');
+    const fitIntro = () => {
+      const tw = titleEl?.offsetWidth ?? 0;
+      const th = titleEl?.offsetHeight ?? 0;
+      if (!tw || !th) return ZOOM.introFrom;
+      return Math.max(
+        ZOOM.rest,
+        Math.min(ZOOM.introFrom, (stage.clientWidth * 0.86) / tw, (stage.clientHeight * 0.8) / th),
+      );
+    };
+    let introFrom = fitIntro();
     // c = camera as drawn, t = where input wants it.
-    const c = { x: BOARD_CENTRE.x, y: BOARD_CENTRE.y, z: pinned ? ZOOM.introFrom : restZoom, rx: 0, ry: 0 };
+    const c = { x: BOARD_CENTRE.x, y: BOARD_CENTRE.y, z: pinned ? introFrom : restZoom, rx: 0, ry: 0 };
     const t = { x: BOARD_CENTRE.x, y: BOARD_CENTRE.y, z: c.z };
     // Coming back from a case study: restore the camera the visitor left (design spec 5.1). In the
     // pinned board the zoom belongs to the scroll intro, so only the pan position is restored.
@@ -198,7 +211,7 @@ export function AtlasBoard({ projects, mode, sectionRef, reduced, onShowList, on
         ip = ease3(p);
         if (p !== lastProgress) {
           lastProgress = p;
-          t.z = ZOOM.introFrom + (ZOOM.rest - ZOOM.introFrom) * ip;
+          t.z = introFrom + (ZOOM.rest - introFrom) * ip;
           const radius = ip * 1800;
           for (const r of reveal) {
             const hide = r.d > radius + 60;
@@ -251,6 +264,8 @@ export function AtlasBoard({ projects, mode, sectionRef, reduced, onShowList, on
     const ro = new ResizeObserver(() => {
       w = stage.clientWidth;
       h = stage.clientHeight;
+      introFrom = fitIntro();
+      lastProgress = -1; // re-apply the intro zoom even if scroll progress has not moved
       if (!ticking) {
         apply();
         readouts();
