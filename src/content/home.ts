@@ -28,8 +28,9 @@ export const aboutCopy = {
   // DRAFT: owner approves. Wording follows plan section 2 flag 4 and the CV summary (directed AI agents,
   // owned the architecture, review, tests and deployment), and matches the site headline.
   statement:
-    "I'm a full-stack developer and AI engineer in Kuala Lumpur who builds production web and AI products end to end. I plan in phases, direct AI coding agents, and keep ownership of the architecture, the review, the tests and the deploy.",
-  accent: ["production"],
+    "I'm a Full-Stack Developer and AI Engineer in Kuala Lumpur who builds production web and AI products end to end. I plan in phases, direct AI coding agents, and keep ownership of the architecture, the review, the tests and the deploy.",
+  // SplitText matches accent per space-separated word, so each word of the two titles is listed.
+  accent: ["production", "Full-Stack", "Developer", "AI", "Engineer"],
   // Spec section 4 (02 About): only these four CV facts. The owner chose to show them without
   // captions beyond the short label (review decision 4); the 90% basis is stated in Experience.
   facts: [
