@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useMemo, useRef, useState, useSyncExternalStore, type PointerEvent as ReactPointerEvent } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { site } from "@/content/site";
@@ -93,6 +93,49 @@ function Ruler({ inert, sections }: { inert: boolean; sections: HomeSection[] })
   const [active, setActive] = useState(0);
   const { scrollTo } = useScroll();
   const count = sections.length;
+  // Index-aligned with `sections` (null when a section is missing from the page).
+  const triggersRef = useRef<(ScrollTrigger | null)[]>([]);
+  const gesture = useRef<{ id: number; x0: number; dragging: boolean } | null>(null);
+  const suppressClick = useRef(false);
+
+  // Inverse of the marker placement: pointer x on the ruler -> a scroll position inside that section.
+  const scrubTo = (clientX: number) => {
+    const nav = rulerRef.current;
+    if (!nav) return;
+    const rect = nav.getBoundingClientRect();
+    const f = Math.min(Math.max((clientX - rect.left - 14) / (rect.width - 28), 0), 0.9999) * count;
+    const i = Math.floor(f);
+    const t = triggersRef.current[i];
+    if (!t) return;
+    const y = t.start + (f - i) * (t.end - t.start);
+    scrollTo(Math.min(Math.max(y, 0), ScrollTrigger.maxScroll(window)), { immediate: true });
+  };
+
+  const onPointerDown = (e: ReactPointerEvent<HTMLElement>) => {
+    if (!e.isPrimary || e.button !== 0) return;
+    suppressClick.current = false;
+    gesture.current = { id: e.pointerId, x0: e.clientX, dragging: false };
+  };
+  const onPointerMove = (e: ReactPointerEvent<HTMLElement>) => {
+    const g = gesture.current;
+    if (!g || g.id !== e.pointerId) return;
+    if (!g.dragging) {
+      if (Math.abs(e.clientX - g.x0) <= 5) return; // below this it is a click, not a drag
+      g.dragging = true;
+      e.currentTarget.setPointerCapture(e.pointerId);
+      e.currentTarget.dataset.dragging = "";
+    }
+    scrubTo(e.clientX);
+  };
+  const onPointerEnd = (e: ReactPointerEvent<HTMLElement>) => {
+    const g = gesture.current;
+    if (!g || g.id !== e.pointerId) return;
+    gesture.current = null;
+    if (!g.dragging) return;
+    suppressClick.current = true; // the browser fires a click on release; a drag must not jump
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    delete e.currentTarget.dataset.dragging;
+  };
 
   useGSAP(
     () => {
@@ -101,24 +144,26 @@ function Ruler({ inert, sections }: { inert: boolean; sections: HomeSection[] })
       const place = (i: number, p: number) => {
         marker.style.left = `calc(14px + (100% - 28px) * ${(i + p) / count})`;
       };
-      const triggers = sections.flatMap((s, i) => {
+      const triggers = sections.map((s, i) => {
         const el = document.getElementById(s.id);
-        if (!el) return [];
-        return [
-          ScrollTrigger.create({
-            trigger: el,
-            start: "top 50%",
-            end: "bottom 50%",
-            onUpdate: (self) => place(i, self.progress),
-            onToggle: (self) => {
-              if (!self.isActive) return;
-              setActive(i);
-              place(i, self.progress);
-            },
-          }),
-        ];
+        if (!el) return null;
+        return ScrollTrigger.create({
+          trigger: el,
+          start: "top 50%",
+          end: "bottom 50%",
+          onUpdate: (self) => place(i, self.progress),
+          onToggle: (self) => {
+            if (!self.isActive) return;
+            setActive(i);
+            place(i, self.progress);
+          },
+        });
       });
-      return () => triggers.forEach((t) => t.kill());
+      triggersRef.current = triggers;
+      return () => {
+        triggers.forEach((t) => t?.kill());
+        triggersRef.current = [];
+      };
     },
     { scope: rulerRef, dependencies: [sections] },
   );
@@ -128,7 +173,21 @@ function Ruler({ inert, sections }: { inert: boolean; sections: HomeSection[] })
       ref={rulerRef}
       aria-label="Page sections"
       inert={inert}
-      className="relative hidden h-11 w-[min(440px,36vw)] items-center rounded-xl border border-[#23222e] bg-bg/60 px-3.5 backdrop-blur-md md:flex"
+      data-cursor="label"
+      data-cursor-label="DRAG"
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerEnd}
+      onPointerCancel={onPointerEnd}
+      // The numbers are links; a native link drag would cancel the pointer stream mid-scrub.
+      onDragStart={(e) => e.preventDefault()}
+      onClickCapture={(e) => {
+        if (!suppressClick.current) return;
+        suppressClick.current = false;
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+      className="relative hidden h-11 w-[min(440px,36vw)] cursor-grab touch-none items-center rounded-xl border border-[#23222e] bg-bg/60 px-3.5 backdrop-blur-md select-none data-[dragging]:cursor-grabbing md:flex"
     >
       <div aria-hidden="true" className="ruler-ticks" />
       {sections.map((s, i) => (
