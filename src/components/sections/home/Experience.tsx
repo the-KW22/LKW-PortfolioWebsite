@@ -6,35 +6,9 @@ import { useMotion } from "@/hooks/useMotion";
 import { useReveal } from "@/components/motion/Reveal";
 import { experience } from "@/content/experience";
 import { experienceCopy } from "@/content/home";
-import type { ExperienceEntry, ExperienceProject } from "@/content/types";
+import type { ExperienceEntry } from "@/content/types";
+import { ProjectCaseFile } from "./ProjectCaseFile";
 import { SectionHead } from "./SectionHead";
-
-function ProjectTile({ p }: { p: ExperienceProject }) {
-  return (
-    <li data-job-in className="rounded-xl border border-line bg-[#0b0b10] px-[18px] py-4">
-      <b className="mb-1.5 block text-base font-semibold">{p.name}</b>
-      <span className="text-[13.5px] leading-normal text-mute">{p.points[0]}</span>
-      {p.highlights?.map((h) => (
-        <span key={h.value} className="mt-3 block text-[13.5px] leading-normal text-lime">
-          <strong className="font-display text-xl font-extrabold tracking-[-0.03em]">{h.value}</strong>{" "}
-          {h.label}
-        </span>
-      ))}
-      <span className="mt-3 flex flex-wrap gap-1.5">
-        {p.stack.map((t) => (
-          <span
-            key={t.name}
-            className={`rounded-full border px-2 py-0.5 text-[11px] ${
-              t.ai ? "border-lime/50 text-lime" : "border-[#2a2935] text-[#b9b8c6]"
-            }`}
-          >
-            {t.name}
-          </span>
-        ))}
-      </span>
-    </li>
-  );
-}
 
 function Job({ e }: { e: ExperienceEntry }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -71,11 +45,7 @@ function Job({ e }: { e: ExperienceEntry }) {
           </ul>
         ) : null}
         {e.projects ? (
-          <ul className="mt-6 grid gap-3 lg:grid-cols-2">
-            {e.projects.map((p) => (
-              <ProjectTile key={p.id} p={p} />
-            ))}
-          </ul>
+          <ProjectCaseFile projects={e.projects} />
         ) : null}
       </div>
     </div>
