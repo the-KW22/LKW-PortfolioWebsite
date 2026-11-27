@@ -11,17 +11,17 @@ export const heroCopy = {
   intro:
     "I take products from idea to production: interfaces, APIs, databases and the AI that ties them together.",
   ctaPrimary: "See projects", // DRAFT
-  // Floating chips at different depths. `ai` chips are lime (spec: lime marks AI things).
+  // Tech chip row under the intro. `ai` chips are lime (spec: lime marks AI things).
   // They name tech used in the owner's own projects (see src/content/projects).
   chips: [
-    { label: "Claude API", ai: true, x: 62, y: 18, z: 160 },
-    { label: "Spring Boot", x: 80, y: 30, z: 90 },
-    { label: "Next.js", x: 52, y: 34, z: 40 },
-    { label: "MCP", ai: true, x: 72, y: 46, z: 220 },
-    { label: "PostgreSQL", x: 88, y: 14, z: 60 },
-    { label: "TypeScript", x: 40, y: 16, z: 120 },
-    { label: "pgvector", ai: true, x: 66, y: 62, z: 70 },
-  ],
+    { label: "Claude API", ai: true },
+    { label: "Spring Boot" },
+    { label: "Next.js" },
+    { label: "MCP", ai: true },
+    { label: "PostgreSQL" },
+    { label: "TypeScript" },
+    { label: "pgvector", ai: true },
+  ] as { label: string; ai?: boolean }[],
 };
 
 export const aboutCopy = {

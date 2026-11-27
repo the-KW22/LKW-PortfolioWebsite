@@ -25,7 +25,7 @@ export function CaseHero({ project }: { project: Project }) {
       <SplitText
         as="h1"
         text={project.name}
-        waitForPreloader
+        waitForWarp
         by="chars"
         className="font-display mt-[4vh] block text-[clamp(52px,15vw,230px)] leading-[0.86] font-black tracking-[-0.06em]"
       />

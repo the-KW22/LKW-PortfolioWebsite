@@ -5,7 +5,6 @@ import { useRef } from "react";
 type ElTag = React.ComponentType<React.HTMLAttributes<HTMLElement> & { ref?: React.Ref<HTMLElement> }>;
 import { gsap } from "@/lib/gsap";
 import { useMotion } from "@/hooks/useMotion";
-import { whenPreloaderDone } from "@/components/shell/preloaderStore";
 import { whenWarpRevealed } from "@/components/warp/warpStore";
 
 /** Starting opacity of the scroll-lit About paragraph on desktop (owner decision 2026-11-26: 0.3, was 0.13). */
@@ -18,11 +17,12 @@ interface Props {
   /** "words" or "chars" become the animated units. */
   by?: "words" | "chars";
   /**
-   * "rise": each unit rises out of a mask on scroll enter (or after the preloader).
+   * "rise": each unit rises out of a mask on scroll enter.
    * "scrub": units light up from dim to full as you scroll (About statement).
    */
   mode?: "rise" | "scrub";
-  waitForPreloader?: boolean;
+  /** Also wait for a kinetic warp to finish covering the page. */
+  waitForWarp?: boolean;
   /** Words to render as the violet italic serif accent, e.g. ["build"]. */
   accent?: string[];
   stagger?: number;
@@ -38,7 +38,7 @@ export function SplitText({
   className,
   by = "words",
   mode = "rise",
-  waitForPreloader = false,
+  waitForWarp = false,
   accent = [],
   stagger,
 }: Props) {
@@ -81,20 +81,11 @@ export function SplitText({
             scrollTrigger: { trigger: el, start: "top 90%", once: true },
           });
         });
-      if (waitForPreloader) {
-        // Also wait for a kinetic warp to finish covering the page, so the letters rise as it fades.
-        let off2: (() => void) | undefined;
-        const off1 = whenPreloaderDone(() => {
-          off2 = whenWarpRevealed(play);
-        });
-        return () => {
-          off1();
-          off2?.();
-        };
-      }
+      // Letters rise as a kinetic warp fades.
+      if (waitForWarp) return whenWarpRevealed(play);
       play();
     },
-    [mode, by, waitForPreloader, stagger, text],
+    [mode, by, waitForWarp, stagger, text],
   );
 
   const maskClass = mode === "rise" ? "-mb-[0.14em] inline-block overflow-hidden pb-[0.14em] align-bottom" : "inline-block";

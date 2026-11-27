@@ -11,7 +11,7 @@ for (const { w, h } of widths) {
     const ctx = await browser.newContext({ viewport: { width: w, height: h }, reducedMotion: process.env.REDUCED ? "reduce" : "no-preference" });
     const page = await ctx.newPage();
     await page.goto(BASE + route, { waitUntil: "load" });
-    await page.waitForTimeout(3500); // preloader + intro animations
+    await page.waitForTimeout(3500); // intro animations
     const r = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"]).analyze();
     console.log(`\n## ${route} @${w}: ${r.violations.length} violations, ${r.incomplete.length} needs-review, ${r.passes.length} passes`);
     for (const v of r.violations) {

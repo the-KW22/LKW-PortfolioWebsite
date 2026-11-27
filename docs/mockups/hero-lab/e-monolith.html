@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hero lab - E Monolith</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;900&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07070a;--ink:#ecebf3;--mute:#8b8a99;--line:#1f1e29;--violet:#8b7bff;--lime:#c6f432}
+*{box-sizing:border-box;margin:0}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:"Inter Tight",system-ui,sans-serif;overflow-x:hidden}
+#c{position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0}
+.stage{position:relative;height:250vh}
+.hero{position:sticky;top:0;height:100vh;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;padding:0 clamp(20px,4vw,64px) clamp(28px,5vh,56px);pointer-events:none}
+.hero a{pointer-events:auto}
+.eyebrow{font:500 12px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin-bottom:2.2vh;opacity:0;transition:opacity 1s .2s}
+.eyebrow i{font-style:normal;color:var(--lime)}
+h1{font-weight:900;font-size:clamp(40px,10.5vw,176px);line-height:.86;letter-spacing:-.055em}
+h1 .l{display:block;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em}
+h1 .l>span{display:inline-block;transform:translateY(112%);transition:transform 1.2s cubic-bezier(.16,.85,.2,1)}
+h1 .l:nth-child(2)>span{transition-delay:.1s}
+h1 .l:nth-child(3)>span{transition-delay:.2s}
+h1 em{font-family:"Instrument Serif",serif;font-style:italic;font-weight:400;color:var(--violet);letter-spacing:-.03em}
+.intro{margin-top:3.2vh;display:flex;flex-wrap:wrap;gap:20px 32px;align-items:center;opacity:0;transform:translateY(12px);transition:opacity 1s .6s,transform 1s .6s}
+.intro p{color:var(--mute);font-size:clamp(14px,1.2vw,18px);max-width:60ch;line-height:1.4}
+.btn{background:var(--lime);color:#07070a;font-weight:900;font-size:15px;letter-spacing:-.01em;padding:13px 24px;border-radius:999px;text-decoration:none}
+.in .eyebrow,.in .intro{opacity:1;transform:none}
+.in h1 .l>span{transform:none}
+.next{position:absolute;left:0;right:0;bottom:0;height:100vh;display:grid;place-items:center;z-index:2}
+.next span{font:500 13px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);border:1px solid var(--line);padding:14px 22px;border-radius:999px;background:rgba(7,7,10,.55)}
+.tag{position:fixed;top:14px;right:14px;z-index:5;display:flex;gap:12px;align-items:center;font:500 11px "JetBrains Mono",monospace;letter-spacing:.06em;border:1px solid var(--line);background:rgba(7,7,10,.7);backdrop-filter:blur(8px);padding:8px 14px;border-radius:999px}
+.tag a,.tag button{color:var(--mute);background:none;border:0;font:inherit;letter-spacing:inherit;cursor:pointer;text-decoration:none}
+.tag button{color:var(--lime)}
+.tag b{color:var(--violet);font-weight:500}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="tag"><a href="index.html">&larr; all options</a><b>E · Monolith</b><button id="replay">Replay &#8635;</button></div>
+<div class="stage">
+  <section class="hero" id="hero">
+    <div class="eyebrow"><i>●</i> Leow Kai Wen · Full-stack developer · AI engineer · Open to work</div>
+    <h1><span class="l"><span>I design</span></span><span class="l"><span>and <em>build</em></span></span><span class="l"><span>whole products.</span></span></h1>
+    <div class="intro"><p>I take products from idea to production: interfaces, APIs, databases and the AI that ties them together.</p><a class="btn" href="#next">See projects &darr;</a></div>
+  </section>
+  <div class="next" id="next"><span>03 — Personal projects (Atlas)</span></div>
+</div>
+
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from "three";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = (s) => document.querySelector(s);
+const hero = $("#hero");
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const violet = 0x8b7bff, lime = 0xc6f432;
+
+// fonts first so the chip textures use JetBrains Mono
+await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1200))]);
+
+const renderer = new THREE.WebGLRenderer({ canvas: $("#c"), antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x07070a);
+scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0;
+const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+const CAM = new THREE.Vector3(0, 1, 9);
+
+// ---------- grid floor + back wall (opaque so the glass can refract them) ----------
+const gridMat = (wall) => new THREE.ShaderMaterial({
+  uniforms: { uC: { value: new THREE.Vector3() }, uGlow: { value: 0 }, uWall: { value: wall },
+    uBg: { value: new THREE.Color(0x07070a) }, uLine: { value: new THREE.Color(violet) } },
+  vertexShader: `varying vec3 vW; void main(){ vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }`,
+  fragmentShader: `varying vec3 vW; uniform vec3 uC,uBg,uLine; uniform float uGlow,uWall;
+    float g(vec2 p,float s){ vec2 q=p/s; vec2 d=abs(fract(q-.5)-.5)/fwidth(q); return 1.-min(min(d.x,d.y),1.); }
+    void main(){ vec2 p=uWall>.5?vW.xy:vW.xz;
+      float a=g(p,.5)*.35+g(p,2.5)*.65;
+      float f=1.-smoothstep(3.,15.,length(vW-uC));
+      gl_FragColor=vec4(mix(uBg,uLine,a*f*.55*uGlow),1.);
+      #include <colorspace_fragment>
+    }`,
+  extensions: { derivatives: true },
+});
+const floorM = gridMat(0), wallM = gridMat(1);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), floorM); floor.rotation.x = -Math.PI / 2;
+const wall = new THREE.Mesh(new THREE.PlaneGeometry(60, 40), wallM);
+scene.add(floor, wall);
+
+// ---------- the monolith ----------
+const anchor = new THREE.Group(); scene.add(anchor);
+const lay = new THREE.Group(); anchor.add(lay);   // scroll: lays the slab flat
+const slab = new THREE.Group(); lay.add(slab);    // cursor: turns toward the mouse
+
+const glass = new THREE.Mesh(
+  new RoundedBoxGeometry(1.5, 1.8, 0.5, 5, 0.06),
+  new THREE.MeshPhysicalMaterial({ color: 0x2b2547, roughness: 0.16, metalness: 0, transmission: 1, thickness: 1.5, ior: 1.45,
+    attenuationColor: new THREE.Color(0x4b3fb0), attenuationDistance: 2.4, clearcoat: 1, clearcoatRoughness: 0.08, envMapIntensity: 1.3 }));
+glass.position.y = 0.9; slab.add(glass);
+
+const wireMat = new THREE.LineBasicMaterial({ color: violet, transparent: true, opacity: 0 });
+const faintMat = new THREE.LineBasicMaterial({ color: violet, transparent: true, opacity: 0 });
+const edges = (w, h, d, y, m) => { const l = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(w, h, d)), m); l.position.y = y; slab.add(l); };
+edges(1.5, 1.8, 0.5, -0.9, wireMat);                       // outer frame of the lower half
+edges(1.08, 1.4, 0.28, -0.9, faintMat);                    // inner core
+for (let i = 1; i <= 5; i++) edges(1.32, 0.002, 0.38, -0.3 * i, faintMat); // layers
+const pts = [];                                            // faint "circuit" traces
+for (let i = 0; i < 14; i++) { const x = -0.6 + (i % 7) * 0.2, y = -0.15 - Math.floor(i / 7) * 0.8 - (i % 3) * 0.12;
+  pts.push(x, y, 0.19, x, y - 0.35, 0.19, x, y - 0.35, 0.19, x + 0.17, y - 0.35, 0.19); }
+const trace = new THREE.LineSegments(new THREE.BufferGeometry().setAttribute("position", new THREE.Float32BufferAttribute(pts, 3)), faintMat);
+slab.add(trace);
+const fill = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.8, 0.5), new THREE.MeshBasicMaterial({ color: violet, transparent: true, opacity: 0, depthWrite: false }));
+fill.position.y = -0.9; slab.add(fill);
+
+const scan = new THREE.Mesh(new THREE.BoxGeometry(1.56, 0.012, 0.56), new THREE.MeshBasicMaterial({ color: lime, toneMapped: false }));
+const scanGlow = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.09, 0.6), new THREE.MeshBasicMaterial({ color: lime, transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
+slab.add(scan, scanGlow);
+
+// ---------- floating tech chips behind the glass ----------
+function chipTex(text, ai) {
+  const c = document.createElement("canvas"); c.width = 320; c.height = 96;
+  const x = c.getContext("2d");
+  x.beginPath(); x.roundRect(3, 3, 314, 90, 45); x.fillStyle = "#0d0c14"; x.fill();
+  x.lineWidth = 3; x.strokeStyle = ai ? "#c6f432" : "#3a3852"; x.stroke();
+  x.fillStyle = ai ? "#c6f432" : "#ecebf3"; x.font = '500 34px "JetBrains Mono",monospace'; x.textAlign = "center"; x.textBaseline = "middle";
+  x.fillText(text, 160, 50);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const chipSpecs = [["Claude API", 1, -1.4, 1.9, -1.2], ["MCP", 1, 1.5, 2.3, -1.6], ["pgvector", 1, -0.5, 0.9, -1.9], ["Next.js", 0, 1.3, 0.4, -1.1],
+  ["Spring Boot", 0, -1.6, 0.1, -1.4], ["PostgreSQL", 0, 0.2, 2.9, -1.7], ["TypeScript", 0, -0.2, 1.5, -2.2]];
+const chips = new THREE.Group(); anchor.add(chips);
+for (const [t, ai, x, y, z] of chipSpecs) {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.24), new THREE.MeshBasicMaterial({ map: chipTex(t, ai), transparent: false, alphaTest: 0.5, toneMapped: false }));
+  m.position.set(x, y, z); m.userData = { y, ph: x * 3 }; chips.add(m);
+}
+
+const light = new THREE.PointLight(0xffffff, 0, 14, 2); scene.add(light);
+
+// ---------- layout ----------
+let aspect = 1, s = 1, ax = 0, ay = 0;
+function resize() {
+  const w = innerWidth, h = innerHeight; aspect = w / h;
+  renderer.setSize(w, h, false); camera.aspect = aspect; camera.updateProjectionMatrix();
+  const vh = 2 * CAM.z * Math.tan((camera.fov * Math.PI) / 360), vw = vh * aspect;
+  s = Math.min(0.95, aspect * 0.62);
+  ax = aspect > 1 ? vw * 0.23 : vw * 0.05; ay = vh * 0.1 + (aspect < 1 ? vh * 0.12 : 0);
+  anchor.position.set(ax, ay, 0); anchor.scale.setScalar(s);
+  floor.position.set(ax, ay - 1.8 * s - 0.35, -5);
+  wall.position.set(ax, ay, -2.6 * s);
+  floorM.uniforms.uC.value.copy(anchor.position); wallM.uniforms.uC.value.copy(anchor.position);
+}
+addEventListener("resize", resize); resize();
+
+// ---------- input ----------
+let mx = 0, my = 0, tx = 0, ty = 0, sy = 0, p = 0, rotY = 0, rotX = 0;
+addEventListener("pointermove", (e) => { tx = (e.clientX / innerWidth) * 2 - 1; ty = (e.clientY / innerHeight) * 2 - 1; });
+const readScroll = () => { sy = clamp(scrollY / (innerHeight * 1.3)); };
+addEventListener("scroll", readScroll); readScroll();
+
+// ---------- intro ----------
+let t0 = 0, revealed = false;
+function replay() { hero.classList.remove("in"); revealed = false; t0 = performance.now(); if (reduce) t0 = -1e9; }
+$("#replay").onclick = replay;
+replay();
+
+let last = performance.now();
+renderer.setAnimationLoop((now) => {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  const k = 1 - Math.exp(-dt * 5);
+  mx += (tx - mx) * k; my += (ty - my) * k; p += (sy - p) * (1 - Math.exp(-dt * 6));
+
+  const it = clamp((now - t0) / 3200), e = 1 - Math.pow(1 - it, 3);
+  if (!revealed && now - t0 > (reduce ? -1 : 1500)) { hero.classList.add("in"); revealed = true; }
+  const sec = now / 1000;
+
+  // intro: slab rises out of the dark, light fills it
+  slab.position.y = -3.2 * (1 - e);
+  scene.environmentIntensity = 1.1 * e * e;
+  wireMat.opacity = 0.9 * e; faintMat.opacity = 0.4 * e; fill.material.opacity = 0.05 * e;
+  floorM.uniforms.uGlow.value = wallM.uniforms.uGlow.value = e;
+  light.intensity = 40 * e;
+  scanGlow.material.opacity = 0.12 * e; scan.visible = e > 0.05;
+
+  // cursor: slab turns toward it, light + reflections sweep
+  rotY += (mx * 0.6 - rotY) * k; rotX += (my * 0.14 - rotX) * k;
+  slab.rotation.set(rotX, rotY + Math.sin(sec * 0.4) * 0.05, 0);
+  scene.environmentRotation.y = mx * 1.3;
+  light.position.set(ax + mx * 3.5, ay - my * 2.5 + 0.6, 3);
+  scan.position.y = scanGlow.position.y = Math.sin(sec * 0.55) * 0.1 * e;
+  chips.children.forEach((c) => { c.position.y = c.userData.y + Math.sin(sec * 0.8 + c.userData.ph) * 0.07; });
+  chips.scale.setScalar(Math.max(0.001, e * (1 - p * 0.9)));
+
+  // scroll: lie flat, recede, widen into a tile
+  lay.rotation.x = -p * 1.4;
+  lay.position.set(-ax * p * 0.8, -p * 1.1, -p * 2.4);
+  lay.scale.set(1 + p * 1.5, 1 - p * 0.3, 1);
+  camera.position.set(0, CAM.y + p * 2.2, CAM.z);
+  camera.lookAt(0, 0.3 - p * 0.4, 0);
+  hero.style.opacity = clamp(1 - p * 1.8);
+
+  renderer.render(scene, camera);
+});
+</script>
+</body>
+</html>

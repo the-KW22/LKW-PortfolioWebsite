@@ -1,7 +1,7 @@
 ---
 type: overview
 updated: 2026-11-27
-sources: [raw/sessions/2026-11-25-lint-webp-cleanup.md, raw/sessions/2026-11-27-ver3-redesign-build.md]
+sources: [raw/sessions/2026-11-25-lint-webp-cleanup.md, raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-agent-workflow.md, raw/sessions/2026-11-27-agents-md-nextjs-warning.md, raw/sessions/2026-11-27-hero-scene-rebuild.md]
 ---
 # Wiki index
 
@@ -9,7 +9,8 @@ Schema and operations: `vault/CLAUDE.md`. Chronology: [[log]].
 
 ## Pages
 - [[overview]]: what the site is, status (ver 2.0 live, ver 3.0 in progress), stack, working rules.
-- [[ver3-redesign]]: ver 3.0 goal, Atlas / warp / X-ray concept, look, home sections, rules.
+- [[agent-workflow]]: ponytail for all coding, Haiku/Sonnet routing by complexity, pipeline, why AGENTS.md warns "NOT the Next.js you know", industry reference.
+- [[ver3-redesign]]: ver 3.0 goal, Atlas / warp / X-ray concept, look, home sections (hero scene), rules.
 - [[versioning-and-archives]]: `/`, `/v2`, `/v1`, noindex, protection rules.
 - [[ver3-build-process]]: phases and merge commits, per-phase checks, gotchas.
 - [[ver3-owner-decisions]]: the owner's content, design and performance decisions.
@@ -26,3 +27,6 @@ Schema and operations: `vault/CLAUDE.md`. Chronology: [[log]].
 ## Sources
 - [[2026-11-25-lint-webp-cleanup]]
 - [[2026-11-27-ver3-redesign-build]]
+- [[2026-11-27-agent-workflow]]
+- [[2026-11-27-agents-md-nextjs-warning]]
+- [[2026-11-27-hero-scene-rebuild]]

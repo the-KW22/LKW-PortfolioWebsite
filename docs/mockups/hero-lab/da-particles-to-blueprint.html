@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hero lab - D+A Dust to Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;900&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07070a;--ink:#ecebf3;--mute:#8b8a99;--line:#1f1e29;--violet:#8b7bff;--lime:#c6f432}
+*{box-sizing:border-box;margin:0}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:"Inter Tight",system-ui,sans-serif;overflow-x:hidden}
+#c{position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0}
+.lens{position:fixed;left:0;top:0;width:360px;height:360px;border-radius:50%;border:1.5px solid var(--lime);box-shadow:0 0 24px rgba(198,244,50,.25),inset 0 0 24px rgba(198,244,50,.12);z-index:1;pointer-events:none;opacity:0}
+.lens::after{content:"X-RAY";position:absolute;left:50%;top:-22px;transform:translateX(-50%);font:500 10px "JetBrains Mono",monospace;letter-spacing:.14em;color:var(--lime)}
+.stage{position:relative;height:250vh}
+.hero{position:sticky;top:0;height:100vh;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;padding:0 clamp(20px,4vw,64px) clamp(28px,5vh,56px);pointer-events:none}
+.hero a{pointer-events:auto}
+.eyebrow{font:500 12px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin-bottom:2.2vh;opacity:0;transition:opacity 1s .2s}
+.eyebrow i{font-style:normal;color:var(--lime)}
+h1{font-weight:900;font-size:clamp(40px,10.5vw,176px);line-height:.86;letter-spacing:-.055em}
+h1 .l{display:block;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em}
+h1 .l>span{display:inline-block;transform:translateY(112%);transition:transform 1.2s cubic-bezier(.16,.85,.2,1)}
+h1 .l:nth-child(2)>span{transition-delay:.1s}
+h1 .l:nth-child(3)>span{transition-delay:.2s}
+h1 em{font-family:"Instrument Serif",serif;font-style:italic;font-weight:400;color:var(--violet);letter-spacing:-.03em}
+.intro{margin-top:3.2vh;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:center;opacity:0;transform:translateY(12px);transition:opacity 1s .6s,transform 1s .6s}
+.intro p{color:var(--mute);font-size:clamp(14px,1.2vw,18px);max-width:60ch;line-height:1.4}
+.btn{background:var(--lime);color:#07070a;font-weight:900;font-size:15px;letter-spacing:-.01em;padding:13px 24px;border-radius:999px;text-decoration:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:2.2vh;opacity:0;transition:opacity 1s .8s}
+.chips span{font:500 11px "JetBrains Mono",monospace;letter-spacing:.04em;color:var(--ink);border:1px solid var(--line);padding:6px 11px;border-radius:999px;background:rgba(7,7,10,.5)}
+.chips .ai{color:var(--lime);border-color:rgba(198,244,50,.45)}
+.in .eyebrow,.in .intro,.in .chips{opacity:1;transform:none}
+.in h1 .l>span{transform:none}
+.next{position:absolute;left:0;right:0;bottom:0;height:100vh;display:grid;place-items:center;z-index:2}
+.next span{font:500 13px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);border:1px solid var(--line);padding:14px 22px;border-radius:999px;background:rgba(7,7,10,.55)}
+.tag{position:fixed;top:14px;right:14px;z-index:5;display:flex;gap:12px;align-items:center;font:500 11px "JetBrains Mono",monospace;letter-spacing:.06em;border:1px solid var(--line);background:rgba(7,7,10,.7);backdrop-filter:blur(8px);padding:8px 14px;border-radius:999px}
+.tag a,.tag button{color:var(--mute);background:none;border:0;font:inherit;letter-spacing:inherit;cursor:pointer;text-decoration:none}
+.tag button{color:var(--lime)}
+.tag b{color:var(--violet);font-weight:500}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="lens" id="lens"></div>
+<div class="tag"><a href="index.html">&larr; all options</a><b>D+A · Dust → Blueprint → Build</b><button id="replay">Replay &#8635;</button></div>
+<div class="stage">
+  <section class="hero" id="hero">
+    <div class="eyebrow"><i>●</i> Leow Kai Wen · Full-stack developer · AI engineer · Open to work</div>
+    <h1><span class="l"><span>I design</span></span><span class="l"><span>and <em>build</em></span></span><span class="l"><span>whole products.</span></span></h1>
+    <div class="intro"><p>I take products from idea to production: interfaces, APIs, databases and the AI that ties them together.</p><a class="btn" href="#next">See projects &darr;</a></div>
+    <div class="chips"><span class="ai">Claude API</span><span class="ai">MCP</span><span class="ai">pgvector</span><span>Next.js</span><span>Spring Boot</span><span>PostgreSQL</span><span>TypeScript</span></div>
+  </section>
+  <div class="next" id="next"><span>03 — Personal projects (Atlas)</span></div>
+</div>
+
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from "three";
+
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = (s) => document.querySelector(s);
+const hero = $("#hero"), lensEl = $("#lens");
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const rgb = (h) => [(h >> 16) / 255, ((h >> 8) & 255) / 255, (h & 255) / 255];
+
+await Promise.race([document.fonts.load('900 190px "Inter Tight"'), new Promise((r) => setTimeout(r, 1500))]);
+
+// ---------- blueprint outlines (local units, centred, ~6.2 x 3.1) ----------
+const rect = (x0, y0, x1, y1) => [[x0, y0], [x1, y0], [x1, y1], [x0, y1], [x0, y0]];
+const arc = (cx, cy, rx, ry, a0 = 0, a1 = Math.PI * 2, n = 48) =>
+  Array.from({ length: n + 1 }, (_, i) => { const a = a0 + ((a1 - a0) * i) / n; return [cx + Math.cos(a) * rx, cy + Math.sin(a) * ry]; });
+const conns = [ // also used as the data-packet routes
+  [[0, 0.8], [0.35, 0.8], [0.35, 1.25], [0.7, 1.25]],
+  [[0, 0.8], [0.35, 0.8], [0.35, 0.45], [0.7, 0.45]],
+  [[1.35, 0.15], [1.35, -0.78]],
+  [[2.0, 0.45], [2.33, 0.45]],
+  [[1.35, 0.75], [1.35, 0.95]],
+];
+const polys = [
+  rect(-3.1, -1.5, 0, 1.6), [[-3.1, 1.2], [0, 1.2]], [[-2.2, 1.2], [-2.2, -1.5]],
+  ...[-2.85, -2.65, -2.45].map((x) => arc(x, 1.4, 0.06, 0.06, 0, Math.PI * 2, 12)),
+  ...[0.8, 0.5, 0.2].map((y) => rect(-2.95, y, -2.4, y + 0.1)),
+  rect(-2, 0.2, -0.2, 1.0), rect(-2, -1.2, -1.5, -0.2), rect(-1.35, -1.2, -0.85, -0.2), rect(-0.7, -1.2, -0.2, -0.2),
+  rect(0.7, 0.95, 2.0, 1.55), rect(0.7, 0.15, 2.0, 0.75),
+  arc(1.35, -0.95, 0.6, 0.17), arc(1.35, -1.55, 0.6, 0.17, Math.PI, Math.PI * 2, 24), arc(1.35, -1.25, 0.6, 0.17, Math.PI, Math.PI * 2, 24),
+  [[0.75, -0.95], [0.75, -1.55]], [[1.95, -0.95], [1.95, -1.55]],
+  arc(2.65, 0.45, 0.32, 0.32), arc(2.65, 0.45, 0.14, 0.14, 0, Math.PI * 2, 24),
+  ...[0, 1, 2, 3].map((k) => { const a = Math.PI / 4 + (k * Math.PI) / 2, c = Math.cos(a), s = Math.sin(a); return [[2.65 + c * 0.14, 0.45 + s * 0.14], [2.65 + c * 0.32, 0.45 + s * 0.32]]; }),
+  ...conns,
+];
+const segs = []; // [x0,y0,x1,y1]
+for (const pl of polys) for (let i = 0; i < pl.length - 1; i++) segs.push([...pl[i], ...pl[i + 1]]);
+const cum = []; let total = 0;
+for (const g of segs) { total += Math.hypot(g[2] - g[0], g[3] - g[1]); cum.push(total); }
+
+function sampleBlueprint() {
+  const r = Math.random() * total; let lo = 0, hi = cum.length - 1;
+  while (lo < hi) { const m = (lo + hi) >> 1; if (cum[m] < r) lo = m + 1; else hi = m; }
+  const g = segs[lo], len = cum[lo] - (lo ? cum[lo - 1] : 0), t = 1 - (cum[lo] - r) / len;
+  return [g[0] + (g[2] - g[0]) * t, g[1] + (g[3] - g[1]) * t];
+}
+
+// ---------- particles ----------
+const N = 30000;
+const dust = new Float32Array(N * 3), bp = new Float32Array(N * 3), rnd = new Float32Array(N * 4);
+for (let i = 0; i < N; i++) {
+  const r = Math.random(), ambient = r < 0.1 || (i % 10) === 0;
+  rnd.set([Math.random(), 0.3 + Math.random() * 0.7, Math.random(), Math.random()], i * 4);
+  rnd[i * 4 + 2] = ambient ? Math.random() * 0.1 : 0.1 + Math.random() * 0.9; // z<.1: ambient dust, z>.94: lime
+  dust.set([(Math.random() - 0.5) * 22, (Math.random() - 0.5) * 13, (Math.random() - 0.5) * 8], i * 3);
+  if (ambient) bp.set([(Math.random() - 0.5) * 16, (Math.random() - 0.5) * 9, (Math.random() - 0.5) * 3], i * 3);
+  else { const [x, y] = sampleBlueprint(); bp.set([x, y, (Math.random() - 0.5) * 0.04], i * 3); }
+}
+
+const U = { // shared uniforms
+  uRes: { value: new THREE.Vector2() }, uPx: { value: 1 }, uTime: { value: 0 }, uScroll: { value: 0 },
+  uLens: { value: new THREE.Vector3(-999, -999, 180) }, uLensOn: { value: 0 },
+  uU2: { value: 0 }, uDim: { value: 1 }, uLine: { value: 0 }, uBuild: { value: 0 },
+};
+const lensGLSL = `float lensMask(vec2 px){ return (1.-smoothstep(uLens.z-3.,uLens.z,distance(px,uLens.xy)))*uLensOn; }`;
+const common = `uniform vec2 uRes; uniform float uPx,uTime,uScroll,uLensOn; uniform vec3 uLens;`;
+const mk = (vs, fs, extra = {}) => new THREE.ShaderMaterial({ uniforms: U, vertexShader: vs, fragmentShader: fs, transparent: true, depthTest: false, depthWrite: false, ...extra });
+
+const pg = new THREE.BufferGeometry();
+pg.setAttribute("position", new THREE.BufferAttribute(dust, 3));
+pg.setAttribute("aBp", new THREE.BufferAttribute(bp, 3));
+pg.setAttribute("aR", new THREE.BufferAttribute(rnd, 4));
+const pMat = mk(`${common} uniform float uU2,uDim;
+  attribute vec3 aBp; attribute vec4 aR; varying vec3 vC; varying float vA;
+  float ease(float x){ return x*x*(3.-2.*x); }
+  ${lensGLSL}
+  void main(){
+    float e2=ease(clamp((uU2-aR.x*.45)/.55,0.,1.));
+    float ang=aR.w*6.2832;
+    vec3 p=mix(position,aBp,e2);
+    p+=vec3(cos(ang+1.),sin(ang+1.),0.)*sin(3.1416*e2)*1.8;                 // curved travel
+    float amp=.3*(1.-e2)+.012+(aR.z<.1?.25:0.);                              // idle drift
+    p+=amp*vec3(sin(uTime*.5+aR.w*40.),cos(uTime*.6+aR.w*23.),sin(uTime*.4+aR.w*11.));
+    p+=vec3(cos(aR.w*37.),sin(aR.w*51.),aR.x-.5)*uScroll*uScroll*(3.+9.*aR.x)+vec3(0.,-uScroll*4.5*aR.y,0.); // scroll scatter
+    vec4 mv=modelViewMatrix*vec4(p,1.);
+    gl_Position=projectionMatrix*mv;
+    float lens=lensMask((gl_Position.xy/gl_Position.w*.5+.5)*uRes);
+    gl_PointSize=(1.1+aR.y*1.5)*uPx*(10./-mv.z)*(1.+lens*.6);
+    float isLime=aR.z>.94?1.:0.;
+    vC=mix(vec3(.545,.482,1.),vec3(.776,.957,.196),max(isLime,lens*.7));
+    vA=mix(.85,.85*uDim,e2);
+  }`,
+  `varying vec3 vC; varying float vA; void main(){ float d=length(gl_PointCoord-.5); if(d>.5)discard; gl_FragColor=vec4(vC,smoothstep(.5,.05,d)*vA); }`,
+  { blending: THREE.AdditiveBlending });
+const points = new THREE.Points(pg, pMat); points.renderOrder = 2; points.frustumCulled = false;
+
+// thin violet lines: drawn on, brighter inside the lens
+const lp = [], lt = [];
+segs.forEach((g, i) => { lp.push(g[0], g[1], 0, g[2], g[3], 0); lt.push(i / segs.length, (i + 1) / segs.length); });
+const lg = new THREE.BufferGeometry();
+lg.setAttribute("position", new THREE.Float32BufferAttribute(lp, 3));
+lg.setAttribute("aT", new THREE.Float32BufferAttribute(lt, 1));
+const lineMat = mk(`attribute float aT; varying float vT; void main(){ vT=aT; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }`,
+  `${common} uniform float uLine; varying float vT; ${lensGLSL}
+  void main(){ if(vT>uLine) discard; float l=lensMask(gl_FragCoord.xy); float f=1.-clamp(uScroll*1.6,0.,1.);
+    gl_FragColor=vec4(mix(vec3(.545,.482,1.),vec3(.78,.74,1.),l),(.5+.5*l)*f); }`);
+const lines = new THREE.LineSegments(lg, lineMat); lines.renderOrder = 1; lines.frustumCulled = false;
+
+// built surfaces: vanish inside the lens
+const tv = [];
+const tri = (a, c, o) => tv.push(a[0], a[1], -0.02, ...c, o);
+const quad = (x0, y0, x1, y1, h, o) => { const c = rgb(h); tri([x0, y0], c, o); tri([x1, y0], c, o); tri([x1, y1], c, o); tri([x0, y0], c, o); tri([x1, y1], c, o); tri([x0, y1], c, o); };
+const fan = (cx, cy, rx, ry, h, o, a0 = 0, a1 = Math.PI * 2) => { const c = rgb(h), pts = arc(cx, cy, rx, ry, a0, a1, 32); for (let i = 0; i < 32; i++) { tri([cx, cy], c, o); tri(pts[i], c, o); tri(pts[i + 1], c, o); } };
+quad(-3.1, -1.5, 0, 1.6, 0x12102a, 0); quad(-3.1, 1.2, 0, 1.6, 0x1f1c4a, 0.05); quad(-3.1, -1.5, -2.2, 1.2, 0x171436, 0.1);
+[0.8, 0.5, 0.2].forEach((y, i) => quad(-2.95, y, -2.4, y + 0.1, 0x3a3480, 0.15 + i * 0.03));
+quad(-2, 0.2, -0.2, 1.0, 0x3a3380, 0.25); [[-2, -1.5], [-1.35, -0.85], [-0.7, -0.2]].forEach(([a, b], i) => quad(a, -1.2, b, -0.2, 0x2a2566, 0.3 + i * 0.05));
+quad(0.7, 0.95, 2.0, 1.55, 0x24205a, 0.5); quad(0.7, 0.15, 2.0, 0.75, 0x24205a, 0.55);
+quad(0.75, -1.55, 1.95, -0.95, 0x1f1c4e, 0.65); fan(1.35, -1.55, 0.6, 0.17, 0x1f1c4e, 0.65, Math.PI, Math.PI * 2); fan(1.35, -0.95, 0.6, 0.17, 0x3a3490, 0.7);
+fan(2.65, 0.45, 0.32, 0.32, 0x4a5e0c, 0.8); fan(2.65, 0.45, 0.14, 0.14, 0xc6f432, 0.85);
+const sg = new THREE.BufferGeometry(), buf = new THREE.InterleavedBuffer(new Float32Array(tv), 7);
+sg.setAttribute("position", new THREE.InterleavedBufferAttribute(buf, 3, 0));
+sg.setAttribute("aC", new THREE.InterleavedBufferAttribute(buf, 3, 3));
+sg.setAttribute("aO", new THREE.InterleavedBufferAttribute(buf, 1, 6));
+const surf = new THREE.Mesh(sg, mk(`attribute vec3 aC; attribute float aO; varying vec3 vC; varying float vO; void main(){ vC=aC; vO=aO; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }`,
+  `${common} uniform float uBuild; varying vec3 vC; varying float vO; ${lensGLSL}
+  void main(){ float a=clamp((uBuild-vO*.6)/.4,0.,1.)*(1.-lensMask(gl_FragCoord.xy))*(1.-clamp(uScroll*1.6,0.,1.)); if(a<.01)discard; gl_FragColor=vec4(vC,a*.94); }`));
+surf.renderOrder = 0; surf.frustumCulled = false;
+
+// lime data packets, only visible inside the lens
+const PK = 5, routes = conns.map((c) => { const l = []; let s = 0; for (let i = 0; i < c.length - 1; i++) { s += Math.hypot(c[i + 1][0] - c[i][0], c[i + 1][1] - c[i][1]); l.push(s); } return { c, l, s }; });
+const pk = new Float32Array(routes.length * PK * 3);
+const kg = new THREE.BufferGeometry(); kg.setAttribute("position", new THREE.BufferAttribute(pk, 3));
+const packets = new THREE.Points(kg, mk(`${common} void main(){ vec4 mv=modelViewMatrix*vec4(position,1.); gl_Position=projectionMatrix*mv; gl_PointSize=9.*uPx*(10./-mv.z); }`,
+  `${common} ${lensGLSL} void main(){ float d=length(gl_PointCoord-.5); float a=smoothstep(.5,0.,d)*lensMask(gl_FragCoord.xy)*(1.-clamp(uScroll*1.6,0.,1.)); if(a<.01)discard; gl_FragColor=vec4(.776,.957,.196,a); }`, { blending: THREE.AdditiveBlending }));
+packets.renderOrder = 3; packets.frustumCulled = false;
+function movePackets(t) {
+  routes.forEach((r, ri) => { for (let k = 0; k < PK; k++) {
+    const d = (((t * 0.35 + k / PK + ri * 0.13) % 1) * r.s); let i = r.l.findIndex((v) => v >= d); if (i < 0) i = r.l.length - 1;
+    const s0 = i ? r.l[i - 1] : 0, f = (d - s0) / (r.l[i] - s0), a = r.c[i], b = r.c[i + 1], o = (ri * PK + k) * 3;
+    pk[o] = a[0] + (b[0] - a[0]) * f; pk[o + 1] = a[1] + (b[1] - a[1]) * f; pk[o + 2] = 0.01; } });
+  kg.attributes.position.needsUpdate = true;
+}
+
+// ---------- scene ----------
+const renderer = new THREE.WebGLRenderer({ canvas: $("#c"), antialias: false });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setClearColor(0x07070a);
+const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100); camera.position.z = 10;
+const group = new THREE.Group(); group.add(surf, lines, points, packets); scene.add(group);
+
+function resize() {
+  const w = innerWidth, h = innerHeight, dpr = renderer.getPixelRatio(), aspect = w / h;
+  renderer.setSize(w, h, false); camera.aspect = aspect; camera.updateProjectionMatrix();
+  U.uRes.value.set(w * dpr, h * dpr); U.uPx.value = dpr; U.uLens.value.z = 180 * dpr;
+  const vh = 2 * 10 * Math.tan((camera.fov * Math.PI) / 360), vw = vh * aspect, wide = aspect > 1.1;
+  const s = Math.min((wide ? vw * 0.5 : vw * 0.92) / 6.4, (vh * 0.5) / 3.4);
+  group.scale.setScalar(s);
+  group.position.set(wide ? vw / 2 - 3.2 * s - vw * 0.04 : 0, vh / 2 - 1.7 * s - vh * 0.12, 0);
+}
+addEventListener("resize", resize); resize();
+
+// ---------- input / loop ----------
+let mx = 0, my = 0, tx = 0, ty = 0, lx = -999, ly = -999, cx = -999, cy = -999, sy = 0, p = 0;
+addEventListener("pointermove", (e) => { cx = e.clientX; cy = e.clientY; tx = (cx / innerWidth) * 2 - 1; ty = (cy / innerHeight) * 2 - 1; if (lx < -900) { lx = cx; ly = cy; } });
+const readScroll = () => { sy = clamp(scrollY / (innerHeight * 1.3)); };
+addEventListener("scroll", readScroll); readScroll();
+
+let t0 = 0, revealed = false;
+function replay() { hero.classList.remove("in"); revealed = false; t0 = performance.now(); if (reduce) t0 = -1e9; }
+$("#replay").onclick = replay; replay();
+
+const sm = (x) => { x = clamp(x); return x * x * (3 - 2 * x); };
+let last = performance.now();
+renderer.setAnimationLoop((now) => {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  const k = 1 - Math.exp(-dt * 6), t = (now - t0) / 1000;
+  mx += (tx - mx) * k; my += (ty - my) * k; p += (sy - p) * (1 - Math.exp(-dt * 6));
+  lx += (cx - lx) * (1 - Math.exp(-dt * 14)); ly += (cy - ly) * (1 - Math.exp(-dt * 14));
+
+  // timeline: dust -> blueprint (0.3-2.3s) -> headline (0.6s) -> lines (2.0s) -> build (2.9s) -> lens (3.4-4.2s)
+  U.uU2.value = clamp((t - 0.3) / 2.0);
+  U.uLine.value = clamp((t - 2.0) / 1.6); U.uBuild.value = clamp((t - 2.9) / 2.4);
+  U.uLensOn.value = sm((t - 3.4) / 0.8); U.uDim.value = 1 - 0.55 * U.uBuild.value;
+  if (!revealed && t > (reduce ? -1 : 0.6)) { hero.classList.add("in"); revealed = true; }
+
+  U.uTime.value = now / 1000; U.uScroll.value = p;
+  U.uLens.value.x = lx * U.uPx.value; U.uLens.value.y = (innerHeight - ly) * U.uPx.value;
+  lensEl.style.transform = `translate(${lx - 180}px,${ly - 180}px)`; lensEl.style.opacity = U.uLensOn.value * (1 - clamp(p * 3));
+  movePackets(now / 1000);
+
+  group.rotation.set(-my * 0.07, mx * 0.12, 0);
+  hero.style.opacity = clamp(1 - p * 1.8);
+  renderer.render(scene, camera);
+});
+</script>
+</body>
+</html>

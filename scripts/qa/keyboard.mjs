@@ -1,4 +1,4 @@
-// Keyboard-only pass: Tab order, focus visibility, traps, menu dialog, X-ray key, preloader skip.
+// Keyboard-only pass: Tab order, focus visibility, traps, menu dialog, X-ray key.
 import { BASE, launch } from "./browser.mjs";
 
 const browser = await launch();
@@ -39,25 +39,9 @@ async function tabSequence(page, label, max = 140) {
   return seq;
 }
 
-// ---- Preloader: a fresh session shows it; a key press must end it quickly
+// ---- Home: full Tab sequence
 {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
-  const page = await ctx.newPage();
-  await page.goto(BASE + "/", { waitUntil: "load" });
-  const shown = await page.evaluate(() => document.documentElement.hasAttribute("data-preload"));
-  console.log(`
-Preloader active on first visit: ${shown}`);
-  const t0 = Date.now();
-  await page.keyboard.press("Tab");
-  await page.waitForFunction(() => !document.documentElement.hasAttribute("data-preload"), null, { timeout: 4000 });
-  console.log(`Preloader ended ${Date.now() - t0}ms after Tab (exit animation is ~0.9s)`);
-  await ctx.close();
-}
-
-// ---- Home: repeat visit (no preloader), full Tab sequence
-{
-  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
-  await ctx.addInitScript(() => sessionStorage.setItem("lkw-preloaded", "1"));
   const page = await ctx.newPage();
   await page.goto(BASE + "/", { waitUntil: "load" });
   await page.waitForTimeout(1500);

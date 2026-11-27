@@ -1,7 +1,7 @@
 ---
 type: how-to
 updated: 2026-11-27
-sources: [raw/sessions/2026-11-25-lint-webp-cleanup.md, raw/sessions/2026-11-27-ver3-redesign-build.md]
+sources: [raw/sessions/2026-11-25-lint-webp-cleanup.md, raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-agent-workflow.md]
 ---
 # Code quality
 
@@ -12,6 +12,8 @@ sources: [raw/sessions/2026-11-25-lint-webp-cleanup.md, raw/sessions/2026-11-27-
 - **Pitfall (fixed):** `gsap.to(targets, { overwrite: true })` also kills `gsap.quickTo` tweens on the same targets; use `overwrite: "auto"` ([[2026-11-27-ver3-redesign-build]]).
 - **Lint gotcha:** repo-wide `npm run lint` in the main checkout scans `.claude/worktrees/*` and reports about 86,000 problems; lint `src scripts` instead ([[ver3-build-process]]).
 - Still untested: Lighthouse, Safari, Firefox, real touch devices, a real screen reader ([[open-follow-ups]]).
+
+Agent verification steps and review rules: [[agent-workflow]].
 
 ## Ver 2.0 code (now frozen in `src/app/v2` and live on `main`)
 State at 2026-11-25: `npx eslint` 0 problems, `npx tsc --noEmit` clean, `next build` passes.

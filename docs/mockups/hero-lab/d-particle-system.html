@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hero lab - D One system particles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;900&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+<style>
+:root{--bg:#07070a;--ink:#ecebf3;--mute:#8b8a99;--line:#1f1e29;--violet:#8b7bff;--lime:#c6f432}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg)}
+body{height:250vh;color:var(--ink);font-family:"Inter Tight",system-ui,sans-serif;overflow-x:hidden;background:var(--bg)}
+#c{position:fixed;inset:0;z-index:0}
+.hero{position:fixed;inset:0;z-index:2;pointer-events:none;display:flex;flex-direction:column;justify-content:flex-end;padding:0 clamp(20px,4vw,64px) clamp(28px,5vh,56px)}
+.eyebrow{font:500 12px "JetBrains Mono",monospace;color:var(--mute);letter-spacing:.04em;margin-bottom:2vh;opacity:0;transition:opacity .8s .2s}
+.eyebrow i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--lime);margin-right:8px;box-shadow:0 0 10px var(--lime)}
+h1{font-weight:900;font-size:clamp(40px,10.5vw,176px);line-height:.86;letter-spacing:-.055em}
+.ln{display:block;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em}
+.ln>span{display:block;transform:translateY(112%);transition:transform 1.1s cubic-bezier(.2,.8,.2,1)}
+.ln:nth-child(2)>span{transition-delay:.12s}.ln:nth-child(3)>span{transition-delay:.24s}
+em{font-family:"Instrument Serif",serif;font-style:italic;font-weight:400;color:var(--violet);letter-spacing:-.04em}
+.sub{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center;margin-top:3vh;opacity:0;transform:translateY(12px);transition:opacity .9s .7s,transform .9s .7s}
+.sub p{max-width:52ch;color:var(--mute);font-size:clamp(14px,1.25vw,18px);line-height:1.45}
+.btn{pointer-events:auto;background:var(--lime);color:#07070a;font:600 15px "Inter Tight",sans-serif;padding:13px 24px;border-radius:999px;border:0;cursor:pointer;text-decoration:none}
+.in .ln>span{transform:none}.in .eyebrow{opacity:1}.in .sub{opacity:1;transform:none}
+.lab{position:fixed;left:0;top:0;z-index:3;pointer-events:none;font:500 11px "JetBrains Mono",monospace;color:var(--ink);background:rgba(10,10,15,.8);border:1px solid var(--line);border-radius:999px;padding:4px 10px;white-space:nowrap;opacity:0;will-change:transform}
+.lab.ai{color:var(--lime);border-color:rgba(198,244,50,.45)}
+.ph{position:absolute;top:150vh;left:0;right:0;height:100vh;z-index:5;background:var(--bg);border-top:1px solid var(--line);display:grid;place-items:center;font:500 13px "JetBrains Mono",monospace;color:var(--mute);letter-spacing:.06em}
+.tag,.back{position:fixed;top:16px;z-index:10;font:500 11px "JetBrains Mono",monospace;color:var(--mute);display:flex;gap:12px;align-items:center}
+.tag{right:16px}.back{left:16px;text-decoration:none}
+.tag button{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer}
+.tag button:hover,.back:hover{color:var(--lime);border-color:var(--lime)}
+</style>
+</head>
+<body>
+<div id="c"></div>
+<a class="back" href="index.html">&larr; all options</a>
+<div class="tag"><span>Option D &middot; One system (particles)</span><button id="replay">Replay &#8635;</button></div>
+<main class="hero" id="hero">
+  <div class="eyebrow"><i></i>Leow Kai Wen &middot; Full-stack developer &middot; AI engineer &middot; Open to work</div>
+  <h1><span class="ln"><span>I design</span></span><span class="ln"><span>and <em>build</em></span></span><span class="ln"><span>whole products.</span></span></h1>
+  <div class="sub"><p>I take products from idea to production: interfaces, APIs, databases and the AI that ties them together.</p><a class="btn" id="go" href="#projects">See projects &darr;</a></div>
+</main>
+<section class="ph" id="projects">03 &mdash; Personal projects (Atlas)</section>
+
+<script type="module">
+import * as THREE from "three";
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = s => document.querySelector(s), now = () => performance.now() / 1000;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const rnd = (a, b) => a + Math.random() * (b - a);
+const gauss = () => (Math.random() + Math.random() + Math.random() - 1.5) * .8;
+try { await Promise.race([document.fonts.load('900 200px "Inter Tight"'), new Promise(r => setTimeout(r, 1500))]); } catch {}
+
+const DPR = Math.min(devicePixelRatio, 2);
+const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
+renderer.setPixelRatio(DPR); renderer.setSize(innerWidth, innerHeight);
+$("#c").appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, .1, 100);
+
+// ---------- targets ----------
+// 1) "LKW" sampled from an offscreen 2D canvas
+const cv = document.createElement("canvas"); cv.width = 700; cv.height = 260;
+const g = cv.getContext("2d"); g.fillStyle = "#fff"; g.textAlign = "center"; g.textBaseline = "middle";
+g.font = '900 240px "Inter Tight","Arial Black",sans-serif'; g.fillText("LKW", 350, 135);
+const px = g.getImageData(0, 0, 700, 260).data, pts = [];
+for (let y = 0; y < 260; y += 2) for (let x = 0; x < 700; x += 2) if (px[(y * 700 + x) * 4 + 3] > 128) pts.push(x, y);
+const TC = [3.2, 2.4], TS = 0.0185;
+
+// 2) stack constellation (world coords, upper-right so the headline stays clear)
+const NODES = [
+  ["Next.js", -1.2, 3.6, 0, 0], ["TypeScript", -0.6, 0.6, 0.5, 0], ["Spring Boot", 3.0, 2.2, -0.5, 0],
+  ["PostgreSQL", 4.6, -0.6, 0.3, 0], ["pgvector", 8.2, 0.4, 0, 1], ["MCP", 6.6, 3.2, 0.8, 1], ["Claude API", 9.4, 3.6, -0.4, 1]
+].map(([name, x, y, z, ai]) => ({ name, p: new THREE.Vector3(x, y, z), ai }));
+const EDGES = [[0, 1], [0, 2], [2, 3], [3, 4], [2, 5], [5, 6], [4, 6], [2, 6]];
+
+// ---------- particles ----------
+const N = 40000, NODE_N = 31500;
+const aS = new Float32Array(N * 3), aT = new Float32Array(N * 3), aN = new Float32Array(N * 3), aR = new Float32Array(N * 4), aAI = new Float32Array(N);
+for (let i = 0; i < N; i++) {
+  const a = Math.random() * 6.283, r = rnd(6, 20);
+  aS.set([Math.cos(a) * r * 1.3, Math.sin(a) * r * .8, rnd(-10, 8)], i * 3);
+  const k = (Math.random() * pts.length / 2 | 0) * 2;
+  aT.set([(pts[k] - 350) * TS + TC[0] + gauss() * .03, -(pts[k + 1] - 135) * TS + TC[1] + gauss() * .03, gauss() * .12], i * 3);
+  if (i < NODE_N) {
+    const n = NODES[i % 7]; aAI[i] = n.ai;
+    aN.set([n.p.x + gauss() * .55, n.p.y + gauss() * .55, n.p.z + gauss() * .55], i * 3);
+  } else {
+    const [a0, b0] = EDGES[i % EDGES.length], A = NODES[a0], B = NODES[b0], t = Math.random();
+    aAI[i] = A.ai && B.ai ? 1 : 0;
+    aN.set([A.p.x + (B.p.x - A.p.x) * t + gauss() * .04, A.p.y + (B.p.y - A.p.y) * t + gauss() * .04, A.p.z + (B.p.z - A.p.z) * t], i * 3);
+  }
+  aR.set([Math.random(), Math.random(), Math.random(), Math.random()], i * 4);
+}
+const geo = new THREE.BufferGeometry();
+geo.setAttribute("position", new THREE.BufferAttribute(aT, 3)); // required by three; real positions come from the attributes below
+geo.setAttribute("aS", new THREE.BufferAttribute(aS, 3));
+geo.setAttribute("aT", new THREE.BufferAttribute(aT, 3));
+geo.setAttribute("aN", new THREE.BufferAttribute(aN, 3));
+geo.setAttribute("aR", new THREE.BufferAttribute(aR, 4));
+geo.setAttribute("aAI", new THREE.BufferAttribute(aAI, 1));
+const U = { uT: { value: 0 }, uM1: { value: 0 }, uM2: { value: 0 }, uSc: { value: 0 }, uDpr: { value: DPR }, uMouse: { value: new THREE.Vector3(999, 999, 0) } };
+const points = new THREE.Points(geo, new THREE.ShaderMaterial({
+  uniforms: U, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+  vertexShader: `
+    attribute vec3 aS,aT,aN; attribute vec4 aR; attribute float aAI;
+    uniform float uT,uM1,uM2,uSc,uDpr; uniform vec3 uMouse; varying vec3 vCol; varying float vA;
+    void main(){
+      float e1=smoothstep(0.,1.,clamp(uM1*1.7-aR.x*.7,0.,1.));
+      float e2=smoothstep(0.,1.,clamp(uM2*1.7-aR.y*.7,0.,1.));
+      vec3 dust=aS+vec3(sin(uT*.3+aR.x*20.),cos(uT*.25+aR.y*20.),sin(uT*.2+aR.z*20.))*.4;
+      vec3 p=mix(dust,aT,e1);
+      p+=vec3(sin(aR.x*40.+uT*2.),cos(aR.y*40.+uT*2.),sin(aR.z*30.+uT))*e1*(1.-e1)*2.4;   // swirl while travelling
+      p+=vec3(sin(uT*1.4+aR.x*50.),cos(uT*1.2+aR.y*50.),0.)*.025*e1*(1.-e2);                // breathing letters
+      p=mix(p,aN,e2);
+      p+=vec3(sin(aR.y*40.+uT*2.),cos(aR.z*40.+uT*2.),0.)*e2*(1.-e2)*2.4;
+      p+=vec3(sin(uT*.8+aR.z*30.),cos(uT*.7+aR.x*30.),0.)*.06*e2;
+      float sc=smoothstep(0.,1.,uSc);
+      vec3 dir=normalize(p-vec3(3.,1.5,0.)+vec3(.001));
+      p+=(dir*(5.+aR.z*14.)+vec3(0.,-7.,5.+aR.w*6.))*sc;                                       // scatter toward Atlas (below)
+      vec2 d=p.xy-uMouse.xy; float dl=length(d); float f=exp(-dl*dl/2.4);
+      p.xy+=normalize(d+vec2(1e-4))*f*1.5; p.z+=f*1.5;                                         // cursor repel
+      vec4 mv=viewMatrix*vec4(p,1.);
+      gl_Position=projectionMatrix*mv;
+      gl_PointSize=(.9+aR.w*1.9)*uDpr*(14./-mv.z)*1.7*(1.+f*.8);
+      vec3 violet=vec3(.545,.482,1.), lime=vec3(.776,.957,.196);
+      vCol=mix(violet,vec3(.93,.92,.97),e1*(1.-e2)*.55);
+      vCol=mix(vCol,mix(violet,lime,aAI),e2);
+      vCol=mix(vCol,lime,f*.5);
+      vA=(.45+.55*aR.z)*(1.-sc*.55);
+    }`,
+  fragmentShader: `varying vec3 vCol; varying float vA;
+    void main(){float d=length(gl_PointCoord-.5); if(d>.5) discard; gl_FragColor=vec4(vCol,vA*smoothstep(.5,.1,d));}`
+}));
+points.frustumCulled = false; scene.add(points);
+
+// connecting lines (architecture graph)
+const lp = [], lc = [], V = new THREE.Color(0x8b7bff), L = new THREE.Color(0xc6f432);
+for (const [a, b] of EDGES) {
+  const A = NODES[a], B = NODES[b], c = A.ai && B.ai ? L : V;
+  lp.push(A.p.x, A.p.y, A.p.z, B.p.x, B.p.y, B.p.z); lc.push(c.r, c.g, c.b, c.r, c.g, c.b);
+}
+const lg = new THREE.BufferGeometry();
+lg.setAttribute("position", new THREE.Float32BufferAttribute(lp, 3)); lg.setAttribute("color", new THREE.Float32BufferAttribute(lc, 3));
+const lines = new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0, depthWrite: false }));
+scene.add(lines);
+
+// DOM labels
+const labs = NODES.map(n => {
+  const d = document.createElement("div"); d.className = "lab" + (n.ai ? " ai" : ""); d.textContent = n.name; document.body.appendChild(d); return d;
+});
+
+// ---------- interaction ----------
+const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), hit = new THREE.Vector3(), ndc = new THREE.Vector2();
+let mx = 0, my = 0, tmx = 0, tmy = 0, s = 0, t0 = now();
+addEventListener("pointermove", e => { tmx = e.clientX / innerWidth * 2 - 1; tmy = -(e.clientY / innerHeight * 2 - 1); });
+const onScroll = () => s = clamp(scrollY / (innerHeight * 1.5));
+addEventListener("scroll", onScroll, { passive: true }); onScroll();
+addEventListener("resize", () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); });
+const hero = $("#hero");
+function start() {
+  hero.classList.remove("in"); void hero.offsetWidth;
+  if (RM) { t0 = now() - 100; hero.classList.add("in"); }
+  else { t0 = now(); setTimeout(() => hero.classList.add("in"), 500); }
+}
+$("#replay").onclick = () => { scrollTo(0, 0); start(); };
+$("#go").onclick = e => { e.preventDefault(); scrollTo({ top: innerHeight * 1.5, behavior: "smooth" }); };
+
+const v3 = new THREE.Vector3();
+function frame() {
+  const t = now(), e = t - t0;
+  U.uT.value = t;
+  U.uM1.value = ease(clamp((e - .5) / 2.2));        // dust -> LKW (done ~2.7s), holds until 3.8s
+  U.uM2.value = ease(clamp((e - 3.8) / 2.2));       // LKW -> stack (done ~6s)
+  U.uSc.value = s;
+  mx += (tmx - mx) * .06; my += (tmy - my) * .06;
+  camera.position.set(mx * .8, my * .5, 14); camera.lookAt(0, 0, 0); camera.updateMatrixWorld();
+  ray.setFromCamera(ndc.set(tmx, tmy), camera);
+  if (ray.ray.intersectPlane(plane, hit)) U.uMouse.value.copy(hit);
+  const lo = U.uM2.value, fade = clamp(1 - s * 2);
+  lines.material.opacity = lo * lo * .45 * fade;
+  const w = innerWidth, h = innerHeight;
+  NODES.forEach((n, i) => {
+    v3.copy(n.p).project(camera);
+    labs[i].style.transform = `translate(${(v3.x * .5 + .5) * w + 12}px,${(-v3.y * .5 + .5) * h - 26}px)`;
+    labs[i].style.opacity = clamp((lo - .6) * 3) * fade;
+  });
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+start();
+frame();
+</script>
+</body>
+</html>

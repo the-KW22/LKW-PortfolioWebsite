@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hero lab A+B - Warp into blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;700;900&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07070a;--ink:#ecebf3;--mute:#8b8a99;--line:#1f1e29;--violet:#8b7bff;--lime:#c6f432}
+*{box-sizing:border-box;margin:0}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:"Inter Tight",system-ui,sans-serif;overflow-x:hidden}
+#gl{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+#hero{position:fixed;inset:0;z-index:2;pointer-events:none;display:flex;align-items:flex-end;padding:0 clamp(20px,4vw,64px) clamp(28px,5vh,56px)}
+#hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(to top right,rgba(7,7,10,.85),rgba(7,7,10,0) 60%)}
+.eyebrow{font:500 12px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin-bottom:2vh;opacity:0;transition:opacity .8s .1s}
+.eyebrow i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime);margin-right:10px;vertical-align:1px}
+h1{font-weight:900;font-size:clamp(40px,10.5vw,176px);line-height:.86;letter-spacing:-.055em}
+.ln{display:block;overflow:hidden;padding-bottom:.07em}
+.ln>span{display:block;transform:translateY(112%)}
+h1 em{font:italic 400 1.04em "Instrument Serif",serif;color:var(--violet);letter-spacing:-.03em}
+.intro{max-width:560px;color:var(--mute);font-size:clamp(15px,1.3vw,19px);line-height:1.4;margin:3vh 0;opacity:0;transform:translateY(14px);transition:opacity .9s .55s,transform .9s .55s}
+.btn{pointer-events:auto;display:inline-block;background:var(--lime);color:#07070a;font-weight:700;padding:14px 26px;border-radius:999px;text-decoration:none;opacity:0;transform:translateY(14px);transition:opacity .9s .7s,transform .9s .7s}
+.in .ln>span{transform:none;transition:transform 1.1s cubic-bezier(.16,1,.3,1) calc(var(--i)*.12s)}
+.in .eyebrow{opacity:1}.in .intro,.in .btn{opacity:1;transform:none}
+.tag,.back{position:fixed;top:16px;z-index:6;font:500 11px "JetBrains Mono",monospace;letter-spacing:.06em;color:var(--mute);background:rgba(7,7,10,.6);border:1px solid var(--line);border-radius:999px;padding:8px 14px;backdrop-filter:blur(8px)}
+.tag{right:16px;display:flex;gap:12px;align-items:center}.tag b{color:var(--ink)}
+.tag button{font:inherit;color:#07070a;background:var(--lime);border:0;border-radius:99px;padding:4px 10px;cursor:pointer}
+.back{left:16px;text-decoration:none}.back:hover{color:var(--ink)}
+#lens{position:fixed;left:0;top:0;width:340px;height:340px;margin:-170px 0 0 -170px;border-radius:50%;border:1.5px solid var(--lime);box-shadow:0 0 36px rgba(198,244,50,.28),inset 0 0 50px rgba(198,244,50,.08);pointer-events:none;z-index:3;opacity:0}
+#lens span{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font:500 10px "JetBrains Mono",monospace;letter-spacing:.14em;color:var(--lime)}
+#pre{position:fixed;inset:0;z-index:5;background:var(--bg);display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-end;padding:clamp(20px,4vw,64px);pointer-events:none;transition:opacity .3s}
+#pre.done{opacity:0}
+#pre b{font:500 clamp(64px,14vw,220px) "JetBrains Mono",monospace;letter-spacing:-.04em;line-height:.9;color:var(--ink)}
+#pre span{font:500 11px "JetBrains Mono",monospace;letter-spacing:.14em;color:var(--lime);text-transform:uppercase;margin-bottom:12px}
+#atlas{position:relative;z-index:4;min-height:100vh;background:var(--bg);border-top:1px solid var(--line);display:grid;place-items:center;font:500 clamp(14px,2vw,22px) "JetBrains Mono",monospace;color:var(--mute);letter-spacing:.06em}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div id="lens"><span>X-RAY</span></div>
+<div id="pre"><span>Loading portfolio</span><b id="count">000</b></div>
+<a class="back" href="index.html">&larr; all options</a>
+<div class="tag"><span><b>A+B</b> Warp into blueprint</span><button id="replay">Replay &#8635;</button></div>
+<div id="hero"><div>
+  <div class="eyebrow"><i></i>Leow Kai Wen &middot; Full-stack developer &middot; AI engineer &middot; Open to work</div>
+  <h1><span class="ln"><span style="--i:0">I design</span></span><span class="ln"><span style="--i:1">and <em>build</em></span></span><span class="ln"><span style="--i:2">whole products.</span></span></h1>
+  <p class="intro">I take products from idea to production: interfaces, APIs, databases and the AI that ties them together.</p>
+  <a class="btn" href="#atlas">See projects &darr;</a>
+</div></div>
+<div style="height:150vh"></div>
+<section id="atlas">03 &mdash; Personal projects (Atlas)</section>
+
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from "three";
+THREE.ColorManagement.enabled = false; // shaders output raw sRGB values
+
+const $ = s => document.querySelector(s);
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const DPR = Math.min(devicePixelRatio || 1, 2);
+const cl = x => Math.min(1, Math.max(0, x));
+const sm = (a, b, x) => { x = cl((x - a) / (b - a)); return x * x * (3 - 2 * x); };
+const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
+
+const renderer = new THREE.WebGLRenderer({ canvas: $("#gl"), antialias: true });
+renderer.setPixelRatio(DPR);
+renderer.setClearColor(0x07070a);
+const scene = new THREE.Scene();
+const cam = new THREE.PerspectiveCamera(40, 1, 0.1, 500);
+const grp = new THREE.Group(); // the product
+scene.add(grp);
+const tun = new THREE.Group(); // warp tunnel, follows the camera
+scene.add(tun);
+
+const D = 140, FLOOR = -3.4, V0 = 260, TB = 1.0, TD = 1.5; // tunnel depth, floor y, cruise speed, brake start, brake length
+const U = {
+  // product
+  uDraw: { value: 2 }, uBuild: { value: 0 }, uFade: { value: 0 }, uPack: { value: 0 }, uArr: { value: 0 },
+  uLens: { value: new THREE.Vector2(-999, -999) }, uR: { value: 0 }, uPx: { value: DPR },
+  // tunnel
+  uTravel: { value: 0 }, uDepth: { value: D }, uStretch: { value: 1 }, uWidth: { value: DPR }, uSnap: { value: 0 },
+  uFloor: { value: FLOOR }, uWarp: { value: 1 }, uVel: { value: new THREE.Vector2() }, uRes: { value: new THREE.Vector2(1, 1) },
+  uGrid: { value: 0 }, uCamZ: { value: 13 },
+};
+const LENS = `uniform vec2 uLens; uniform float uR;
+float lensIn(float soft){ return 1.0 - smoothstep(uR - soft, uR, distance(gl_FragCoord.xy, uLens)); }`;
+
+// ================= TUNNEL (from option B) =================
+const N = 1700, pos = new Float32Array(N * 12), aS = new Float32Array(N * 16), aR = new Float32Array(N * 8), idx = [];
+for (let i = 0; i < N; i++) {
+  const a = Math.random() * 6.283, r = 2.4 + Math.pow(Math.random(), 1.5) * 18;
+  const s = [Math.cos(a) * r * 1.7, Math.sin(a) * r, Math.random() * D, 0.6 + Math.random() * 1.6];
+  const rr = [Math.random(), Math.random()];
+  [[0, -1], [0, 1], [1, -1], [1, 1]].forEach(([e, side], v) => {
+    pos.set([e, side, 0], (i * 4 + v) * 3); aS.set(s, (i * 4 + v) * 4); aR.set(rr, (i * 4 + v) * 2);
+  });
+  idx.push(i * 4, i * 4 + 1, i * 4 + 2, i * 4 + 1, i * 4 + 3, i * 4 + 2);
+}
+const sg = new THREE.BufferGeometry();
+sg.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+sg.setAttribute("aS", new THREE.BufferAttribute(aS, 4));
+sg.setAttribute("aR", new THREE.BufferAttribute(aR, 2));
+sg.setIndex(idx);
+const streaks = new THREE.Mesh(sg, new THREE.ShaderMaterial({
+  uniforms: U, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+  vertexShader: `attribute vec4 aS; attribute vec2 aR;
+    uniform float uTravel, uDepth, uStretch, uWidth, uSnap, uFloor, uWarp; uniform vec2 uVel, uRes;
+    varying float vA; varying vec3 vC;
+    void main(){
+      float z = -mod(aS.z - uTravel, uDepth) - .6;
+      float k = pow(-z / uDepth, 1.3);
+      vec3 p = vec3(aS.xy, z);
+      p.xy += uVel * k * 14.0;
+      float sn = smoothstep(aR.x * .6, aR.x * .6 + .4, uSnap);
+      vec3 q = p;
+      q.x = mix(p.x, floor(aS.x / 3.0 + .5) * 3.0 + uVel.x * k * 14.0, sn);
+      q.y = mix(p.y, uFloor, sn);
+      vec3 t = q; t.z -= aS.w * uStretch;
+      mat4 vp = projectionMatrix * viewMatrix * modelMatrix;
+      vec4 ch = vp * vec4(q, 1.0), ct = vp * vec4(t, 1.0);
+      vec2 d = (ct.xy / ct.w - ch.xy / ch.w) * uRes;
+      float L = length(d); vec2 dir = L > 1e-4 ? d / L : vec2(1., 0.);
+      vec4 b = position.x < .5 ? ch : ct;
+      b.xy += vec2(-dir.y, dir.x) * position.y * uWidth * 2.0 / uRes * b.w;
+      gl_Position = b;
+      float near = smoothstep(0.0, 4.0, -z - .6), far = 1.0 - smoothstep(.55, 1.0, -z / uDepth);
+      vA = near * far * (1.0 - position.x * .85) * (1.0 - sn * .65) * (.35 + .65 * aR.x);
+      vC = mix(vec3(.545, .482, 1.0), vec3(.78, .96, .2), step(.86, aR.y));
+      vC = mix(vC, vec3(1.0), uWarp * (1.0 - position.x) * .5);
+    }`,
+  fragmentShader: `varying float vA; varying vec3 vC; void main(){ gl_FragColor = vec4(vC, vA); }`,
+}));
+streaks.frustumCulled = false;
+tun.add(streaks);
+
+const floorMesh = new THREE.Mesh(new THREE.PlaneGeometry(400, 400).rotateX(-Math.PI / 2), new THREE.ShaderMaterial({
+  uniforms: U, transparent: true, depthWrite: false,
+  vertexShader: `varying vec3 vP; void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vP = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
+  fragmentShader: `uniform float uTravel, uGrid, uDepth, uCamZ; uniform vec2 uVel; varying vec3 vP;
+    float gridLine(vec2 q){ vec2 g = abs(fract(q - .5) - .5) / fwidth(q); return 1.0 - min(min(g.x, g.y), 1.0); }
+    void main(){
+      float d = max(uCamZ - vP.z, 0.0);
+      vec2 p = vec2(vP.x - uVel.x * pow(d / uDepth, 1.3) * 14.0, vP.z - uTravel);
+      float l = max(gridLine(p / 3.0) * .55, gridLine(p / 15.0) * .9);
+      float haze = smoothstep(50.0, 220.0, d);
+      float a = (l * exp(-d / 60.0) + haze * .5) * uGrid;
+      gl_FragColor = vec4(mix(vec3(.545, .482, 1.0), vec3(.75, .68, 1.0), haze), a);
+    }`,
+}));
+floorMesh.position.set(0, FLOOR, -150);
+floorMesh.frustumCulled = false;
+scene.add(floorMesh);
+const sky = new THREE.Mesh(new THREE.PlaneGeometry(1000, 300), new THREE.ShaderMaterial({
+  uniforms: U, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+  vertexShader: `varying vec2 vU; void main(){ vU = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+  fragmentShader: `uniform float uGrid; varying vec2 vU;
+    void main(){
+      float y = abs(vU.y);
+      float g = exp(-pow(y / 22.0, 1.2)) * .5 + exp(-y / 6.0) * .5;
+      gl_FragColor = vec4(vec3(.5, .4, 1.0) * g, g * uGrid * .8);
+    }`,
+}));
+sky.position.set(0, 1.6, -300);
+sky.frustumCulled = false;
+scene.add(sky);
+
+const WORDS = [["CoreEx", 0], ["AsteroidUI", 0], ["Moonwave", 0], ["Brickly", 0], ["PetCare", 0], ["Next.js", 0],
+  ["Spring Boot", 0], ["PostgreSQL", 0], ["TypeScript", 0], ["Claude API", 1], ["MCP", 1], ["pgvector", 1]];
+await Promise.race([Promise.all(['900 64px "Inter Tight"', '500 40px "JetBrains Mono"'].map(f => document.fonts.load(f))), new Promise(r => setTimeout(r, 1500))]).catch(() => {});
+const sprites = [];
+[...WORDS, ...WORDS].forEach(([txt, lime], i) => {
+  const c = document.createElement("canvas"); c.width = 512; c.height = 128;
+  const g = c.getContext("2d");
+  g.font = i % WORDS.length < 5 ? '900 84px "Inter Tight",sans-serif' : '500 56px "JetBrains Mono",monospace';
+  g.textAlign = "center"; g.textBaseline = "middle";
+  g.fillStyle = lime ? "#c6f432" : "#ecebf3";
+  g.fillText(txt, 256, 66);
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(4, 1), new THREE.MeshBasicMaterial({
+    map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false }));
+  const a = Math.random() * 6.283, r = 4.5 + Math.random() * 9;
+  m.userData = { x: Math.cos(a) * r * 1.5, y: Math.sin(a) * r * 0.8, zo: (i / (WORDS.length * 2)) * D };
+  m.frustumCulled = false;
+  tun.add(m); sprites.push(m);
+});
+
+// ================= PRODUCT (from option A) =================
+// Blueprint lines arrive as streaks: each segment flies in from far down the tunnel (staggered by draw order) and lands in place.
+const lineMat = new THREE.ShaderMaterial({
+  uniforms: U, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+  vertexShader: `attribute float aT; attribute float aE; attribute float aR; uniform float uArr; varying float vFly; varying float vVis;
+    void main(){
+      float ar = clamp(uArr * 1.5 - aT * .5, 0.0, 1.0);
+      float fly = pow(1.0 - ar, 3.0);
+      vFly = fly; vVis = smoothstep(0.0, .04, ar);
+      vec3 p = position; p.z -= fly * (40.0 + aR * 90.0) + aE * fly * 45.0;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+    }`,
+  fragmentShader: `${LENS} uniform float uBuild, uFade; varying float vFly; varying float vVis;
+    void main(){
+      float inside = lensIn(8.0);
+      float a = mix(mix(1.0, 0.4, uBuild), 1.0, inside) * vVis;       // dim after build, full inside lens
+      vec3 c = mix(vec3(.545, .482, 1.0), vec3(.8, .78, 1.0), inside) + vFly * .8;
+      gl_FragColor = vec4(c, a * (1.0 - uFade));
+    }`,
+});
+function solid(base, rim) {
+  return new THREE.ShaderMaterial({
+    uniforms: { ...U, uBase: { value: new THREE.Color(base) }, uRim: { value: new THREE.Color(rim) } },
+    polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1,
+    vertexShader: `varying vec3 vN; varying vec3 vV;
+      void main(){ vN = normalize(normalMatrix * normal); vec4 mv = modelViewMatrix * vec4(position, 1.0); vV = -mv.xyz; gl_Position = projectionMatrix * mv; }`,
+    fragmentShader: `${LENS} uniform vec3 uBase, uRim; uniform float uBuild, uFade; varying vec3 vN; varying vec3 vV;
+      float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+      void main(){
+        if (distance(gl_FragCoord.xy, uLens) < uR) discard;                        // X-ray lens: see through
+        if (hash(floor(gl_FragCoord.xy / 2.0)) > uBuild * (1.0 - uFade)) discard;  // dithered "fill in"
+        vec3 n = normalize(vN);
+        float l = max(dot(n, normalize(vec3(.4, .8, .6))), 0.0);
+        float f = pow(1.0 - max(dot(n, normalize(vV)), 0.0), 2.5);
+        gl_FragColor = vec4(uBase * (.35 + .9 * l) + uRim * f * .55, 1.0);
+      }`,
+  });
+}
+const mats = {
+  ui: solid(0x1d1c36, 0x8b7bff), ui2: solid(0x2a2752, 0xb4a8ff),
+  api: solid(0x262152, 0x8b7bff), db: solid(0x1b2a44, 0x7aa8ff), ai: solid(0x2b3a0c, 0xc6f432),
+};
+
+let cur = 0;
+const parts = {};
+function part(name, base, ex) {
+  const n = new THREE.Group();
+  n.userData = { base: V3(...base), ex: V3(...ex) };
+  n.position.copy(n.userData.base);
+  grp.add(n); parts[name] = n; return n;
+}
+function stamp(g, start, span) { // aT: draw/arrival order; aE: which end of the segment; aR: random flight distance
+  const n = g.attributes.position.count, t = new Float32Array(n), e = new Float32Array(n), r = new Float32Array(n);
+  for (let i = 0; i < n; i += 2) { t[i] = t[i + 1] = start + span * (i / n); e[i + 1] = 1; r[i] = r[i + 1] = Math.random(); }
+  g.setAttribute("aT", new THREE.BufferAttribute(t, 1));
+  g.setAttribute("aE", new THREE.BufferAttribute(e, 1));
+  g.setAttribute("aR", new THREE.BufferAttribute(r, 1));
+}
+function add(node, geo, x, y, z, kind, thr = 1) {
+  const m = new THREE.Mesh(geo, mats[kind]);
+  m.position.set(x, y, z);
+  const eg = new THREE.EdgesGeometry(geo, thr);
+  stamp(eg, cur, 0.05); cur += 0.016;
+  const l = new THREE.LineSegments(eg, lineMat);
+  l.position.copy(m.position);
+  node.add(m, l);
+}
+const box = (n, w, h, d, x, y, z, k) => add(n, new THREE.BoxGeometry(w, h, d), x, y, z, k);
+
+const APP = [-2.6, 0.4, 0];
+box(part("frame", APP, [-1, 0, -1.8]), 5.2, 3.4, 0.12, 0, 0, 0, "ui");
+const chrome = part("chrome", APP, [-1, 0.3, -0.5]);
+box(chrome, 4.9, 0.34, 0.06, 0, 1.4, 0.09, "ui2");
+box(chrome, 1.0, 2.5, 0.06, -1.9, -0.2, 0.09, "ui2");
+[0, 1, 2].forEach(i => box(chrome, 0.14, 0.14, 0.08, -2.2 + i * 0.22, 1.4, 0.14, "api"));
+const cards = part("cards", APP, [-1, 0, 0.9]);
+[-0.65, 0.5, 1.65].forEach(x => box(cards, 1.05, 0.8, 0.08, x, 0.6, 0.12, "ui"));
+const bars = part("bars", APP, [-1, -0.3, 2.1]);
+[0.5, 0.9, 0.65, 1.1, 0.8, 1.3].forEach((h, i) => box(bars, 0.22, h, 0.1, -1.0 + i * 0.38, -1.25 + h / 2, 0.12, "ai"));
+[0, 1, 2].forEach(i => box(bars, 1.7 - i * 0.4, 0.07, 0.05, 1.5, -0.4 - i * 0.28, 0.12, "ui2"));
+[[1.9, 1.7], [1.9, 0.4], [1.9, -0.9]].forEach(([x, y], i) => {
+  const n = part("api" + (i + 1), [x, y, 0], [1.2, (1 - i) * 0.7, 1.2]);
+  box(n, 1.2, 0.8, 0.8, 0, 0, 0, "api");
+  box(n, 1.0, 0.06, 0.6, 0, 0.46, 0, "ui2");
+});
+const db = part("db", [4.7, -0.9, 0], [1.3, -0.8, -1.5]);
+[0.4, 0, -0.4].forEach(y => add(db, new THREE.CylinderGeometry(0.7, 0.7, 0.32, 24), 0, y, 0, "db", 30));
+add(part("ai", [4.7, 1.7, 0], [1.1, 1.0, 1.6]), new THREE.IcosahedronGeometry(0.8, 0), 0, 0, 0, "ai");
+
+const CONNS = [
+  ["frame", [2.6, 1.2, 0.1], "api1", [-0.6, 0, 0]], ["frame", [2.6, 0, 0.1], "api2", [-0.6, 0, 0]],
+  ["frame", [2.6, -1.2, 0.1], "api3", [-0.6, 0, 0]], ["api1", [0.6, 0, 0], "ai", [-0.8, 0, 0]],
+  ["api2", [0.6, 0, 0], "db", [-0.7, 0.4, 0]], ["api3", [0.6, 0, 0], "db", [-0.7, -0.4, 0]],
+];
+const NS = CONNS.length * 3;
+const connPos = new Float32Array(NS * 6);
+const connGeo = new THREE.BufferGeometry();
+connGeo.setAttribute("position", new THREE.BufferAttribute(connPos, 3));
+for (let i = 0; i < NS; i++) { // one stamp per segment so later ones arrive later
+  const tmp = new THREE.BufferGeometry();
+  tmp.setAttribute("position", new THREE.BufferAttribute(new Float32Array(6), 3));
+  stamp(tmp, 0.64 + i * 0.014, 0);
+  ["aT", "aE", "aR"].forEach(k => {
+    const old = connGeo.attributes[k], arr = new Float32Array(NS * 2);
+    if (old) arr.set(old.array);
+    arr.set(tmp.attributes[k].array, i * 2);
+    connGeo.setAttribute(k, new THREE.BufferAttribute(arr, 1));
+  });
+}
+const connLines = new THREE.LineSegments(connGeo, lineMat);
+connLines.frustumCulled = false;
+grp.add(connLines);
+
+const PK = CONNS.length * 12;
+const pkPos = new Float32Array(PK * 3), pkSize = new Float32Array(PK);
+for (let i = 0; i < PK; i++) pkSize[i] = [1, 0.6, 0.35][i % 3];
+const pkGeo = new THREE.BufferGeometry();
+pkGeo.setAttribute("position", new THREE.BufferAttribute(pkPos, 3));
+pkGeo.setAttribute("aS", new THREE.BufferAttribute(pkSize, 1));
+const packets = new THREE.Points(pkGeo, new THREE.ShaderMaterial({
+  uniforms: U, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+  vertexShader: `attribute float aS; uniform float uPx; varying float vS;
+    void main(){ vS = aS; gl_PointSize = aS * 11.0 * uPx; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+  fragmentShader: `${LENS} uniform float uPack, uFade; varying float vS;
+    void main(){
+      float r = length(gl_PointCoord - .5); if (r > .5) discard;
+      float a = lensIn(8.0) * uPack * (1.0 - uFade) * (1.0 - r * 1.8) * vS;
+      gl_FragColor = vec4(mix(vec3(.78, .96, .2), vec3(1.), (1.0 - r * 2.0) * .6), a);
+    }`,
+}));
+packets.frustumCulled = false;
+grp.add(packets);
+
+function updateConns(time) {
+  let s = 0, k = 0;
+  CONNS.forEach((c, ci) => {
+    const A = parts[c[0]].position.clone().add(V3(...c[1])), B = parts[c[2]].position.clone().add(V3(...c[3]));
+    const mx = (A.x + B.x) / 2, pts = [A, V3(mx, A.y, A.z), V3(mx, B.y, B.z), B];
+    const len = [0, 1, 2].map(i => pts[i].distanceTo(pts[i + 1])), tot = len[0] + len[1] + len[2];
+    for (let i = 0; i < 3; i++, s++) { pts[i].toArray(connPos, s * 6); pts[i + 1].toArray(connPos, s * 6 + 3); }
+    for (let pk = 0; pk < 4; pk++) for (let j = 0; j < 3; j++, k++) {
+      let d = ((((time * 0.2 + pk / 4 + ci * 0.37) % 1) - j * 0.02 + 1) % 1) * tot, i = 0;
+      while (i < 2 && d > len[i]) { d -= len[i]; i++; }
+      pts[i].clone().lerp(pts[i + 1], d / len[i]).toArray(pkPos, k * 3);
+    }
+  });
+  connGeo.attributes.position.needsUpdate = true;
+  pkGeo.attributes.position.needsUpdate = true;
+}
+
+// ================= lifecycle =================
+const hero = $("#hero"), lensEl = $("#lens"), pre = $("#pre"), countEl = $("#count"), R = 170;
+let mx = 0, my = 0, tx = innerWidth * 0.62, ty = innerHeight * 0.35, lx = tx, ly = ty, rx = 0, ry = 0;
+let tvx = 0, tvy = 0, pmx = null, pmy = 0, vx = 0, vy = 0, travel = 0, dist = 13;
+addEventListener("pointermove", e => {
+  tx = e.clientX; ty = e.clientY; mx = tx / innerWidth * 2 - 1; my = ty / innerHeight * 2 - 1;
+  if (pmx !== null) { tvx += (tx - pmx) / innerWidth; tvy -= (ty - pmy) / innerHeight; }
+  pmx = tx; pmy = ty;
+});
+let t0 = performance.now(), last = t0, shown = false;
+$("#replay").onclick = () => { hero.classList.remove("in"); pre.classList.remove("done"); void hero.offsetWidth; t0 = performance.now(); shown = false; };
+function resize() {
+  const w = innerWidth, h = innerHeight, asp = w / h;
+  renderer.setSize(w, h, false);
+  U.uRes.value.set(w * DPR, h * DPR);
+  cam.aspect = asp; cam.updateProjectionMatrix();
+  dist = Math.max(13, 6.6 / (Math.tan(THREE.MathUtils.degToRad(20)) * asp));
+  grp.position.set(asp > 1.2 ? 0.9 : 0, 0.7, 0);
+}
+addEventListener("resize", resize); resize();
+
+function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  const t = reduced ? 99 : (now - t0) / 1000, time = now / 1000;
+  const p = cl(scrollY / (innerHeight * 1.5));
+
+  countEl.textContent = String(Math.round(100 * sm(0, TB, t))).padStart(3, "0");
+  if (t >= TB) pre.classList.add("done");
+  if (t > 3.1 && !shown) { hero.classList.add("in"); shown = true; }
+
+  // warp speed: cruise -> hard brake -> idle drift; second half of scroll = warp burst
+  const s = cl((t - TB) / TD), burst = sm(0.45, 0.95, p);
+  const speed = (t < TB ? V0 : V0 * Math.pow(1 - s, 3.2)) + 2 + V0 * 1.1 * burst;
+  const wn = cl(speed / V0);
+  travel += speed * dt;
+  const snap = sm(TB + TD * 0.75, TB + TD + 0.5, t) * (1 - sm(0.45, 0.8, p));
+
+  U.uTravel.value = travel;
+  U.uStretch.value = 0.018 * speed + 0.5 + snap * 5;
+  U.uSnap.value = snap;
+  U.uWarp.value = wn;
+  U.uGrid.value = sm(TB + TD * 0.8, TB + TD + 0.6, t) * (1 - 0.85 * sm(0.5, 0.9, p));
+
+  // product timeline
+  U.uArr.value = reduced ? 1 : cl((t - 1.2) / 2.4);
+  U.uBuild.value = sm(4.0, 5.8, t);
+  U.uPack.value = cl(t - 5.2);
+  const e = sm(0.03, 0.45, p), f = sm(0.5, 0.85, p);
+  U.uFade.value = f;
+
+  const kl = sm(4.6, 5.4, t) * (1 - sm(0.4, 0.7, p));
+  lx += (tx - lx) * 0.18; ly += (ty - ly) * 0.18;
+  U.uLens.value.set(lx * DPR, (innerHeight - ly) * DPR);
+  U.uR.value = R * DPR * kl;
+  lensEl.style.transform = `translate(${lx}px,${ly}px) scale(${kl})`;
+  lensEl.style.opacity = kl;
+
+  const k = dt > 0 ? 1 / dt : 0; // cursor velocity -> streak bend
+  vx += (Math.max(-3, Math.min(3, tvx * k)) * 0.35 - vx) * 0.12;
+  vy += (Math.max(-3, Math.min(3, tvy * k)) * 0.35 - vy) * 0.12;
+  tvx = tvy = 0;
+  U.uVel.value.set(vx, vy);
+
+  for (const n of Object.values(parts)) n.position.copy(n.userData.base).addScaledVector(n.userData.ex, e);
+  updateConns(time);
+  rx += (my * 0.14 - rx) * 0.06; ry += (mx * 0.3 - ry) * 0.06;
+  grp.rotation.set(0.1 + rx + p * 0.2, -0.35 + ry + Math.sin(time * 0.4) * 0.04 + p * 0.25, 0);
+  grp.scale.set(0.95, 0.95, 0.95 * (1 - 0.9 * f));
+
+  cam.fov = 40 + 50 * wn; cam.updateProjectionMatrix();
+  cam.position.set(0, 1.6, dist - e * 1.2);
+  cam.lookAt(0, 0.3, 0);
+  cam.updateMatrixWorld();
+  tun.position.copy(cam.position);
+  U.uFloor.value = FLOOR - cam.position.y;
+  U.uCamZ.value = cam.position.z;
+
+  const spriteVis = 1 - sm(TB + TD * 0.3, TB + TD + 0.2, t) * (1 - burst);
+  sprites.forEach(m => {
+    const u = m.userData, z = -((((u.zo - travel) % D) + D) % D) - 1.0, kk = Math.pow(-z / D, 1.3);
+    const x = u.x + vx * kk * 14, y = u.y + vy * kk * 14;
+    m.position.set(x, y, z);
+    m.rotation.z = Math.atan2(y, x) * wn;
+    m.scale.set(1 + wn * 14, 1 - 0.5 * wn, 1);
+    const o = sm(0, 6, -z - 1) * (1 - sm(0.6, 1, -z / D)) * Math.max(0, spriteVis) * (0.55 + 0.45 * (1 - wn));
+    m.material.opacity = o; m.visible = o > 0.01;
+  });
+
+  hero.style.opacity = 1 - sm(0, 0.3, p);
+  hero.style.visibility = p > 0.35 ? "hidden" : "";
+  renderer.render(scene, cam);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

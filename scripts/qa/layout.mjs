@@ -38,8 +38,6 @@ console.log("\n## Reduced motion (emulated prefers-reduced-motion: reduce), desk
   await page.goto(BASE + "/", { waitUntil: "load" });
   await page.waitForTimeout(1500);
   const r = await page.evaluate(() => ({
-    preload: document.documentElement.hasAttribute("data-preload"),
-    preloaderShown: getComputedStyle(document.getElementById("preloader")).display !== "none",
     lenis: document.documentElement.classList.contains("lenis"),
     canvas: document.querySelectorAll("canvas").length,
     bodyCursor: getComputedStyle(document.body).cursor,

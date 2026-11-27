@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hero lab (Issue #1)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;900&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07070a;--ink:#ecebf3;--mute:#8b8a99;--line:#1f1e29;--v:#8b7bff;--l:#c6f432;--card:#0f0f16}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Inter Tight",system-ui,sans-serif;padding:7vh 5vw 10vh}
+.mono{font:500 12px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+h1{font-weight:900;font-size:clamp(40px,7vw,104px);letter-spacing:-.05em;line-height:.9;margin:18px 0 20px}
+h1 em{font-family:"Instrument Serif",serif;font-weight:400;color:var(--v)}
+p.lead{max-width:620px;color:#b9b8c6;font-size:17px;line-height:1.55}
+h2{margin:56px 0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+a.card{display:flex;flex-direction:column;gap:10px;padding:22px;border:1px solid var(--line);border-radius:16px;background:var(--card);color:inherit;text-decoration:none;transition:border-color .2s,transform .2s}
+a.card:hover{border-color:var(--v);transform:translateY(-3px)}
+.card .id{font:500 12px "JetBrains Mono",monospace;color:var(--v)}
+.card.combo .id{color:var(--l)}
+.card b{font-size:22px;letter-spacing:-.02em}
+.card span{color:var(--mute);font-size:14.5px;line-height:1.5}
+.card .tags{font:400 11px "JetBrains Mono",monospace;color:var(--mute);margin-top:auto;padding-top:8px}
+.rec{color:var(--l)}
+</style>
+</head>
+<body>
+<p class="mono"><span class="rec">●</span> Issue #1 · hero lab · throwaway prototypes</p>
+<h1>Pick the first <em>shock.</em></h1>
+<p class="lead">Each page is a standalone mock of the home hero. Watch the intro, move the mouse, then scroll. Use “Replay ↻” at the top right to run the intro again. Desktop only; these are not tuned for phones.</p>
+
+<h2 class="mono">Single directions</h2>
+<div class="grid">
+  <a class="card" href="a-blueprint-build.html"><span class="id">A</span><b>Blueprint → Build</b><span>A product blueprint draws itself, then builds into solid parts. The cursor is an X-ray lens that shows the wireframe and live data flowing.</span><span class="tags">story · X-ray preview · medium cost</span></a>
+  <a class="card" href="b-warp-arrival.html"><span class="id">B</span><b>Warp arrival</b><span>The preloader drops you into a light-speed tunnel of tech and project names that brakes hard onto the grid horizon.</span><span class="tags">cinematic first second · low–medium cost</span></a>
+  <a class="card" href="c-signal-terrain.html"><span class="id">C</span><b>Living signal terrain</b><span>The grid becomes moving terrain. The cursor sends lime pulses across it, and the tech chips ride the waves.</span><span class="tags">safe evolution of today · low cost</span></a>
+  <a class="card" href="d-particle-system.html"><span class="id">D</span><b>One-system particles</b><span>Dust gathers into “LKW”, then re-forms as a map of the stack. The cursor pushes particles away.</span><span class="tags">striking · common on award sites · medium–high</span></a>
+  <a class="card" href="e-monolith.html"><span class="id">E</span><b>Monolith</b><span>A glass slab: polished glass on top, bare wireframe below. The grid and chips bend through the glass.</span><span class="tags">premium · heaviest on GPU · high cost</span></a>
+</div>
+
+<h2 class="mono">Combinations</h2>
+<div class="grid">
+  <a class="card combo" href="bda-warp-particles-blueprint.html"><span class="id">B + D + A · earlier candidate</span><b>Warp → Particles → Blueprint</b><span>The B+C warp tunnel brakes, its dust streams into the product blueprint, the product builds, and the X-ray lens shows the wireframe and live data.</span><span class="tags">chosen direction · 2026-11-27</span></a>
+  <a class="card combo" href="ab-warp-into-blueprint.html"><span class="id">A + B · recommended</span><b>Warp into blueprint</b><span>The warp tunnel brakes, its streaks become blueprint lines, the product builds, and the X-ray lens stays on the cursor. Scroll explodes the parts, then warps into the Atlas.</span><span class="tags">shows warp + X-ray + Atlas in one hero</span></a>
+  <a class="card combo" href="bc-warp-terrain.html"><span class="id">B + C</span><b>Warp onto terrain</b><span>The same warp arrival, landing on the living terrain with one big shockwave, then cursor pulses.</span><span class="tags">cheapest strong option</span></a>
+  <a class="card combo" href="da-particles-to-blueprint.html"><span class="id">D + A · chosen 2026-11-27</span><b>Dust → Blueprint → Build</b><span>Dust streams straight into a product blueprint, then it builds. The X-ray lens reveals the wireframe and live data. Build plan: docs/v3-hero-scene-plan.md.</span><span class="tags">chosen direction for Issue #1</span></a>
+</div>
+</body>
+</html>

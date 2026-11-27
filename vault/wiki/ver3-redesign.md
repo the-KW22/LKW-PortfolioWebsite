@@ -1,7 +1,7 @@
 ---
 type: architecture
 updated: 2026-11-27
-sources: [raw/sessions/2026-11-27-ver3-redesign-build.md]
+sources: [raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-hero-scene-rebuild.md]
 ---
 # Ver 3.0 redesign
 
@@ -17,7 +17,7 @@ sources: [raw/sessions/2026-11-27-ver3-redesign-build.md]
 Dark only. Violet `#8b7bff` (brand) and lime `#c6f432` (AI, live status, X-ray). Fonts: Inter Tight, Instrument Serif (accent word), JetBrains Mono (labels). No portrait, no 3D laptop. Sound, terminal mode and Konami code were cut from v1.
 
 ## Home page (one scroll, section ids in `src/content/sections.ts`)
-Hero (WebGL grid floor with cursor tilt, CSS fallback) -> About -> Personal projects (Atlas) -> Experience -> Tech stack (3D ring on desktop, grid elsewhere) -> Services -> Contact -> footer. Header is a "ruler" section scanner with a KL clock; menu is full screen; custom cursor, magnetic buttons, preloader (first visit only), Lenis + GSAP ScrollTrigger as the only scroll system.
+Hero (dust-to-blueprint WebGL scene with an X-ray lens cursor, CSS fallback; see [[ver3-owner-decisions]]) -> About -> Personal projects (Atlas) -> Experience -> Tech stack (3D ring on desktop, grid elsewhere) -> Services -> Contact -> footer. Header is a "ruler" section scanner with a KL clock; menu is full screen; custom cursor, magnetic buttons, no preloader, Lenis + GSAP ScrollTrigger as the only scroll system.
 
 ## Stack and layout
 Next.js App Router, React 19, Tailwind 4, GSAP, Lenis, three + @react-three/fiber (hero only, lazy loaded). New site in `src/app/(site)/`; components in `src/components/{shell,motion,atlas,case,xray,warp,sections/home}`; typed content in `src/content` (projects, experience, skills, home copy, site config). See [[site-structure]].
@@ -28,4 +28,7 @@ Next.js App Router, React 19, Tailwind 4, GSAP, Lenis, three + @react-three/fibe
 - Decisions: [[ver3-owner-decisions]]. How it was built: [[ver3-build-process]]. Projects: [[projects-showcase]]. Contact: [[contact-form]].
 
 ## Docs in the repo
-`docs/v3-implementation-plan.md`, `docs/v3-design-spec.md`, `docs/v3-design-spec-review.md`, `docs/v3-assets-checklist.md`, `docs/v3-owner-todo.md`, `docs/v3-qa-report.md`, `docs/reference.md`, mockups in `docs/mockups/` (`home.html` is the approved reference).
+`docs/v3-implementation-plan.md`, `docs/v3-design-spec.md`, `docs/v3-design-spec-review.md`, `docs/v3-assets-checklist.md`, `docs/v3-owner-todo.md`, `docs/v3-qa-report.md`, `docs/reference.md`, mockups in `docs/mockups/` (`home.html` is the approved reference), hero lab in `docs/mockups/hero-lab/`, hero plan in `docs/v3-hero-scene-plan.md`.
+
+## History
+- 2026-11-27: the hero is no longer a WebGL grid floor with cursor tilt. It is the dust-to-blueprint scene (see [[ver3-owner-decisions]]). The preloader (first visit only) was removed. See [[2026-11-27-hero-scene-rebuild]].

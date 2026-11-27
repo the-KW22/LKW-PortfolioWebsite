@@ -1,7 +1,7 @@
 ---
 type: overview
 updated: 2026-11-27
-sources: [raw/sessions/2026-11-25-lint-webp-cleanup.md, raw/sessions/2026-11-27-ver3-redesign-build.md]
+sources: [raw/sessions/2026-11-25-lint-webp-cleanup.md, raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-agent-workflow.md]
 ---
 # Overview
 
@@ -17,6 +17,7 @@ Next.js 16.2.1 (Turbopack, App Router), React 19.2.4, TypeScript, Tailwind CSS 4
 
 ## Rules for working here
 - `AGENTS.md`: this Next.js version has breaking changes; read `node_modules/next/dist/docs/` before writing code.
+- `AGENTS.md` also holds the agent workflow (ponytail for all coding, Haiku/Sonnet routing); `CLAUDE.md` just imports it. See [[agent-workflow]].
 - Contact email on the site is `kwenleow@gmail.com`; `the.kw22me@gmail.com` is the account used for projects. No phone number on the site.
 - Never edit `/v1` or `/v2` files except real bug fixes ([[versioning-and-archives]]).
 

@@ -6,7 +6,6 @@ import { gsap } from "@/lib/gsap";
 import { useMotion } from "@/hooks/useMotion";
 import { useFinePointer, useMediaQuery } from "@/hooks/useMediaQuery";
 import { deviceCanRunHeroScene } from "@/lib/heroCapability";
-import { whenPreloaderDone } from "@/components/shell/preloaderStore";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { heroCopy } from "@/content/home";
 import { homeSections } from "@/content/sections";
@@ -14,9 +13,10 @@ import { site } from "@/content/site";
 import { accentItalic, btnSolid } from "./ui";
 
 /**
- * 01 Hero. The CSS scene is the SSR/phone/fallback version; HeroScene (WebGL) replaces it on capable desktops. Perspective grid floor, glow and floating
- * chips at different depths. Cursor tilt and parallax run only with a mouse, from 768px up and
- * without reduced motion; everything else gets the same static scene.
+ * 01 Hero. The CSS scene is the SSR/phone/fallback version; HeroScene (WebGL: dust, then a product
+ * blueprint with an X-ray lens) replaces it on capable desktops. The CSS scene is a perspective grid
+ * floor and glow; its cursor tilt runs only with a mouse, from 768px up, without reduced motion and
+ * without the WebGL scene. The tech chips are a real DOM row under the intro in every mode.
  */
 export function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -25,7 +25,7 @@ export function Hero() {
   const reduced = useMediaQuery("(prefers-reduced-motion: reduce)");
   const wantGL = fine && wide && !reduced;
 
-  // WebGL scene: loaded after the preloader and first idle moment, only on capable devices.
+  // WebGL scene: loaded after window load and first idle moment, only on capable devices.
   // "off" = CSS hero stays (default, SSR, phones, failures); "loading"/"ready" = canvas mounted.
   const [Scene, setScene] = useState<ComponentType<{ onReady: () => void; onFail: () => void }> | null>(null);
   const [glReady, setGlReady] = useState(false);
@@ -43,23 +43,20 @@ export function Hero() {
         .then((m) => !dead && setScene(() => m.default))
         .catch(() => !dead && setGlFailed(true));
     };
-    const stop = whenPreloaderDone(() => {
-      const go = () => {
-        idle = window.requestIdleCallback
-          ? window.requestIdleCallback(start, { timeout: 2500 })
-          : window.setTimeout(start, 300);
-      };
-      if (document.readyState === "complete") go();
-      else window.addEventListener("load", go, { once: true });
-    });
+    const go = () => {
+      idle = window.requestIdleCallback
+        ? window.requestIdleCallback(start, { timeout: 2500 })
+        : window.setTimeout(start, 300);
+    };
+    if (document.readyState === "complete") go();
+    else window.addEventListener("load", go, { once: true });
     return () => {
       dead = true;
-      stop();
       if (idle) (window.cancelIdleCallback ?? clearTimeout)(idle);
     };
   }, [wantGL, glFailed, Scene]);
 
-  // Entrance: headline lines rise from a mask once the preloader is done.
+  // Entrance: headline lines rise from a mask on mount.
   useMotion(
     root,
     (ctx) => {
@@ -67,17 +64,12 @@ export function Hero() {
       if (!el) return;
       const lines = gsap.utils.toArray<HTMLElement>("[data-line]", el);
       const rest = gsap.utils.toArray<HTMLElement>("[data-hero-in]", el);
-      const chips = gsap.utils.toArray<HTMLElement>("[data-chip]", el);
       gsap.set(lines, { yPercent: 110 });
       gsap.set(rest, { y: 30, opacity: 0 });
-      gsap.set(chips, { opacity: 0 });
-      return whenPreloaderDone(() =>
-        ctx.add(() => {
-          gsap.to(lines, { yPercent: 0, stagger: 0.1, duration: 1.3, delay: 0.45, ease: "expo.out" });
-          gsap.to(rest, { y: 0, opacity: 1, stagger: 0.1, duration: 1, delay: 0.8, ease: "expo.out" });
-          gsap.to(chips, { opacity: 1, stagger: 0.08, duration: 1.4, delay: 0.9 });
-        }),
-      );
+      ctx.add(() => {
+        gsap.to(lines, { yPercent: 0, stagger: 0.1, duration: 1.3, delay: 0.6, ease: "expo.out" });
+        gsap.to(rest, { y: 0, opacity: 1, stagger: 0.1, duration: 1, delay: 0.95, ease: "expo.out" });
+      });
     },
     [],
   );
@@ -91,7 +83,7 @@ export function Hero() {
     gsap.fromTo("[data-floor]", { rotationX: 72 }, { rotationX: 84, ease: "none", scrollTrigger: st });
   }, []);
 
-  // Cursor tilt: the scene rotates toward the cursor (about ±10° X, ±14° Y), chips shift by depth.
+  // Cursor tilt: the CSS scene rotates toward the cursor (about ±10° X, ±14° Y).
   useMotion(
     root,
     () => {
@@ -99,22 +91,11 @@ export function Hero() {
       if (!el || !tiltOn) return;
       const stage = el.querySelector<HTMLElement>("[data-stage]");
       if (!stage) return;
-      const chips = gsap.utils.toArray<HTMLElement>("[data-chip]", el);
-      gsap.set(chips, { z: (i, t: HTMLElement) => Number(t.dataset.z) });
       const rx = gsap.quickTo(stage, "rotationX", { duration: 0.9, ease: "power3.out" });
       const ry = gsap.quickTo(stage, "rotationY", { duration: 0.9, ease: "power3.out" });
-      const move = chips.map((c) => ({
-        x: gsap.quickTo(c, "x", { duration: 0.9, ease: "power3.out" }),
-        y: gsap.quickTo(c, "y", { duration: 0.9, ease: "power3.out" }),
-        z: Number(c.dataset.z),
-      }));
       const set = (nx: number, ny: number) => {
         rx(ny * -10);
         ry(nx * 14);
-        move.forEach((m) => {
-          m.x(nx * -m.z * 0.25);
-          m.y(ny * -m.z * 0.25);
-        });
       };
       const onMove = (e: PointerEvent) => {
         if (e.pointerType === "touch") return;
@@ -127,7 +108,7 @@ export function Hero() {
       return () => {
         el.removeEventListener("pointermove", onMove);
         el.removeEventListener("pointerleave", onLeave);
-        gsap.set([stage, ...chips], { clearProps: "transform" });
+        gsap.set(stage, { clearProps: "transform" });
       };
     },
     [tiltOn],
@@ -150,11 +131,6 @@ export function Hero() {
           <Scene onReady={() => setGlReady(true)} onFail={() => setGlFailed(true)} />
         </div>
       ) : null}
-      <ul className="sr-only">
-        {heroCopy.chips.map((c) => (
-          <li key={c.label}>{c.label}</li>
-        ))}
-      </ul>
       <div
         data-stage
         data-gl={glOn ? "on" : undefined}
@@ -163,26 +139,6 @@ export function Hero() {
       >
         <div className="hero-glow pointer-events-none absolute top-[44%] left-1/2 h-[30vw] w-[70vw] -translate-x-1/2 -translate-y-1/2" />
         <div data-floor className="hero-floor absolute top-[40%] -right-1/2 -left-1/2 h-[160%]" />
-        {heroCopy.chips.map((c) => (
-          <div
-            key={c.label}
-            data-chip
-            data-z={c.z}
-            className={`absolute [transform-style:preserve-3d] ${c.x <= 72 && c.y <= 40 ? "" : "hidden md:block"}`}
-            style={{ left: `${c.x}%`, top: `${c.y}%` }}
-          >
-            <span
-              className={`block rounded-full border px-4 py-2 text-[13px] whitespace-nowrap ${
-                c.ai
-                  ? "border-lime/50 bg-[rgba(17,16,24,0.85)] text-lime"
-                  : "border-[#2e2d3a] bg-[rgba(17,16,24,0.85)] text-[#d8d7e4]"
-              }`}
-            >
-              {c.ai ? "● " : ""}
-              {c.label}
-            </span>
-          </div>
-        ))}
       </div>
 
       <div
@@ -217,7 +173,21 @@ export function Hero() {
           data-hero-in
           className="mt-8 flex flex-col justify-between gap-7 md:mt-[34px] md:flex-row md:items-end"
         >
-          <p className="max-w-[420px] text-[17px] leading-[1.55] text-[#b9b8c6]">{heroCopy.intro}</p>
+          <div className="max-w-[420px]">
+            <p className="text-[17px] leading-[1.55] text-[#b9b8c6]">{heroCopy.intro}</p>
+            <ul className="mt-5 flex flex-wrap gap-2">
+              {heroCopy.chips.map((c) => (
+                <li
+                  key={c.label}
+                  className={`rounded-full border bg-bg/50 px-[11px] py-1.5 font-mono text-[11px] tracking-[0.04em] ${
+                    c.ai ? "border-lime/45 text-lime" : "border-line text-ink"
+                  }`}
+                >
+                  {c.label}
+                </li>
+              ))}
+            </ul>
+          </div>
           <div className="flex flex-wrap gap-3">
             <Magnetic>
               <a href="#projects" className={btnSolid}>

@@ -12,7 +12,7 @@ interface ScrollOptions {
 }
 
 interface ScrollApi {
-  /** Stop scrolling for `key` (menu, preloader ...). Several keys can hold the lock at once. */
+  /** Stop scrolling for `key` (menu ...). Several keys can hold the lock at once. */
   lock: (key: string) => void;
   unlock: (key: string) => void;
   scrollTo: (target: string | number | HTMLElement, opts?: ScrollOptions) => void;

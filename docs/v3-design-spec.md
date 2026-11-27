@@ -62,6 +62,7 @@ A custom display face or logo font may replace Inter Tight later (see assets che
 ## 3. Global elements
 
 ### 3.1 Preloader
+- **Removed 2026-11-27 (owner decision): the hero dust-to-blueprint scene is the first thing visitors see.** The notes below are historical.
 - Huge counter `000%` → `100%` (bottom left, violet `%`), small mono label top left.
 - Then the panel slides up (expo in-out, about 1s) and the hero headline lines rise in from a mask.
 - The counter reflects real readiness (fonts and hero assets), finishes as soon as they are ready, and is capped at 1.2s total.

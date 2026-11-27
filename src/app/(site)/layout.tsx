@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { ShellProvider } from "@/components/shell/ShellProvider";
 import { ScrollProvider } from "@/components/motion/ScrollProvider";
 import { WarpProvider } from "@/components/warp/WarpProvider";
-import { Preloader } from "@/components/shell/Preloader";
 import { Cursor } from "@/components/shell/Cursor";
 import { Header } from "@/components/shell/Header";
 import { Menu } from "@/components/shell/Menu";
@@ -72,11 +71,6 @@ export const metadata: Metadata = {
   },
 };
 
-// Runs before first paint. Decides whether the preloader shows: first visit of the session only,
-// never with reduced motion, never on direct hits to /projects/*. Without JS it never runs, and the
-// overlay stays display:none, so the page is never blocked.
-const PRELOAD_SCRIPT = `try{var d=document.documentElement;if(!sessionStorage.getItem("lkw-preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches&&location.pathname.indexOf("/projects/")!==0){d.setAttribute("data-preload","1");sessionStorage.setItem("lkw-preloaded","1")}}catch(e){}`;
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -92,11 +86,9 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full">
-        <script dangerouslySetInnerHTML={{ __html: PRELOAD_SCRIPT }} />
         <ShellProvider>
           <ScrollProvider>
             <WarpProvider>
-            <Preloader />
             <Cursor />
             <SkipLink />
             <Header />

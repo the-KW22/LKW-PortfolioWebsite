@@ -1,7 +1,7 @@
 ---
 type: decision
 updated: 2026-11-27
-sources: [raw/sessions/2026-11-27-ver3-redesign-build.md]
+sources: [raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-hero-scene-rebuild.md]
 ---
 # Ver 3.0 owner decisions
 
@@ -21,6 +21,12 @@ Decisions made by the owner while designing and reviewing [[ver3-redesign]].
 - Dark only; violet and lime; Atlas + kinetic warp + X-ray concept. Sound, terminal mode and Konami code cut from v1; no testimonials, blog or awards.
 - Performance: effects win on desktop and laptop; speed wins on phones.
 - Experimental `globalNotFound` was accepted to style the 404 with two root layouts.
+
+## Hero (2026-11-27)
+- Chosen direction: **"Dust → Blueprint → Build"** (D+A), without the "LKW" stage. Dust streams into the product blueprint, lines draw on, surfaces build, and the cursor X-ray lens reveals the wireframe with lime data packets. Scroll scatters it toward the Atlas. Other directions are kept only in the hero lab ([[2026-11-27-hero-scene-rebuild]]).
+- **Preloader removed** (the first-visit 0 → 100 counter), so the dust gathering is the first thing visitors see.
+- Tech chips are a row under the intro. Floating CSS chips were removed everywhere.
+- No grid floor in WebGL mode. The CSS fallback hero (grid floor and glow) is kept.
 
 ## Contact
 Form needs only two env vars ([[contact-form]]); a rate-limit service is optional.

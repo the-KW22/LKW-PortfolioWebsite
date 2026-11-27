@@ -1,7 +1,7 @@
 ---
 type: architecture
 updated: 2026-11-27
-sources: [raw/sessions/2026-11-25-lint-webp-cleanup.md, raw/sessions/2026-11-27-ver3-redesign-build.md]
+sources: [raw/sessions/2026-11-25-lint-webp-cleanup.md, raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-hero-scene-rebuild.md]
 ---
 # Site structure
 
@@ -13,7 +13,7 @@ sources: [raw/sessions/2026-11-25-lint-webp-cleanup.md, raw/sessions/2026-11-27-
 - `/about-me` and `/contact-me` permanently redirect to `/#about` and `/#contact`. A `/resume` route was added in Phase 9 and removed again on 2026-11-26 ([[ver3-owner-decisions]]).
 - Archives: `/v1` (rewrite to static build) and `/v2` (`src/app/v2`) ([[versioning-and-archives]]).
 
-Component folders (`src/components`): `shell/` (header, menu, cursor, preloader, footer), `motion/` (reveal, split text, counter, tilt, magnetic, scramble, scroll provider), `atlas/`, `case/` (case-study sections), `xray/`, `warp/`, `sections/home/`. Typed content lives in `src/content`; contact logic in `src/lib/contact` ([[contact-form]]). Overview of the design: [[ver3-redesign]].
+Component folders (`src/components`): `shell/` (header, menu, cursor, footer; no preloader), `motion/` (reveal, split text, counter, tilt, magnetic, scramble, scroll provider), `atlas/`, `case/` (case-study sections), `xray/`, `warp/`, `sections/home/` (hero scene `HeroScene.tsx`, with its blueprint geometry in `heroBlueprint.ts`). Typed content lives in `src/content`; contact logic in `src/lib/contact` ([[contact-form]]). Overview of the design: [[ver3-redesign]].
 
 ## Ver 2.0 (live on `main` until launch; frozen copy at `/v2`)
 Routes (`src/app`): `/`, `/about-me`, `/projects`, `/contact-me`, `/robots.txt`, `/sitemap.xml`, plus `error.tsx`, `loading.tsx`, `not-found.tsx`. The former `/testing` route was removed on 2026-11-25.
@@ -24,3 +24,4 @@ Components: `layout/` (Nav, Footer, HomeClient, IntroAnimation, DecorativeAnimat
 
 ## History
 - 2026-11-27: ver 3.0 routes and folders added; the ver 2.0 section above now describes `main` and the `/v2` archive. See [[2026-11-27-ver3-redesign-build]].
+- 2026-11-27: `shell/` no longer has a preloader (`Preloader.tsx` and `preloaderStore.ts` deleted). Earlier notes listed it. The hero scene and `heroBlueprint.ts` were added under `sections/home/`. See [[2026-11-27-hero-scene-rebuild]].

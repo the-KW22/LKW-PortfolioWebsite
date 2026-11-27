@@ -5,7 +5,6 @@ import { useRef } from "react";
 type ElTag = React.ComponentType<React.HTMLAttributes<HTMLElement> & { ref?: React.Ref<HTMLElement> }>;
 import { gsap } from "@/lib/gsap";
 import { useMotion } from "@/hooks/useMotion";
-import { whenPreloaderDone } from "@/components/shell/preloaderStore";
 
 export interface RevealOptions {
   /** Animate matching descendants (staggered) instead of the element itself. */
@@ -15,13 +14,11 @@ export interface RevealOptions {
   stagger?: number;
   delay?: number;
   start?: string;
-  /** Hold the animation until the preloader has finished. */
-  waitForPreloader?: boolean;
 }
 
 /** Rise-and-fade on scroll enter. Content is visible without JS; the hidden start state is applied by JS. */
 export function useReveal(scope: React.RefObject<HTMLElement | null>, opts: RevealOptions = {}) {
-  const { selector, y = 40, duration = 1.1, stagger = 0.08, delay = 0, start = "top 88%", waitForPreloader = false } = opts;
+  const { selector, y = 40, duration = 1.1, stagger = 0.08, delay = 0, start = "top 88%" } = opts;
   useMotion(
     scope,
     (ctx) => {
@@ -43,10 +40,9 @@ export function useReveal(scope: React.RefObject<HTMLElement | null>, opts: Reve
             scrollTrigger: { trigger: el, start, once: true },
           });
         });
-      if (waitForPreloader) return whenPreloaderDone(play);
       play();
     },
-    [selector, y, duration, stagger, delay, start, waitForPreloader],
+    [selector, y, duration, stagger, delay, start],
   );
 }
 

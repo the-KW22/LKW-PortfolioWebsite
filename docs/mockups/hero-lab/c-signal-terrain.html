@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hero lab - C Living signal terrain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;900&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+<style>
+:root{--bg:#07070a;--ink:#ecebf3;--mute:#8b8a99;--line:#1f1e29;--violet:#8b7bff;--lime:#c6f432}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg)}
+body{height:250vh;color:var(--ink);font-family:"Inter Tight",system-ui,sans-serif;overflow-x:hidden;
+  background:radial-gradient(ellipse 90% 30% at 50% 33%,rgba(139,123,255,.5),transparent 72%),linear-gradient(to bottom,rgba(139,123,255,.12),transparent 33%),var(--bg)}
+#c{position:fixed;inset:0;z-index:0}
+.hero{position:fixed;inset:0;z-index:2;pointer-events:none;display:flex;flex-direction:column;justify-content:flex-end;padding:0 clamp(20px,4vw,64px) clamp(28px,5vh,56px)}
+.eyebrow{font:500 12px "JetBrains Mono",monospace;color:var(--mute);letter-spacing:.04em;margin-bottom:2vh;opacity:0;transition:opacity .8s .2s}
+.eyebrow i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--lime);margin-right:8px;box-shadow:0 0 10px var(--lime)}
+h1{font-weight:900;font-size:clamp(40px,10.5vw,176px);line-height:.86;letter-spacing:-.055em}
+.ln{display:block;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em}
+.ln>span{display:block;transform:translateY(112%);transition:transform 1.1s cubic-bezier(.2,.8,.2,1)}
+.ln:nth-child(2)>span{transition-delay:.12s}.ln:nth-child(3)>span{transition-delay:.24s}
+em{font-family:"Instrument Serif",serif;font-style:italic;font-weight:400;color:var(--violet);letter-spacing:-.04em}
+.sub{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center;margin-top:3vh;opacity:0;transform:translateY(12px);transition:opacity .9s .7s,transform .9s .7s}
+.sub p{max-width:52ch;color:var(--mute);font-size:clamp(14px,1.25vw,18px);line-height:1.45}
+.btn{pointer-events:auto;background:var(--lime);color:#07070a;font:600 15px "Inter Tight",sans-serif;padding:13px 24px;border-radius:999px;border:0;cursor:pointer;text-decoration:none}
+.in .ln>span{transform:none}.in .eyebrow{opacity:1}.in .sub{opacity:1;transform:none}
+.ph{position:absolute;top:150vh;left:0;right:0;height:100vh;z-index:5;background:var(--bg);border-top:1px solid var(--line);display:grid;place-items:center;font:500 13px "JetBrains Mono",monospace;color:var(--mute);letter-spacing:.06em}
+.tag,.back{position:fixed;top:16px;z-index:10;font:500 11px "JetBrains Mono",monospace;color:var(--mute);display:flex;gap:12px;align-items:center}
+.tag{right:16px}.back{left:16px;color:var(--mute);text-decoration:none}
+.tag button{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer}
+.tag button:hover,.back:hover{color:var(--lime);border-color:var(--lime)}
+</style>
+</head>
+<body>
+<div id="c"></div>
+<a class="back" href="index.html">&larr; all options</a>
+<div class="tag"><span>Option C &middot; Living signal terrain</span><button id="replay">Replay &#8635;</button></div>
+<main class="hero" id="hero">
+  <div class="eyebrow"><i></i>Leow Kai Wen &middot; Full-stack developer &middot; AI engineer &middot; Open to work</div>
+  <h1><span class="ln"><span>I design</span></span><span class="ln"><span>and <em>build</em></span></span><span class="ln"><span>whole products.</span></span></h1>
+  <div class="sub"><p>I take products from idea to production: interfaces, APIs, databases and the AI that ties them together.</p><a class="btn" id="go" href="#projects">See projects &darr;</a></div>
+</main>
+<section class="ph" id="projects">03 &mdash; Personal projects (Atlas)</section>
+
+<script type="module">
+import * as THREE from "three";
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = s => document.querySelector(s), now = () => performance.now() / 1000;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ease = x => 1 - Math.pow(1 - x, 3);
+try { await Promise.race([document.fonts.load('500 30px "JetBrains Mono"'), new Promise(r => setTimeout(r, 1200))]); } catch {}
+
+// ---------- renderer / camera ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+$("#c").appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 200);
+
+// ---------- terrain ----------
+// Height function is mirrored in GLSL and JS so chips can ride the surface.
+const GLSL_H = `
+float H(vec2 p,float t){return sin(p.x*.23+t*.20)*cos(p.y*.19-t*.15)*1.6+.7*sin(p.x*.61+p.y*.47+t*.3)+.35*sin(p.y*1.1-p.x*.8-t*.5);}
+float lane(float x){return .45+.55*smoothstep(2.,14.,abs(x));}`;
+const hJS = (x, z, t) => (Math.sin(x * .23 + t * .2) * Math.cos(z * .19 - t * .15) * 1.6 + .7 * Math.sin(x * .61 + z * .47 + t * .3) + .35 * Math.sin(z * 1.1 - x * .8 - t * .5));
+const laneJS = x => { const k = clamp((Math.abs(x) - 2) / 12); return .45 + .55 * k * k * (3 - 2 * k); };
+const GLSL_RING = `
+float ringAt(vec2 xz,vec4 p,float t){
+  float age=t-p.z; if(age<0.||age>4.5) return 0.;
+  float r=age*(9.+6.*p.w), d=length(xz-p.xy), w=.9+.5*p.w, q=(d-r)/w;
+  return exp(-q*q)*min(p.w,1.4)*exp(-age*.7);}`;
+const ringJS = (x, z, p, t) => { const age = t - p.z; if (age < 0 || age > 4.5) return 0; const r = age * (9 + 6 * p.w), d = Math.hypot(x - p.x, z - p.y), q = (d - r) / (.9 + .5 * p.w); return Math.exp(-q * q) * Math.min(p.w, 1.4) * Math.exp(-age * .7); };
+
+const U = {
+  uT: { value: 0 }, uAmp: { value: 0 }, uOp: { value: 1 },
+  uP: { value: Array.from({ length: 8 }, () => new THREE.Vector4(0, 0, -100, 0)) }
+};
+const tg = new THREE.PlaneGeometry(120, 100, 240, 200); tg.rotateX(-Math.PI / 2);
+const terrain = new THREE.Mesh(tg, new THREE.ShaderMaterial({
+  uniforms: U, transparent: true,
+  vertexShader: `uniform float uT,uAmp; varying vec3 vW; varying float vH;${GLSL_H}
+    void main(){vec4 w=modelMatrix*vec4(position,1.); float h=H(w.xz,uT)*lane(w.x)*uAmp; w.y+=h; vH=h; vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w;}`,
+  fragmentShader: `uniform float uT,uOp; uniform vec4 uP[8]; varying vec3 vW; varying float vH;${GLSL_RING}
+    void main(){
+      vec2 g=vW.xz/2.; vec2 fw=fwidth(g); vec2 a=abs(fract(g-.5)-.5)/fw; float line=1.-min(min(a.x,a.y),1.);
+      float rip=0.; for(int i=0;i<8;i++) rip+=ringAt(vW.xz,uP[i],uT);
+      float dist=length(vW-cameraPosition); float fog=1.-smoothstep(28.,90.,dist);
+      vec3 violet=vec3(.545,.482,1.), lime=vec3(.776,.957,.196);
+      float shade=.55+.45*clamp(vH*.45+.5,0.,1.);
+      vec3 col=mix(vec3(.028,.028,.045),violet*shade,line)+lime*rip*(.25+line*1.6);
+      gl_FragColor=vec4(col,fog*uOp);}`
+}));
+terrain.position.z = -35; terrain.renderOrder = -1; terrain.frustumCulled = false;
+scene.add(terrain);
+
+// ---------- pulses ----------
+let pi = 0;
+const emit = (x, z, w) => U.uP.value[pi++ % 8].set(x, z, now(), w);
+const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), hit = new THREE.Vector3(), ndc = new THREE.Vector2();
+let mx = 0, my = 0, tmx = 0, tmy = 0, lastX = 0, lastY = 0, lastT = 0, lastEmit = 0, spd = 0;
+addEventListener("pointermove", e => {
+  tmx = e.clientX / innerWidth * 2 - 1; tmy = -(e.clientY / innerHeight * 2 - 1);
+  const t = now(), dt = Math.max(t - lastT, .008);
+  spd = spd * .6 + Math.hypot(e.clientX - lastX, e.clientY - lastY) / dt * .4; lastX = e.clientX; lastY = e.clientY; lastT = t;
+  if (spd > 250 && t - lastEmit > .09 && ready()) {
+    ndc.set(tmx, tmy); ray.setFromCamera(ndc, camera);
+    if (ray.ray.intersectPlane(plane, hit) && hit.z > -60) { emit(hit.x, hit.z, clamp(spd / 900, .3, 1.6)); lastEmit = t; }
+  }
+});
+
+// ---------- chips ----------
+const CHIPS = [["TypeScript", 6, -5, 0], ["Next.js", 1.8, -8, 0], ["Claude API", 8, -11, 1], ["pgvector", 2, -14, 1], ["MCP", 8.4, -18, 1], ["Spring Boot", 3.3, -23, 0], ["PostgreSQL", 12.5, -28, 0]];
+const NEUTRAL = new THREE.Color(0xb9b8c8), LIME = new THREE.Color(0xc6f432), HOT = new THREE.Color(0xf6ffc8), tmp = new THREE.Color();
+const chips = CHIPS.map(([name, x, z, ai]) => {
+  const cv = document.createElement("canvas"); cv.width = 320; cv.height = 80;
+  const g = cv.getContext("2d"); g.beginPath(); g.roundRect(4, 4, 312, 72, 36);
+  g.fillStyle = "rgba(10,10,15,.92)"; g.fill(); g.lineWidth = 3; g.strokeStyle = "#fff"; g.stroke();
+  g.fillStyle = "#fff"; g.font = '500 30px "JetBrains Mono",monospace'; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(name, 160, 42);
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
+  const spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
+  const k = (2 + -z * .08) * .45; spr.scale.set(k * 1.6, k * .4, 1); spr.renderOrder = 1; scene.add(spr);
+  return { x, z, ai, spr, f: 0, k };
+});
+
+// ---------- intro / scroll ----------
+let t0 = now(), s = 0;
+const hero = $("#hero");
+const ready = () => now() - t0 > .4;
+function start() {
+  hero.classList.remove("in"); void hero.offsetWidth;
+  U.uP.value.forEach(p => p.z = -100);
+  if (RM) { t0 = now() - 10; hero.classList.add("in"); }
+  else { t0 = now(); setTimeout(() => hero.classList.add("in"), 900); }
+}
+$("#replay").onclick = () => { scrollTo(0, 0); start(); };
+$("#go").onclick = e => { e.preventDefault(); scrollTo({ top: innerHeight * 1.5, behavior: "smooth" }); };
+addEventListener("scroll", () => s = clamp(scrollY / (innerHeight * 1.5)), { passive: true });
+s = clamp(scrollY / (innerHeight * 1.5));
+addEventListener("resize", () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); });
+
+let idleAt = 0;
+function frame() {
+  const t = now();
+  const ip = ease(clamp((t - t0 - .2) / 2.4));
+  const amp = ip * (1 - s);
+  U.uT.value = t; U.uAmp.value = amp; U.uOp.value = 1 - s * .5;
+  terrain.position.y = -s * 5;
+  mx += (tmx - mx) * .05; my += (tmy - my) * .05;
+  camera.position.set(mx * .9, 3.4 + (1 - ip) * 2.2 + my * .3, 10);
+  camera.lookAt(mx * -.6, -1.9, -20);
+  // idle pulse so the terrain is alive without cursor movement
+  if (ip > .9 && t - Math.max(lastEmit, idleAt) > 4.5) { idleAt = t; emit((Math.random() - .5) * 16, -6 - Math.random() * 14, .7); }
+  for (const c of chips) {
+    const y = hJS(c.x, c.z, t) * laneJS(c.x) * amp + terrain.position.y + .5 + Math.sin(t * 1.3 + c.x) * .06;
+    c.spr.position.set(c.x, y, c.z);
+    let f = 0; for (const p of U.uP.value) f = Math.max(f, ringJS(c.x, c.z, p, t));
+    c.f = Math.max(clamp(f * 1.6), c.f * .94);
+    tmp.copy(c.ai ? LIME : NEUTRAL).lerp(c.ai ? HOT : LIME, c.f);
+    c.spr.material.color.copy(tmp);
+    const sc = 1 + c.f * .25; c.spr.scale.set(c.k * 1.6 * sc, c.k * .4 * sc, 1);
+    c.spr.material.opacity = clamp(ip * 1.5 - .3) * clamp(1 - s * 2.2);
+  }
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+start();
+frame();
+</script>
+</body>
+</html>

@@ -175,7 +175,7 @@
   html {
     background: var(--bg);
     font-family: var(--font-display), system-ui, sans-serif;
-    scrollbar-gutter: stable; /* no layout jump when scroll locks (menu, preloader) */
+    scrollbar-gutter: stable; /* no layout jump when scroll locks (menu) */
   }
   body {
     @apply bg-bg text-ink;
@@ -197,15 +197,6 @@
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
 }
-
-/* Preloader: hidden unless the inline script in layout.tsx marked this visit. The animation is a
-   failsafe so the overlay can never trap a visitor if JS fails after the script ran. */
-#preloader { display: none; }
-html[data-preload="1"] #preloader {
-  display: flex;
-  animation: preloader-failsafe 0s linear 4s forwards;
-}
-@keyframes preloader-failsafe { to { visibility: hidden; } }
 
 /* Header logo scan line */
 .logo-scan {
@@ -275,7 +266,8 @@ html.has-cursor input, html.has-cursor textarea, html.has-cursor select { cursor
 .cursor-ring[data-variant="hover"] { width: 60px; height: 60px; border-color: var(--violet); }
 .cursor-ring[data-variant="label"] { width: 84px; height: 84px; background: var(--lime); border-color: var(--lime); }
 .cursor-ring[data-variant="label"] span { opacity: 1; }
-.cursor-ring[data-variant="lens"] { width: 260px; height: 260px; border-color: var(--lime); }
+.cursor-ring[data-variant="lens"] { width: 260px; height: 260px; border-color: var(--lime); box-shadow: 0 0 24px rgba(198, 244, 50, 0.25), inset 0 0 24px rgba(198, 244, 50, 0.12); }
+.cursor-ring[data-variant="lens"] span { position: absolute; top: -22px; opacity: 1; color: var(--lime); }
 
 @media (prefers-reduced-motion: reduce) {
   .logo-scan { display: none; }
