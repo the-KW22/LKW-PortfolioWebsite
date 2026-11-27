@@ -31,7 +31,9 @@ function Job({ e }: { e: ExperienceEntry }) {
           className="font-display text-[clamp(26px,3.2vw,50px)] leading-none font-extrabold tracking-[-0.035em]"
         >
           {e.role}{" "}
-          <span className="block font-serif text-[0.7em] font-normal tracking-normal text-mute italic sm:inline">
+          <span
+            className={`block font-serif text-[0.7em] font-normal tracking-normal text-mute italic${e.kind === "education" ? "" : " sm:inline"}`}
+          >
             at {e.organisation}
           </span>
         </h3>
