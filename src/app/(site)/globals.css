@@ -332,10 +332,55 @@ html.has-cursor input, html.has-cursor textarea, html.has-cursor select { cursor
 .atlas-board {
   position: relative;
   transform-style: preserve-3d;
-  background-image: radial-gradient(#24232f 1px, transparent 1px);
-  background-size: 28px 28px;
-  border: 1px solid #15141c;
+  /* Fine dots plus a coarse blueprint grid every 280px (7 dot cells). */
+  background-image:
+    linear-gradient(rgba(139, 123, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 123, 255, 0.055) 1px, transparent 1px),
+    radial-gradient(#24232f 1px, transparent 1px);
+  background-size: 280px 280px, 280px 280px, 28px 28px;
+  border: 1px solid #2a2840;
   border-radius: 24px;
+  box-shadow: inset 0 0 160px rgba(139, 123, 255, 0.07);
+}
+/* Far layers: pushed back in 3D, oversized so they still cover the view when they shrink with depth. */
+.atlas-far { position: absolute; pointer-events: none; }
+.atlas-far-light {
+  inset: -400px;
+  transform: translateZ(-180px);
+  background:
+    radial-gradient(900px 620px at 1400px 1200px, rgba(139, 123, 255, 0.17), transparent 70%),
+    radial-gradient(800px 560px at 3000px 1160px, rgba(139, 123, 255, 0.11), transparent 70%),
+    radial-gradient(760px 520px at 3100px 2060px, rgba(198, 244, 50, 0.07), transparent 70%),
+    radial-gradient(820px 560px at 1340px 2080px, rgba(139, 123, 255, 0.12), transparent 70%),
+    radial-gradient(1200px 700px at 2200px 1600px, rgba(198, 244, 50, 0.045), transparent 70%);
+}
+.atlas-far-dust {
+  inset: -700px;
+  transform: translateZ(-420px);
+  /* Coprime tile sizes so the specks never read as a repeating pattern. */
+  background-image:
+    radial-gradient(1.5px 1.5px at 40px 60px, rgba(236, 235, 243, 0.45), transparent),
+    radial-gradient(2px 2px at 190px 140px, rgba(139, 123, 255, 0.55), transparent),
+    radial-gradient(1.5px 1.5px at 310px 270px, rgba(236, 235, 243, 0.3), transparent),
+    radial-gradient(2.5px 2.5px at 120px 380px, rgba(198, 244, 50, 0.4), transparent);
+  background-size: 331px 307px, 457px 419px, 599px 563px, 743px 691px;
+}
+.atlas-marks { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
+.atlas-marks .atlas-ruler { stroke: #3b3957; stroke-width: 1; }
+.atlas-marks text { fill: #4a4866; font: 13px var(--font-mono), monospace; letter-spacing: 0.08em; stroke: none; }
+.atlas-marks .atlas-cross { fill: none; stroke: #34324a; stroke-width: 1.5; }
+.atlas-marks .atlas-cross text { fill: #3f3d5a; font-size: 12px; }
+.atlas-marks .atlas-brackets { fill: none; stroke: var(--lime); stroke-width: 3; stroke-linecap: square; opacity: 0.7; }
+/* Stage overlays: the vignette keeps the edges dark whatever the camera does; grain takes the flat look off. */
+.atlas-vignette, .atlas-grain { position: absolute; inset: 0; pointer-events: none; }
+.atlas-vignette { background: radial-gradient(ellipse at center, transparent 55%, rgba(5, 5, 9, 0.72) 100%); }
+.atlas-grain {
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .7 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* Phones and touch keep the cheap board: no far layers or grain. */
+@media (max-width: 1023px), (pointer: coarse) {
+  .atlas-far, .atlas-grain { display: none; }
 }
 .atlas-item {
   position: absolute;

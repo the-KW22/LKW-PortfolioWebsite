@@ -8,6 +8,7 @@ import { registerAtlasCamera, takeAtlasCamera } from "./atlasMemory";
 import { useScroll } from "@/components/motion/ScrollProvider";
 import { BOARD, BOARD_CENTRE, ZOOM, projectPlacements, textureItems } from "@/content/atlas";
 import type { Project } from "@/content/types";
+import { AtlasBackdrop } from "./AtlasBackdrop";
 import { AtlasItems } from "./AtlasItems";
 
 export type BoardMode = "pinned" | "inline" | "fullscreen";
@@ -491,9 +492,12 @@ export function AtlasBoard({ projects, mode, sectionRef, reduced, onShowList, on
       >
         <div ref={camRef} className="atlas-cam">
           <div className="atlas-board" style={{ width: BOARD.w, height: BOARD.h }}>
+            <AtlasBackdrop />
             <AtlasItems projects={projects} />
           </div>
         </div>
+        <div className="atlas-vignette" aria-hidden="true" />
+        <div className="atlas-grain" aria-hidden="true" />
       </div>
 
       <div className="atlas-hud-bl mono-label" aria-hidden="true">
