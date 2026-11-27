@@ -9,6 +9,17 @@ import { skillGroups } from "@/content/skills";
 import { SectionHead } from "./SectionHead";
 import { useTechRing } from "./useTechRing";
 
+// Cursor glow inside a card: the card's own pointer position, as CSS variables for its chrome layer.
+const glow = (e: React.PointerEvent<HTMLElement>) => {
+  const r = e.currentTarget.getBoundingClientRect();
+  e.currentTarget.style.setProperty("--mx", `${e.clientX - r.left}px`);
+  e.currentTarget.style.setProperty("--my", `${e.clientY - r.top}px`);
+};
+const unglow = (e: React.PointerEvent<HTMLElement>) => {
+  e.currentTarget.style.removeProperty("--mx");
+  e.currentTarget.style.removeProperty("--my");
+};
+
 /**
  * 05 Tech stack. One data model, two presentations: the plain grid (always the default, and the only
  * one below 1024px, on touch and with reduced motion) and the desktop 3D ring (useTechRing). Tiles
@@ -42,16 +53,34 @@ export function TechStack() {
         />
         <div
           ref={stageRef}
-          className="relative grid gap-x-10 gap-y-9 sm:grid-cols-2 lg:grid-cols-3"
+          className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
         >
           {skillGroups.map((g, row) => (
-            <div key={g.id} role="group" aria-labelledby={`stack-${g.id}`}>
+            <div
+              key={g.id}
+              role="group"
+              aria-labelledby={`stack-${g.id}`}
+              className="relative isolate p-4"
+              onPointerMove={fine ? glow : undefined}
+              onPointerLeave={fine ? unglow : undefined}
+            >
+              {/* Card chrome plus cursor glow: fades in with the labels, once the tiles have settled. */}
+              <span
+                aria-hidden="true"
+                data-ring-fade
+                className={`pointer-events-none absolute inset-0 -z-10 rounded-2xl border bg-[radial-gradient(240px_circle_at_var(--mx,-999px)_var(--my,-999px),color-mix(in_oklab,var(--lime)_12%,transparent),transparent_70%)] ${
+                  g.skills.some((s) => s.ai) ? "border-lime/30" : "border-line"
+                }`}
+              />
               <h3
                 id={`stack-${g.id}`}
                 data-ring-fade
                 className="mono-label mb-3 border-b border-line pb-2 text-mute"
               >
                 {g.label}
+                <span aria-hidden="true" className="ml-2 text-lime">
+                  {g.skills.length}
+                </span>
               </h3>
               <ul className="flex flex-wrap gap-2">
                 {g.skills.map((s, idx) => (

@@ -5,6 +5,10 @@ import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
 const PERSPECTIVE = 1400;
 const ROW_GAP = 62;
+// Pin length (% of viewport): the ring runs for RING_SCROLL, then the settled grid is held for DWELL.
+const RING_SCROLL = 220;
+const DWELL = 40;
+const toRing = (p: number) => Math.min(1, (p * (RING_SCROLL + DWELL)) / RING_SCROLL);
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 const smooth = (v: number) => {
@@ -112,16 +116,16 @@ export function useTechRing(
       const st = ScrollTrigger.create({
         trigger: pin,
         start: "top top",
-        end: "+=220%",
+        end: `+=${RING_SCROLL + DWELL}%`,
         pin: true,
         // Measured before the header ruler triggers, so they see the pin spacer's extra height.
         refreshPriority: 1,
         onUpdate: (self) => {
-          progress = self.progress;
+          progress = toRing(self.progress);
           render();
         },
         onRefresh: (self) => {
-          progress = self.progress;
+          progress = toRing(self.progress);
           measure();
           render();
         },
