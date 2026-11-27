@@ -173,8 +173,7 @@ function Ruler({ inert, sections }: { inert: boolean; sections: HomeSection[] })
       ref={rulerRef}
       aria-label="Page sections"
       inert={inert}
-      data-cursor="label"
-      data-cursor-label="DRAG"
+      data-cursor="drag"
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerEnd}

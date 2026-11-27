@@ -10,6 +10,8 @@ import {
 } from "./cursorStore";
 
 const INTERACTIVE = "a,button,[role=button],summary,label,[data-cursor=hover]";
+// Drag cursor: a hollow ring with arrows, so it never covers the content being dragged.
+export const DRAG_ARROWS = "‹ ›";
 const TEXT_FIELD = "input,textarea,select,[contenteditable=true]";
 
 function stateFor(target: EventTarget | null): CursorState {
@@ -18,6 +20,7 @@ function stateFor(target: EventTarget | null): CursorState {
   const marked = target.closest<HTMLElement>("[data-cursor]");
   const kind = marked?.dataset.cursor;
   if (kind === "label") return { variant: "label", label: marked?.dataset.cursorLabel ?? "" };
+  if (kind === "drag") return { variant: "drag", label: DRAG_ARROWS };
   if (kind === "lens") return { variant: "lens" };
   if (kind === "hidden") return { variant: "hidden" };
   if (target.closest(INTERACTIVE)) return { variant: "hover" };

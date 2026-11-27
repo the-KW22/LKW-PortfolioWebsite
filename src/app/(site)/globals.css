@@ -246,7 +246,7 @@ html.has-cursor input, html.has-cursor textarea, html.has-cursor select { cursor
 }
 .cursor-dot { width: 8px; height: 8px; background: var(--lime); box-shadow: 0 0 0 1px rgba(7, 7, 10, 0.55); transition: opacity 0.2s; }
 .cursor-dot[data-variant="hidden"], .cursor-ring[data-variant="hidden"] { opacity: 0 !important; }
-.cursor-dot[data-variant="label"], .cursor-dot[data-variant="lens"] { background: transparent; }
+.cursor-dot[data-variant="label"], .cursor-dot[data-variant="drag"], .cursor-dot[data-variant="lens"] { background: transparent; }
 .cursor-ring {
   display: grid;
   place-items: center;
@@ -266,6 +266,8 @@ html.has-cursor input, html.has-cursor textarea, html.has-cursor select { cursor
 .cursor-ring[data-variant="hover"] { width: 60px; height: 60px; border-color: var(--violet); }
 .cursor-ring[data-variant="label"] { width: 84px; height: 84px; background: var(--lime); border-color: var(--lime); }
 .cursor-ring[data-variant="label"] span { opacity: 1; }
+.cursor-ring[data-variant="drag"] { width: 44px; height: 44px; border-color: var(--lime); }
+.cursor-ring[data-variant="drag"] span { opacity: 1; color: var(--lime); font-size: 15px; letter-spacing: 0.15em; text-indent: 0.15em; }
 .cursor-ring[data-variant="lens"] { width: 260px; height: 260px; border-color: var(--lime); box-shadow: 0 0 24px rgba(198, 244, 50, 0.25), inset 0 0 24px rgba(198, 244, 50, 0.12); }
 .cursor-ring[data-variant="lens"] span { position: absolute; top: -22px; opacity: 1; color: var(--lime); }
 

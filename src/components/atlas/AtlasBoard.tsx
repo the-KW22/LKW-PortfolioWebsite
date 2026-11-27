@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type RefObject } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { DRAG_ARROWS } from "@/components/shell/Cursor";
 import { setCursorOverride } from "@/components/shell/cursorStore";
 import { isTypingTarget } from "@/hooks/useShortcut";
 import { registerAtlasCamera, takeAtlasCamera } from "./atlasMemory";
@@ -300,7 +301,7 @@ export function AtlasBoard({ projects, mode, sectionRef, reduced, onShowList, on
       lastT = now;
       const before = moved;
       moved += Math.abs(dx) + Math.abs(dy);
-      if (before <= 6 && moved > 6) setCursorOverride({ variant: "label", label: "DRAG" });
+      if (before <= 6 && moved > 6) setCursorOverride({ variant: "drag", label: DRAG_ARROWS });
       t.x -= dx / c.z;
       t.y -= dy / c.z;
       // Release velocity in board px per 60fps frame, lightly smoothed.
@@ -487,8 +488,7 @@ export function AtlasBoard({ projects, mode, sectionRef, reduced, onShowList, on
         aria-label="Project atlas: a draggable map of personal projects"
         aria-describedby={`atlas-help-${mode}`}
         className="atlas-stage"
-        data-cursor="label"
-        data-cursor-label="DRAG"
+        data-cursor="drag"
       >
         <div ref={camRef} className="atlas-cam">
           <div className="atlas-board" style={{ width: BOARD.w, height: BOARD.h }}>

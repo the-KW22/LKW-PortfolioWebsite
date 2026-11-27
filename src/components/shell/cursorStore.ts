@@ -3,10 +3,10 @@
 import { useCallback } from "react";
 
 // Hook for later phases to drive the custom cursor from code (the atlas, the X-ray lens).
-// Markup alternative: data-cursor="label" data-cursor-label="DRAG" | data-cursor="lens" | data-cursor="hidden".
+// Markup alternative: data-cursor="label" data-cursor-label="OPEN" | data-cursor="drag" | data-cursor="lens" | data-cursor="hidden".
 // An override set here wins over whatever data attribute is under the pointer.
 
-export type CursorVariant = "default" | "hover" | "label" | "lens" | "hidden";
+export type CursorVariant = "default" | "hover" | "label" | "drag" | "lens" | "hidden";
 export interface CursorState {
   variant: CursorVariant;
   label?: string;
