@@ -45,7 +45,7 @@ function Job({ e }: { e: ExperienceEntry }) {
           </ul>
         ) : null}
         {e.projects ? (
-          <ProjectCaseFile projects={e.projects} />
+          <ProjectCaseFile projects={e.projects} heading={e.organisation} />
         ) : null}
       </div>
     </div>

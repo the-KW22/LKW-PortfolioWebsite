@@ -15,7 +15,7 @@ const SCROLL_PER_PROJECT = 70;
  * before JS runs, every project is a plain stacked card and the rail is hidden, so nothing is lost.
  * The pinned mode is switched on by `data-pinned` on the stage, set only while the media query matches.
  */
-export function ProjectCaseFile({ projects }: { projects: ExperienceProject[] }) {
+export function ProjectCaseFile({ projects, heading }: { projects: ExperienceProject[]; heading: string }) {
   const stage = useRef<HTMLDivElement>(null);
   const trigger = useRef<ScrollTrigger | null>(null);
   const [active, setActive] = useState(0);
@@ -59,8 +59,12 @@ export function ProjectCaseFile({ projects }: { projects: ExperienceProject[] })
   return (
     <div
       ref={stage}
-      className="group mt-6 grid gap-4 md:grid-cols-[210px_1fr] md:gap-8 data-[pinned=true]:min-h-[58svh]"
+      className="group mt-6 grid gap-4 md:grid-cols-[210px_1fr] md:gap-8 data-[pinned=true]:min-h-[58svh] data-[pinned=true]:content-start"
     >
+      {/* The real heading scrolls away once pinned, so repeat the section + company inside the pinned stage. */}
+      <p className="mono-label hidden text-mute group-data-[pinned=true]:block md:col-span-2">
+        04 / Experience <span className="text-lime">· {heading}</span>
+      </p>
       <ol className="hidden flex-col gap-1 self-start border-l border-line group-data-[pinned=true]:flex">
         {projects.map((p, i) => (
           <li key={p.id}>
