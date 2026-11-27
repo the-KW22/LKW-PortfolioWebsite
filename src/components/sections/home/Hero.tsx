@@ -14,7 +14,7 @@ import { accentItalic, btnSolid } from "./ui";
 
 /**
  * 01 Hero. The CSS scene is the SSR/phone/fallback version; HeroScene (WebGL: dust, then a product
- * blueprint with an X-ray lens) replaces it on capable desktops. The CSS scene is a perspective grid
+ * blueprint) replaces it on capable desktops. The CSS scene is a perspective grid
  * floor and glow; its cursor tilt runs only with a mouse, from 768px up, without reduced motion and
  * without the WebGL scene. The tech chips are a real DOM row under the intro in every mode.
  */

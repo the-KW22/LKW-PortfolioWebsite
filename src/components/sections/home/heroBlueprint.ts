@@ -2,7 +2,6 @@
 // No three.js, no DOM. Local units, centred, ~6.2 x 3.1.
 
 export type Pt = [number, number];
-export type Route = { c: Pt[]; l: number[]; s: number };
 
 export function mulberry32(seed: number): () => number {
   let a = seed >>> 0;
@@ -22,7 +21,7 @@ const arc = (cx: number, cy: number, rx: number, ry: number, a0 = 0, a1 = Math.P
     return [cx + Math.cos(a) * rx, cy + Math.sin(a) * ry] as Pt;
   });
 
-// Connector routes; also the data-packet routes.
+// Connector routes.
 const conns: Pt[][] = [
   [[0, 0.8], [0.35, 0.8], [0.35, 1.25], [0.7, 1.25]],
   [[0, 0.8], [0.35, 0.8], [0.35, 0.45], [0.7, 0.45]],
@@ -100,19 +99,3 @@ export function blueprintSurfaces(): Float32Array {
   return new Float32Array(tv);
 }
 
-/** Data-packet routes with cumulative segment lengths (l) and total length (s). */
-export const routes: Route[] = conns.map((c) => {
-  const l: number[] = [];
-  let s = 0;
-  for (let i = 0; i < c.length - 1; i++) { s += Math.hypot(c[i + 1][0] - c[i][0], c[i + 1][1] - c[i][1]); l.push(s); }
-  return { c, l, s };
-});
-
-/** Point at fraction t (0..1) along a route. */
-export function pointAt(r: Route, t: number): Pt {
-  const d = Math.min(1, Math.max(0, t)) * r.s;
-  let i = r.l.findIndex((v) => v >= d);
-  if (i < 0) i = r.l.length - 1;
-  const s0 = i ? r.l[i - 1] : 0, f = (d - s0) / (r.l[i] - s0), a = r.c[i], b = r.c[i + 1];
-  return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
-}
