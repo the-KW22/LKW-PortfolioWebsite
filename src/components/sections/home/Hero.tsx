@@ -154,7 +154,7 @@ export function Hero() {
         </p>
         <h1
           id="hero-title"
-          className="mt-[22px] font-display text-[clamp(40px,10.5vw,176px)] leading-[0.86] font-black tracking-[-0.055em]"
+          className="mt-[22px] font-display text-[clamp(40px,min(10.5vw,19svh),176px)] leading-[0.86] font-black tracking-[-0.055em]"
         >
           {heroCopy.headline.map((line) => (
             <span key={line} className="-mb-[0.1em] block overflow-hidden pb-[0.1em]">
