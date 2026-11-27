@@ -93,16 +93,27 @@ export function ScrollProvider({ children }: { children: React.ReactNode }) {
   // browser so reloads keep their restored scroll position.
   const lastPath = useRef(pathname);
   useEffect(() => {
+    let hash = "";
     if (lastPath.current !== pathname) {
       lastPath.current = pathname;
-      const hash = window.location.hash;
+      hash = window.location.hash;
       try {
         api.scrollTo(hash || 0, { immediate: true });
       } catch {
         api.scrollTo(0, { immediate: true });
       }
     }
-    const id = window.setTimeout(() => ScrollTrigger.refresh(), 100);
+    const id = window.setTimeout(() => {
+      ScrollTrigger.refresh();
+      // The refresh adds the pinned Atlas spacer and moves later sections, so land on the hash again.
+      if (hash) {
+        try {
+          api.scrollTo(hash, { immediate: true });
+        } catch {
+          // Invalid hash: keep the first jump.
+        }
+      }
+    }, 100);
     return () => window.clearTimeout(id);
   }, [pathname, api]);
 

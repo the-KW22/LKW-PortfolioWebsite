@@ -20,6 +20,8 @@ export function Menu() {
   const pathname = usePathname();
   const overlayRef = useRef<HTMLDivElement>(null);
   const wasOpen = useRef(false);
+  // Section to scroll to once the menu's scroll lock is released (scrolling earlier gets cancelled by Lenis restart).
+  const pendingScroll = useRef<string | null>(null);
   const isHome = pathname === "/";
 
   // Open / close animation.
@@ -57,6 +59,10 @@ export function Menu() {
     } else if (wasOpen.current) {
       wasOpen.current = false;
       unlock("menu");
+      if (pendingScroll.current) {
+        scrollTo(`#${pendingScroll.current}`);
+        pendingScroll.current = null;
+      }
       gsap.killTweensOf([el, links, side]);
       const hide = () => {
         gsap.set(el, { visibility: "hidden", clearProps: "clipPath,opacity" });
@@ -66,7 +72,7 @@ export function Menu() {
       else gsap.to(el, { clipPath: `circle(0px ${at})`, duration: 0.7, ease: "power3.inOut", onComplete: hide });
       btn?.focus({ preventScroll: true });
     }
-  }, [menuOpen, reduced, lock, unlock]);
+  }, [menuOpen, reduced, lock, unlock, scrollTo]);
 
   // Safety: never leave scroll locked if the menu unmounts while open.
   useEffect(() => () => unlock("menu"), [unlock]);
@@ -106,8 +112,8 @@ export function Menu() {
   const onSectionClick = (e: React.MouseEvent, id: string) => {
     if (!isHome) return; // next/link navigates to /#id
     e.preventDefault();
+    pendingScroll.current = id;
     closeMenu();
-    scrollTo(`#${id}`);
   };
 
   const linkedin = site.links.linkedin;
