@@ -17,7 +17,7 @@ export function Contact() {
       </p>
       <h2
         id="contact-title"
-        className="mt-[30px] font-display text-[clamp(52px,13vw,220px)] leading-[0.84] font-black tracking-[-0.06em]"
+        className="mt-[30px] font-display text-[clamp(52px,13vw,220px)] leading-[0.84] font-black tracking-[-0.06em] [&_.overflow-hidden]:-mb-[0.3em] [&_.overflow-hidden]:pb-[0.3em]"
       >
         <SplitText text={l1} as="span" mode="rise" className="block pb-[0.08em]" />
         <SplitText text={l2} as="span" mode="rise" accent={contactCopy.accent} className="block pb-[0.08em]" />
