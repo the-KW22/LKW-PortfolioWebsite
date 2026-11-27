@@ -59,6 +59,7 @@ export function AtlasBoard({ projects, mode, sectionRef, reduced, onShowList, on
   const coordsRef = useRef<HTMLSpanElement>(null);
   const zoomRef = useRef<HTMLSpanElement>(null);
   const hintRef = useRef<HTMLSpanElement>(null);
+  const cueRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const apiRef = useRef<Api | null>(null);
 
@@ -126,6 +127,7 @@ export function AtlasBoard({ projects, mode, sectionRef, reduced, onShowList, on
     let wHint = "";
     let wPos = "";
     let wSize = "";
+    let wCue = "";
 
     const setZoom = (z: number) => {
       t.z = clamp(z, minZ, ZOOM.max);
@@ -139,6 +141,10 @@ export function AtlasBoard({ projects, mode, sectionRef, reduced, onShowList, on
           end: "35% top",
           invalidateOnRefresh: true,
         })
+      : null;
+    // Whole-section progress: the "Scroll to continue" cue leaves as the next section arrives.
+    const endSt = st
+      ? ScrollTrigger.create({ trigger: sectionRef!.current!, start: "top top", end: "bottom bottom" })
       : null;
     if (st) {
       for (const r of reveal) {
@@ -177,6 +183,14 @@ export function AtlasBoard({ projects, mode, sectionRef, reduced, onShowList, on
         if (pos !== wPos) {
           wPos = pos;
           f.style.transform = pos;
+        }
+      }
+      const cue = cueRef.current;
+      if (cue) {
+        const show = !!st && lastProgress >= 0.99 && (endSt?.progress ?? 1) < 0.9 ? "1" : "";
+        if (show !== wCue) {
+          wCue = show;
+          cue.dataset.show = show;
         }
       }
     };
@@ -441,6 +455,7 @@ export function AtlasBoard({ projects, mode, sectionRef, reduced, onShowList, on
       io.disconnect();
       ro.disconnect();
       st?.kill();
+      endSt?.kill();
       document.removeEventListener("visibilitychange", sync);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
@@ -488,6 +503,13 @@ export function AtlasBoard({ projects, mode, sectionRef, reduced, onShowList, on
           Drag
         </span>
       </div>
+
+      {mode === "pinned" && (
+        <div ref={cueRef} className="atlas-cue mono-label" aria-hidden="true">
+          <span>Scroll to continue</span>
+          <span className="atlas-cue-arrow text-lime">↓</span>
+        </div>
+      )}
 
       <div className="atlas-hud-br">
         <div className="atlas-controls">

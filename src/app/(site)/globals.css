@@ -439,6 +439,29 @@ html.has-cursor input, html.has-cursor textarea, html.has-cursor select { cursor
   pointer-events: none;
 }
 [data-atlas-mode="fullscreen"] .atlas-hud-bl { bottom: auto; top: 26px; }
+.atlas-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--mute);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: opacity 0.6s;
+}
+.atlas-cue[data-show="1"] { opacity: 1; }
+.atlas-cue-arrow { display: inline-block; font-size: 16px; line-height: 1; animation: atlas-cue-bob 2s ease-in-out infinite; }
+@keyframes atlas-cue-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+/* Below 1024px the bottom-left readout and the controls column crowd the centre; the cue is a desktop aid. */
+@media (max-width: 1023px) { .atlas-cue { display: none; } }
 .atlas-hud-br {
   position: absolute;
   right: 20px;
@@ -480,6 +503,7 @@ html.has-cursor input, html.has-cursor textarea, html.has-cursor select { cursor
 
 @media (prefers-reduced-motion: reduce) {
   .atlas-item, .atlas-card { transition: none; }
+  .atlas-cue-arrow { animation: none; }
 }
 
 /* ---- X-ray (Phase 5). Lives in the (site) stylesheet only, so /v2 never loads it. ---- */
