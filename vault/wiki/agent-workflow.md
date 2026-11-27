@@ -1,7 +1,7 @@
 ---
 type: decision
 updated: 2026-11-27
-sources: [raw/sessions/2026-11-27-agent-workflow.md, raw/sessions/2026-11-27-agents-md-nextjs-warning.md, raw/sessions/2026-11-27-issues-2-to-10.md]
+sources: [raw/sessions/2026-11-27-agent-workflow.md, raw/sessions/2026-11-27-agents-md-nextjs-warning.md, raw/sessions/2026-11-27-issues-2-to-10.md, raw/sessions/2026-11-27-issues-5-6-7-11-redesign.md]
 ---
 # Agent workflow
 
@@ -36,3 +36,4 @@ Understand, plan, small steps, verify with real feedback, separate review, PR fo
 Thresholds may need tuning ([[open-follow-ups]]).
 - Issues #2 to #10 (2026-11-27): the owner chose Haiku for each fix. Every result was re-verified by the main agent before commit ([[2026-11-27-issues-2-to-10]]).
 - The first Haiku version of the ruler drag failed in testing: a native link drag cancelled the pointer stream. The main agent made that one-line fix itself (`onDragStart` preventDefault, a trivial-tier change) before the commit, so Haiku was not retried.
+- Issues #5, #6, #7 and #11 and the drag-cursor fix (2026-11-27, later session): the main agent wrote all the code itself, with no Haiku or Sonnet subagent, although the routing table sends standard-tier work to Sonnet. The owner picked a direction first for each; verification was eslint, the build and a preview check. `ponytail-review` and `code-review` were not run ([[2026-11-27-issues-5-6-7-11-redesign]]). Decide whether that is acceptable or whether these should be reviewed after the fact.

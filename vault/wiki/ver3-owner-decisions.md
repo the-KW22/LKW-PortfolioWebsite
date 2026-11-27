@@ -1,7 +1,7 @@
 ---
 type: decision
 updated: 2026-11-27
-sources: [raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-hero-scene-rebuild.md, raw/sessions/2026-11-27-issues-2-to-10.md]
+sources: [raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-hero-scene-rebuild.md, raw/sessions/2026-11-27-issues-2-to-10.md, raw/sessions/2026-11-27-issues-5-6-7-11-redesign.md]
 ---
 # Ver 3.0 owner decisions
 
@@ -32,10 +32,21 @@ Decisions made by the owner while designing and reviewing [[ver3-redesign]].
 Defaults the main agent picked where the issue left details open; the owner accepted them by proceeding ([[2026-11-27-issues-2-to-10]]).
 - Ruler (#2): live scrub with no snapping.
 - Atlas scroll cue (#4): bottom-centre, bobbing lime arrow. Hidden during the zoom-out intro, fades in after it and out at about 90% of the pin. Not shown in the phone map, list view or below 1024px. No bob with reduced motion. The owner was told it is subtle; not changed.
-- #5 (Experience), #6 (Tech Stack) and #7 (Services) skipped for now. #11 (Atlas background) not started.
+
+## Section rebuild choices (2026-11-27, later session)
+Each option was proposed and the owner picked one ([[2026-11-27-issues-5-6-7-11-redesign]]).
+- **#5 Experience:** pinned case-file (B), not expandable cards.
+- **#6 Tech Stack:** keep the ring; add the held grid, group cards and cursor glow (ideas 1, 2, 4). Not chosen: staggered per-group landing, a closing line under the grid.
+- **#7 Services:** bento grid (B), not alternating rows. Reason given: four text-only cards in one row looked too ordinary for the site. A fourth pinned section was avoided on purpose.
+- **#11 Atlas background:** light, blueprint markings, grain and parallax layers. Not chosen: a cursor-following light. Zone labels need the owner's wording and are not added.
+- **Drag cursor:** hollow ring instead of the solid DRAG disc, because it hid the ruler and board content.
+- Services, Tech Stack and Experience copy stays marked `DRAFT` for the Phase 7 content pass.
 
 ## Contact
 Form needs only two env vars ([[contact-form]]); a rate-limit service is optional.
+
+## History
+- 2026-11-27: "#5, #6 and #7 skipped for now, #11 not started" is out of date; all four were done in a later session (see above).
 
 ## Not yet decided
 Placeholders do not fail the production build; they are listed by `npm run check:launch` instead (decide before launch). See [[open-follow-ups]] for the issues the owner raised on 2026-11-27.

@@ -1,7 +1,7 @@
 ---
 type: architecture
 updated: 2026-11-27
-sources: [raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-hero-scene-rebuild.md, raw/sessions/2026-11-27-issues-2-to-10.md]
+sources: [raw/sessions/2026-11-27-ver3-redesign-build.md, raw/sessions/2026-11-27-hero-scene-rebuild.md, raw/sessions/2026-11-27-issues-2-to-10.md, raw/sessions/2026-11-27-issues-5-6-7-11-redesign.md]
 ---
 # Ver 3.0 redesign
 
@@ -29,6 +29,14 @@ Next.js App Router, React 19, Tailwind 4, GSAP, Lenis, three + @react-three/fibe
 - Atlas intro: the start zoom fits the title card to the screen, so it is no longer cropped on narrow laptops.
 - Atlas: the "Scroll to continue" cue shows at the bottom of the pinned Atlas on desktop widths (1024px and up) only.
 - Case-study Screens gallery: in desktop pinned mode the wheel scrolls the page again.
+
+## Section rebuilds (2026-11-27, later session)
+Direction for each was proposed and picked by the owner ([[ver3-owner-decisions]]); details in [[2026-11-27-issues-5-6-7-11-redesign]].
+- **Experience (04):** the NM Media job shows its five projects as a pinned case-file. On desktop (768px and up, motion allowed) a rail lists the projects and scroll swaps the full detail on the right; below that, with reduced motion or before JS, they are plain stacked cards. Component `ProjectCaseFile.tsx`.
+- **Tech stack (05):** the 3D ring is unchanged. The pin is 40% longer so the settled grid is held before it releases, and each group is a bordered card with a count (AI card tinted lime) with a soft cursor glow on fine pointers.
+- **Services (06):** a bento grid (web wide, AI tall) with a hand-coded animated SVG diagram per tile and CV-only stack chips. Animations stop with reduced motion. Component `ServiceArt.tsx`.
+- **Atlas background:** static light pools and dust on two far 3D layers (parallax from camera panning), a board-plane SVG with rulers, crosshairs and lime corner brackets, a coarse grid, a vignette and grain. Component `AtlasBackdrop.tsx`. Far layers and grain are off below 1024px and on touch.
+- **Drag cursor:** the header ruler and the Atlas use a hollow 44px lime ring with arrows (`data-cursor="drag"`) so it does not cover content; the solid disc stays for the OPEN label on cards.
 
 ## Rules
 - Performance: on desktop and laptop effects win (optimise, never cut); on phones speed wins (Lighthouse mobile Performance 90+, LCP under 2.5 s, CLS under 0.1).

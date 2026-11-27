@@ -29,3 +29,8 @@
 - Created: sources/2026-11-27-issues-2-to-10
 - Updated: ver3-redesign, ver3-owner-decisions, ver3-build-process, agent-workflow, open-follow-ups, index
 - Notes: "#1 not committed and not closed" in open-follow-ups is recorded under `## History`.
+
+## [2026-11-27] ingest | 2026-11-27-issues-5-6-7-11-redesign
+- Created: sources/2026-11-27-issues-5-6-7-11-redesign
+- Updated: ver3-redesign, ver3-owner-decisions, agent-workflow, open-follow-ups, index
+- Notes: "#5, #6, #7 skipped and #11 not started" (ver3-owner-decisions) and "Still open: #5, #6, #7, #11" (open-follow-ups) are recorded under `## History`.
