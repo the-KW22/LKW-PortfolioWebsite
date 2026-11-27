@@ -27,6 +27,7 @@ export function PinnedGallery({ screens, name }: { screens: GalleryScreen[]; nam
       mm.add("(min-width: 768px) and (prefers-reduced-motion: no-preference)", () => {
         gsap.set(viewport, { overflow: "hidden", scrollSnapType: "none" });
         viewport.setAttribute("tabindex", "-1"); // the page scroll drives it; no separate scroller to focus
+        viewport.removeAttribute("data-lenis-prevent-wheel"); // pinned: the wheel must scroll the page, not be swallowed
         const distance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
         const tl = gsap.timeline({
           defaults: { ease: "none" },
@@ -35,7 +36,7 @@ export function PinnedGallery({ screens, name }: { screens: GalleryScreen[]; nam
             start: "top top",
             end: () => `+=${distance()}`,
             pin: true,
-            scrub: 1,
+            scrub: true,
             invalidateOnRefresh: true,
             anticipatePin: 1,
             // Measure pins before other triggers (the header ruler) so their positions include the pin spacing.
@@ -50,6 +51,7 @@ export function PinnedGallery({ screens, name }: { screens: GalleryScreen[]; nam
         tl.fromTo(barRef.current, { scaleX: 0 }, { scaleX: 1 }, 0);
         return () => {
           viewport.setAttribute("tabindex", "0");
+          viewport.setAttribute("data-lenis-prevent-wheel", "");
           viewport.scrollLeft = 0;
         };
       });
