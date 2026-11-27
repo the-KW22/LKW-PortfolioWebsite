@@ -143,7 +143,7 @@ export function Hero() {
 
       <div
         data-hero-content
-        className="absolute right-[5vw] bottom-[9vh] left-[5vw] [transform-style:preserve-3d]"
+        className="absolute top-24 right-[5vw] bottom-[9vh] left-[5vw] flex flex-col justify-end [transform-style:preserve-3d]"
       >
         <p data-hero-in className="mono-label flex flex-wrap items-center gap-x-[18px] gap-y-1 text-mute">
           <b className="font-medium text-lime">●</b>
