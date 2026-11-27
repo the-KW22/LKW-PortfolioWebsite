@@ -75,12 +75,9 @@ export function TechStack() {
               <h3
                 id={`stack-${g.id}`}
                 data-ring-fade
-                className="mono-label mb-3 border-b border-line pb-2 text-mute"
+                className="mono-label mb-3 border-b border-line pb-2 text-lime"
               >
                 {g.label}
-                <span aria-hidden="true" className="ml-2 text-lime">
-                  {g.skills.length}
-                </span>
               </h3>
               <ul className="flex flex-wrap gap-2">
                 {g.skills.map((s, idx) => (
