@@ -3,19 +3,19 @@ import { placeholderMedia } from "./media";
 import { coreexEditorXray, coreexHeroXray, coreexSearchXray, coreexTokensXray } from "./xray";
 
 // Sources: CV v5 (Projects), CoreEx README, ADRs 0001-0014, backend source (checked 2026-11-26, repo at v0.23.1).
-// Stats were re-counted from the repo in Phase 7 (see docs/v3-owner-todo.md); the CV still says 24 releases and 13 ADRs.
+// Stats were re-counted from the repo in Phase 7 and approved by the owner on 2026-11-26; the CV still says 24 releases and 13 ADRs.
 export const coreex: Project = {
   slug: "coreex",
   order: 1,
   name: "CoreEx",
   category: "full-stack",
   status: "live",
-  year: 2026, // DRAFT: first commit and v0.1.0 are both dated 2026-10-28; owner to confirm
+  year: null, // hidden by owner decision (2026-11-26); nothing renders a year
   tagline: "Personal knowledge base with a job-search tracker and an MCP server", // DRAFT
   summary:
     // DRAFT
     "A live knowledge base and career workspace: Markdown notes, files, backlinks, a knowledge graph and search by words and by meaning, plus an MCP server that lets AI agents work with it through revocable, rate-limited access tokens.",
-  role: "Owned product decisions, architecture, review, tests and releases while directing AI coding agents (Claude Code, Codex).", // DRAFT: wording from the CV and the CoreEx README
+  role: "Product decisions, architecture, review, tests and releases.", // owner decision 2026-11-26: the working method is stated only in About
   stack: [
     { name: "Next.js" },
     { name: "TypeScript" },
@@ -38,7 +38,7 @@ export const coreex: Project = {
     // Verified 2026-11-26 against CoreEx v0.23.1 (staging and main agree): 49 @McpTool methods in backend/src/main,
     // 30 git tags and GitHub releases (v0.1.0 to v0.23.1), 14 files in docs/adr. The CV's 24 and 13 are older figures.
     { value: "49", label: "MCP tools" },
-    { value: "30", label: "tagged releases" },
+    { value: "30", label: "tagged releases, as of November 2026" },
     { value: "14", label: "ADRs" },
   ],
   xray: "deep",
@@ -74,7 +74,7 @@ export const coreex: Project = {
           "Notes are split into chunks, embedded in a Supabase Edge Function and retrieved by similarity. Search by words and by meaning sit side by side, and Chat and the Career AI draw on the same notes as their evidence.", // DRAFT (ADR 0008, 0009, 0013)
           "The MCP server runs inside the API and calls the same services as the REST controllers, so each rule is written once. AI agents reach the workspace through revocable, rate-limited access tokens, and can move things to the Trash but never delete them for good.", // DRAFT (README, ADR 0007)
           "Chat reads notes through the same tools an agent uses. When it wants to change something, it stores a proposal that only runs after the user approves it.", // DRAFT (ADR 0009, ToolCatalogue.java)
-          "The work was planned in GitHub issues and built with AI coding agents under direction: the owner decided what to build, set the architecture, reviewed every change and ran the tests and releases.", // DRAFT (README, CV); owner to approve
+          "The work was planned in GitHub issues: the owner decided what to build, set the architecture, reviewed every change and ran the tests and releases.", // DRAFT (README)
         ],
         draft: true,
       },
@@ -90,9 +90,9 @@ export const coreex: Project = {
         id: "outcome",
         title: "The outcome",
         // DRAFT: figures verified against the repo on 2026-11-26. The owner's "what I learned" is still needed.
-        lead: "CoreEx is live as an invite-only demo and shipped 30 tagged releases in its first four weeks.",
+        lead: "CoreEx is live as an invite-only demo and had shipped 30 tagged releases in its first four weeks (as of November 2026).",
         paragraphs: [
-          "Between 28 October and 25 November 2026 the project went from v0.1.0 to v0.23.1, with 14 architecture decision records, 49 MCP tools and CI on every pull request: build, OpenAPI and client drift checks, typecheck, lint, and unit, API and end-to-end tests.", // DRAFT (git tags, docs/adr, README)
+          "As of November 2026 (28 October to 25 November) the project went from v0.1.0 to v0.23.1, with 14 architecture decision records, 49 MCP tools and CI on every pull request: build, OpenAPI and client drift checks, typecheck, lint, and unit, API and end-to-end tests.", // DRAFT (git tags, docs/adr, README)
         ],
         draft: true,
       },

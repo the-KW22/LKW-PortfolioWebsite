@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { HAS_RESUME } from "@/lib/resume";
 import { site } from "@/content/site";
 import { homeSections, menuCopy } from "@/content/sections";
 import { gsap } from "@/lib/gsap";
@@ -181,11 +180,6 @@ export function Menu() {
           {linkedin ? (
             <a href={linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-violet">
               LinkedIn ↗
-            </a>
-          ) : null /* TODO(owner): LinkedIn URL in src/content/site.ts */}
-          {HAS_RESUME ? (
-            <a href={site.links.resume} className="hover:text-violet">
-              CV (PDF) ↗
             </a>
           ) : null}
         </p>

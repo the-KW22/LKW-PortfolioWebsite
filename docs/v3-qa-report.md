@@ -20,20 +20,20 @@ npm run check:launch  # the launch gate (exits 1 while anything remains)
 |---|---|
 | Metadata | `src/lib/seo.ts` builds one complete `metadata` object (title, description, canonical, Open Graph, Twitter) for `/`, `/projects` and every case study, so they are consistent (Next.js replaces rather than merges `openGraph`, which had dropped `siteName` and `locale` on inner pages). Canonical is `https://lkw22studio.com` plus path. Description no longer says "fresh graduate"; it is built from `site.ts` and the About copy. Viewport gets `themeColor` and `colorScheme: dark`. |
 | Open Graph image | `src/app/(site)/opengraph-image.tsx` for `/` (same style as the case-study cards: dot grid, violet name, lime brand). `/projects` inherits it. The old static `public/og-image.png` is no longer referenced by v3 (v2 still uses it; left alone). |
-| robots | `robots.ts` allows the site and lists the sitemap. `/v1` and `/v2` are kept out of the index by `noindex` (the v2 meta tag already existed; `next.config.ts` now also sends `X-Robots-Tag: noindex, nofollow` for `/v1`, `/v1/*`, `/v2`, `/v2/*` and `/resume`, without touching any archive file). They are deliberately not `Disallow`ed: a crawler that cannot fetch a page never sees its noindex. |
+| robots | `robots.ts` allows the site and lists the sitemap. `/v1` and `/v2` are kept out of the index by `noindex` (the v2 meta tag already existed; `next.config.ts` now also sends `X-Robots-Tag: noindex, nofollow` for `/v1`, `/v1/*`, `/v2`, `/v2/*`, without touching any archive file). They are deliberately not `Disallow`ed: a crawler that cannot fetch a page never sees its noindex. |
 | Sitemap | Unchanged and verified: `/`, `/projects` and the five case studies (7 URLs). |
 | JSON-LD | `/` has `Person` (name, job title = `site.headline`, email, location, `sameAs` from `site.links`) and `WebSite`, linked by `@id`. No phone number. LinkedIn is `null`, so `sameAs` has GitHub only. Case studies keep `CreativeWork`; `/projects` keeps `ItemList`. All use one escaping helper. |
 | 404 | Unknown slugs (`/projects/nope`) are now a hard 404 (`dynamicParams = false`) and unknown routes (`/nope`) use a styled `global-not-found` (needs `experimental.globalNotFound`, because the app has two root layouts). Both return HTTP 404 with `noindex`, a heading, `lang`, a `main` landmark and links to `/` and `/projects`. `(site)/not-found.tsx` is kept as the in-shell variant. |
 | Error pages | `(site)/error.tsx` and a self-contained `src/app/global-error.tsx` (inline styles, no fonts or providers, retry button focused). In-shell pages share `StatusPage`, which moves focus to the heading on mount. |
 | Loading | No `loading.tsx`. Every route is prerendered, and a root `loading.tsx` turned the unknown-slug 404 into a streamed 200 (soft 404). I tested that and removed it. |
-| `/resume` | See section 4. |
+| `/resume` | Removed on 2026-11-26 (owner decision: no CV on the site). It now returns the styled 404. See section 4. |
 | Footer | "Built with Next.js, GSAP and Three.js". |
 | Console greeting | `ConsoleHello`: one `console.log` line for developers (name, "press X on any case study", email, GitHub). Renders nothing. |
 | Launch gate | `npm run check:launch` (section 6). |
 
 ## 2. Accessibility audit
 
-### axe-core (WCAG 2.0/2.1 A and AA plus best practices), routes `/`, `/projects`, `/projects/coreex`, `/projects/petcare`, `/resume`, `/nope`, at 1280 and 375
+### axe-core (WCAG 2.0/2.1 A and AA plus best practices), routes `/`, `/projects`, `/projects/coreex`, `/projects/petcare`, `/nope`, at 1280 and 375
 
 Settled state (`REDUCED=1`, so animations are at rest): **0 violations on all 12 route/width combinations** (first run: 20 to 40 violating nodes per page).
 
@@ -49,12 +49,12 @@ Fixed:
 ### Not fixed, on purpose (all transient animation states, only seen when axe runs mid-animation)
 | Finding | Why left |
 |---|---|
-| Scroll-lit reading text at 0.13 opacity on desktop (`/` and case studies, 44 nodes in the animated run) | The owner's rule is that desktop effects never get weaker. The text is fully legible once lit; with reduced motion it is never dimmed. **Owner decision:** raising the desktop floor to 0.4 (one constant in `SplitText.tsx`) would remove this finding at the cost of a gentler effect. |
-| Tech-stack 3D ring tiles dimmed by depth (14 nodes on `/`) | Depth fade is part of the ring effect; focusing any tile jumps to the flat grid at full opacity, and reduced motion / touch / < 1024px use the grid. |
+| Scroll-lit reading text at 0.3 opacity on desktop (was 0.13; `DIM_START` in `SplitText.tsx`, changed 2026-11-26 by owner decision) | Re-run on 2026-11-26 in the animated state: the contrast finding on `/` is now only the 3D tech-ring tiles dimmed by depth (14 nodes, ratios 1.6 to 4.1) and on case studies the dimmed large headings of the reading text (ratio 2.32 against the 3:1 large-text target; it was 1.3 at 0.13). The text is fully legible once lit, and with reduced motion it is never dimmed. Settled state (`REDUCED=1`) is still **0 violations on all 10 route/width combinations**. Reaching 3:1 at the floor would need about 0.4 on desktop. |
+| Tech-stack 3D ring tiles dimmed by depth (14 nodes on `/`) | Depth fade is part of the ring effect. Tiles are no longer focusable (the "Used in" feature was removed on 2026-11-26), so there is no keyboard path into the ring; reduced motion / touch / < 1024px use the plain grid. |
 | "Needs review" items (hero chips over the WebGL canvas, blurred header, `mix-blend` case top bar, footer wordmark, placeholder plates) | axe cannot compute colours over canvas, blur or blend modes. Their text colours were checked by hand against the tokens; the footer wordmark and placeholder watermarks are decorative and `aria-hidden`. |
 
 ### Landmarks, headings, `lang`, skip link, focus
-`<html lang="en">`; skip link is the first Tab stop (verified on `/projects` and case studies; on `/` after the preloader); one `main` (`#main`, focusable target), `header`, `footer`, labelled `nav`s; the Menu is `role="dialog" aria-modal`. Every Tab stop on `/` (68 stops), `/projects`, a case study at 1280 and 375, `/resume` and `/nope` has a visible focus style: global lime 2px outline everywhere except the contact-form fields, which use a lime bottom border; that is now thickened to 2px (`focus:shadow`). Link purposes were reviewed: external links carry the arrow and every `target="_blank"` link has `rel="noopener noreferrer"` (CaseHero, Contact, Menu; the unused legacy `MediaCarousel` is the only other one).
+`<html lang="en">`; skip link is the first Tab stop (verified on `/projects` and case studies; on `/` after the preloader); one `main` (`#main`, focusable target), `header`, `footer`, labelled `nav`s; the Menu is `role="dialog" aria-modal`. Every Tab stop on `/` (31 stops since the tech-stack tiles stopped being buttons; it was 68), `/projects`, a case study at 1280 and 375 and `/nope` has a visible focus style: global lime 2px outline everywhere except the contact-form fields, which use a lime bottom border; that is now thickened to 2px (`focus:shadow`). Link purposes were reviewed: external links carry the arrow and every `target="_blank"` link has `rel="noopener noreferrer"` (CaseHero, Contact, Menu; the unused legacy `MediaCarousel` is the only other one).
 
 ## 3. Keyboard-only and screen-reader pass
 
@@ -69,9 +69,9 @@ Automated keyboard run (`qa:keyboard`): **0 problems.**
 
 **Screen reader:** no screen reader (NVDA, VoiceOver, TalkBack) could be run here. What was checked instead: axe accessible-name rules, heading outline, landmark list, `aria-live` regions and the sr-only copies used by split text. A real NVDA/VoiceOver pass by the owner is still recommended before launch.
 
-## 4. `/resume`
+## 4. `/resume` (removed)
 
-There is no `public/resume.pdf`. Behaviour now: the Hero "Download CV" button, the Contact "CV" pill and the Menu "CV (PDF)" link are **hidden** (flag `NEXT_PUBLIC_HAS_RESUME`, set in `next.config.ts` from whether the file exists at build time). `/resume` still exists for old links: a styled "Résumé on request" page with an email link and a way home, `noindex`. **When the owner puts the chosen PDF at `public/resume.pdf` and rebuilds, the buttons return and `/resume` redirects to it.** Nothing was guessed: `public/document/LeowKaiWen-Resume.pdf` exists (used by ver 2.0), but the plan says CV v5 should be served, so that choice is the owner's.
+The owner decided on 2026-11-26 that the site has no CV download. The hero "Download CV" button, the Contact "CV" pill, the Menu "CV (PDF)" link, the `/resume` route and its noindex header, `src/lib/resume.ts`, the `NEXT_PUBLIC_HAS_RESUME` flag and the resume check in `check:launch` are gone. `/resume` returns the styled 404 (`qa:flows` checks it). The old PDF under `public/document` belongs to the ver 2.0 archive and was not touched.
 
 ## 5. Reduced motion (real emulation, `prefers-reduced-motion: reduce`, desktop 1280)
 Verified in the browser: no preloader, no Lenis, no WebGL canvas (static hero), native cursor (`cursor: auto`, no custom cursor elements), zero running CSS animations, nothing stuck at opacity 0, after a full scroll no scroll-lit word is still dimmed and no split unit is transformed, the Atlas shows as the list (5 links), the tech stack as the grid. Code review of every component that animates found each gated by `useMotion`, `useReducedMotion` or a media query; the legacy `src/components/ui/*` effect components are not imported anywhere in v3.
@@ -83,15 +83,15 @@ Verified in the browser: no preloader, no Lenis, no WebGL canvas (static hero), 
 ✓ Markers that can reach visitors from components/app code: 0
 ✗ Screenshot placeholders ("Screenshot coming") in project content: 10
 ✓ Markers in public text files: 0
-✗ CV file at public/resume.pdf: missing
-NOT READY: 136 items remaining.
+NOT READY: 135 items remaining.
 ```
+(Re-run 2026-11-26 after the owner decisions: the resume line is gone and the gate no longer checks for a CV file.)
 
 Per-file counts are printed (`--verbose` lists every line): `home.ts` 28, `coreex.ts` 25, `asteroidui.ts` 18, `moonwave.ts` 12, `brickly.ts` 11, `petcare.ts` 10, `xray.ts` 8, `site.ts` 8, and a few more. It scans `src/content`, components, app code (not `/v2`), `lib`, `hooks` and public text files (not `v1`, `v2`, images). Comments are stripped for code (so docs that mention a marker are not counted); in content every marker counts, including `// DRAFT` comments and `draft: true`. Components that only render a marker for unfinished content (`TodoText`, `CaseHero`, `Placeholder`, `XrayFrame`) are allow-listed, otherwise the gate could never pass. Not wired into `npm run build`. The Phase 7 session is rewriting content, so these numbers will change.
 
 ## 7. Layout, hero fallbacks, performance
 
-- **Overflow**: no horizontal overflow at 375, 768, 1280 or 1920 on `/`, `/projects`, `/projects/coreex`, `/projects/moonwave`, `/resume`, `/nope`, after one fix. At 1920 the tilted hero plate on case studies stretched the page to 2005px (horizontal scrollbar) until it flattened; the overview section now uses `overflow-x: clip` (clip, not hidden, so sticky and Lenis still work).
+- **Overflow**: no horizontal overflow at 375, 768, 1280 or 1920 on `/`, `/projects`, `/projects/coreex`, `/projects/moonwave`, `/nope`, after one fix. At 1920 the tilted hero plate on case studies stretched the page to 2005px (horizontal scrollbar) until it flattened; the overview section now uses `overflow-x: clip` (clip, not hidden, so sticky and Lenis still work).
 - **Hero**: WebGL canvas present at 768, 1280, 1920 with a mouse; absent at 375 (touch) and with reduced motion (static hero).
 - **JS weight of `/`** (production, uncompressed bytes transferred as scripts): desktop 1591 KB in 22 files, of which one 658 KB chunk (168 KB gzip) is the lazy three.js hero (loaded after first paint, desktop and fine pointer only); phone 772 KB in 19 files (largest: 227 KB React/Next runtime, 107 KB, 78 KB). Nothing was cut on desktop. For phones, the 772 KB is the thing to watch in Lighthouse mobile; the likely candidates are GSAP + ScrollTrigger + Lenis (needed for the shell) and the Atlas code. I did not change the split.
 - **Console errors**: only `/_vercel/insights` and `/_vercel/speed-insights` 404s, which exist only on Vercel. One real bug found with this check: case-study JSON-LD had lost its `type="application/ld+json"` in my first edit and threw "Unexpected token ':'"; fixed and re-verified.
@@ -110,10 +110,9 @@ Added as **devDependencies only**: `playwright-core` (drives the Chromium that i
 | Severity | Item | Owner |
 |---|---|---|
 | High (launch blocker) | 125 `TODO(owner)`/`DRAFT` markers and 10 screenshot placeholders in `src/content` (see section 6) | Owner + Phase 7 |
-| High (launch blocker) | CV: choose and add `public/resume.pdf`, rebuild | Owner |
 | Medium | Real screen-reader pass (NVDA or VoiceOver) and Safari/Firefox smoke test on the preview | Owner |
 | Medium | Run Lighthouse mobile on the Vercel preview (steps above); watch the 772 KB phone JS | Owner |
-| Medium | Decide whether to raise the desktop dim floor of the scroll-lit text (0.13 → 0.4) to clear the last axe contrast finding | Owner |
+| Low | Scroll-lit text floor is now 0.3 on desktop; only transient animated-state axe findings remain (section 2) | Owner can raise it to about 0.4 |
 | Low | `next build` intermittently failed with Turbopack "next/font/google queries have exactly one entry" (3 of about 10 builds, always the next build succeeded without changes; I could not reproduce it deterministically). Re-run if CI shows it. | Watch |
 | Low | `error.tsx` and `global-error.tsx` compile and are in the build (`_global-error.html`) but were not triggered at runtime (no safe way to throw in a production build) | Owner can test in dev |
 | Low | `/v1` shows two missing illustrations (third-party certificate); a fix means editing `public/v1` | Owner decision |
@@ -121,7 +120,7 @@ Added as **devDependencies only**: `playwright-core` (drives the Chromium that i
 | Info | LinkedIn URL is `null`, so JSON-LD `sameAs` has GitHub only. Add it in `site.ts` and it appears everywhere | Phase 7 |
 | Info | `site.ts` headline reads "Full-Stack Developer \| AI Engineer"; metadata and JSON-LD follow it. Previous metadata said "fresh graduate"; I dropped that wording | Owner confirm |
 
-## 11. Needs a decision from the owner
-1. Which PDF becomes `/resume` (CV v5 per the plan, or the existing `public/document/LeowKaiWen-Resume.pdf`)?
-2. Keep the desktop scroll-lit text at 0.13 opacity (full effect, one known axe finding) or raise it to 0.4?
-3. OK with `experimental.globalNotFound` for the unknown-route 404 (the only way to style it with two root layouts)?
+## 11. Decisions
+1. ~~Which PDF becomes `/resume`~~ Decided 2026-11-26: none, the CV is not on the site.
+2. ~~Desktop scroll-lit text at 0.13 or 0.4~~ Decided 2026-11-26: 0.3.
+3. OK with `experimental.globalNotFound` for the unknown-route 404 (the only way to style it with two root layouts)? Still open.

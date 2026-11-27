@@ -79,9 +79,6 @@ for (const f of walk(join(root, "public"), (r) => archived(r) || r.startsWith("p
   });
 }
 
-// 4. The CV file behind /resume.
-const resumeOk = existsSync(join(root, "public/resume.pdf"));
-
 // ---- report
 const perFile = (list) => {
   const m = new Map();
@@ -102,8 +99,7 @@ show("TODO(owner) / DRAFT markers in src/content", findings.content, "owner fact
 show("Markers that can reach visitors from components/app code", findings.code);
 show("Screenshot placeholders (\"Screenshot coming\") in project content", findings.placeholders, "supply screenshots in public/images/projects/<slug>/");
 show("Markers in public text files", findings.publicText);
-console.log(`\n${resumeOk ? "✓" : "✗"} CV file at public/resume.pdf: ${resumeOk ? "found" : "missing; /resume shows the \"on request\" page and the CV buttons are hidden"}`);
 
-const total = findings.content.length + findings.code.length + findings.placeholders.length + findings.publicText.length + (resumeOk ? 0 : 1);
+const total = findings.content.length + findings.code.length + findings.placeholders.length + findings.publicText.length;
 console.log(`\n${total ? `NOT READY: ${total} item${total === 1 ? "" : "s"} remaining.` : "READY: nothing left to resolve."}`);
 process.exit(total ? 1 : 0);

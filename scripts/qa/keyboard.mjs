@@ -89,7 +89,7 @@ Preloader active on first visit: ${shown}`);
 }
 
 // ---- Projects list and a case study
-for (const [route, w] of [["/projects", 1280], ["/projects/coreex", 1280], ["/projects/coreex", 375], ["/resume", 1280], ["/nope", 1280]]) {
+for (const [route, w] of [["/projects", 1280], ["/projects/coreex", 1280], ["/projects/coreex", 375], ["/nope", 1280]]) {
   const ctx = await browser.newContext({ viewport: { width: w, height: 800 }, reducedMotion: "no-preference" });
   const page = await ctx.newPage();
   await page.goto(BASE + route, { waitUntil: "load" });

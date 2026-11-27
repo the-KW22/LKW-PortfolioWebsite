@@ -23,7 +23,7 @@ Where files go: put images in `public/images/projects/<slug>/` (WebP, about 1600
 
 - [ ] GitHub profile URL (CV has `github.com/the-KW22`).
 - [ ] LinkedIn URL.
-- [ ] Latest CV PDF (CV v5 `Leow-Kai-Wen-CV.pdf`, or newer), served at `/resume`.
+- [x] CV PDF: not needed. Owner decision 2026-11-26: no CV on the site.
 - [ ] Live and GitHub links for each project (decide which repos are public).
 
 ## 4. Per project
@@ -35,7 +35,7 @@ For each project: screenshots, story content, stats and X-ray notes. "X-ray note
 - [ ] One hero screenshot for the 3D plate and the atlas card thumbnail.
 - [ ] X-ray notes for the hero screenshot and gallery screens.
 - [ ] Architecture diagram check (Browser → Next.js → Spring Boot API → Postgres + pgvector; MCP server; Claude API).
-- [ ] Confirm stats: 44 MCP tools, 24 releases, 13 ADRs (re-check against the repo before launch).
+- [x] Stats confirmed 2026-11-26: 49 MCP tools, 30 tagged releases (dated "as of November 2026"), 14 ADRs.
 - [ ] Decision: how to mention the invite-only demo (default: "Invite-only demo, request access" + GitHub link).
 
 ### AsteroidUI (in progress)

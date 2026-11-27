@@ -2,7 +2,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { BASE, launch } from "./browser.mjs";
 
-const routes = ["/", "/projects", "/projects/coreex", "/projects/petcare", "/resume", "/nope"];
+const routes = ["/", "/projects", "/projects/coreex", "/projects/petcare", "/nope"];
 const widths = [{ w: 1280, h: 800 }, { w: 375, h: 812 }];
 const browser = await launch();
 let total = 0;

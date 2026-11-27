@@ -8,11 +8,10 @@ import { useFinePointer, useMediaQuery } from "@/hooks/useMediaQuery";
 import { deviceCanRunHeroScene } from "@/lib/heroCapability";
 import { whenPreloaderDone } from "@/components/shell/preloaderStore";
 import { Magnetic } from "@/components/motion/Magnetic";
-import { HAS_RESUME } from "@/lib/resume";
 import { heroCopy } from "@/content/home";
 import { homeSections } from "@/content/sections";
 import { site } from "@/content/site";
-import { accentItalic, btnOutline, btnSolid } from "./ui";
+import { accentItalic, btnSolid } from "./ui";
 
 /**
  * 01 Hero. The CSS scene is the SSR/phone/fallback version; HeroScene (WebGL) replaces it on capable desktops. Perspective grid floor, glow and floating
@@ -225,13 +224,6 @@ export function Hero() {
                 {heroCopy.ctaPrimary} <span aria-hidden="true">↓</span>
               </a>
             </Magnetic>
-            {HAS_RESUME ? (
-              <Magnetic>
-                <a href={site.links.resume} className={btnOutline}>
-                  {heroCopy.ctaSecondary}
-                </a>
-              </Magnetic>
-            ) : null}
           </div>
         </div>
       </div>

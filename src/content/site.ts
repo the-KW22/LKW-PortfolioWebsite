@@ -13,8 +13,7 @@ export const site: SiteConfig = {
   email: "kwenleow@gmail.com", // from the CV; the phone number is deliberately not published
   links: {
     github: "https://github.com/the-KW22",
-    linkedin: null, // TODO(owner): LinkedIn URL (assets checklist section 3)
-    resume: "/resume",
+    linkedin: null, // owner has no LinkedIn (decided 2026-11-26); the button stays hidden everywhere
   },
   availability: "open",
   availabilityCopy: {
@@ -27,7 +26,7 @@ export const site: SiteConfig = {
     "freelance-only": "Open to freelance and custom builds", // DRAFT
     closed: "Not taking new work right now", // DRAFT
   },
-  replyTime: null, // TODO(owner): reply-time line (draft idea: "I reply within 2 working days")
+  replyTime: null, // owner decided on 2026-11-26 to leave the reply-time line out
   pastVersions: [
     { label: "v1", href: "/v1" },
     { label: "v2", href: "/v2" },

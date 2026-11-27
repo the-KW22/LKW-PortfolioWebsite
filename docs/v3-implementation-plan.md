@@ -14,7 +14,7 @@ Status: **approved for build, 2026-11-26.** Nothing in the new site is built yet
 
 A site you can link from your CV so an interviewer can, within two minutes:
 
-1. Understand who you are and what role you want (hero, one line, CV button).
+1. Understand who you are and what role you want (hero, one line, project button).
 2. See proof: real, shipped, well-explained projects (case studies).
 3. See your work history and skills at a glance (experience page).
 4. Contact you easily (working form + direct links).
@@ -29,7 +29,7 @@ It must also work as personal branding: a unique, award-level site (aiming at Aw
 
 ### Strengths to lead with
 - **Production work** (May to Oct 2026, Junior Software Developer): AI auto-reply platform (over 90% auto-reply rate on replayed real conversations), patient portal (80+ patients, booking with Google Calendar and Zoom), Instagram analytics and scheduling platform, SEO marketing sites with blog admin, WhatsApp community scheduler.
-- **CoreEx**: a full-stack product you run yourself: Spring Boot API, Next.js frontend, Postgres with row-level security, pgvector semantic search, an MCP server with 44 tools, 13 ADRs, 24 releases, CI, Testcontainers tests. Strongest single proof of engineering practice.
+- **CoreEx**: a full-stack product you run yourself: Spring Boot API, Next.js frontend, Postgres with row-level security, pgvector semantic search, an MCP server with 49 tools, 14 ADRs, 30 tagged releases (as of November 2026), CI, Testcontainers tests. Strongest single proof of engineering practice.
 - **AsteroidUI**: a component library with a shadcn-compatible registry, tested against independent Next.js and Vite consumers. Live at `asteroid-ui.vercel.app`.
 - **Honest working method:** you direct AI coding agents and own architecture, review, tests and deployment. Your CV already says this plainly; the site should too (see the guardrails below).
 
@@ -53,7 +53,7 @@ It must also work as personal branding: a unique, award-level site (aiming at Aw
 | `/` | One scrolling page: 01 Hero, 02 About, 03 Personal projects (Atlas), 04 Experience, 05 Tech stack, 06 Services, 07 Contact + footer (details in the design spec, section 4) |
 | `/projects` | Plain list of all 5 projects (same as the atlas "list view"); no-JS and crawler-friendly fallback |
 | `/projects/[slug]` | Case study per project, opened with the kinetic warp; X-ray layer |
-| `/resume` | Serves or redirects to the latest CV PDF so the CV link never changes |
+| ~~`/resume`~~ | Removed on 2026-11-26 (owner decision: no CV on the site) |
 | `/v1`, `/v2` | Frozen archives (already done), noindex |
 
 There are no separate About, Experience or Contact pages any more. Old URLs `/about-me` and `/contact-me` get permanent redirects to `/#about` and `/#contact`, so existing links keep working.
@@ -92,7 +92,7 @@ Honesty rules for CoreEx: say "invite-only live demo"; say it was built with AI 
 - **SEO:** `metadata` per page, per-project `opengraph-image`, JSON-LD (`Person`, `WebSite`, `CreativeWork` per project), generated `sitemap.ts` from content, canonical URLs on `https://lkw22studio.com` (default `SITE_URL` fixed from the old `leowkaiwen.dev` fallback).
 - **Accessibility and quality gates:** semantic landmarks, keyboard-accessible nav, visible focus, colour contrast checks, alt text on all images, reduced-motion, axe check, Lighthouse targets (Performance 90+, Accessibility 95+ on mobile).
 - **Images:** WebP via `next/image`; videos only on case-study pages, lazy-loaded with poster images.
-- **CV PDF:** serve the latest CV (v5 `Leow-Kai-Wen-CV.pdf`) from `/resume` (stable URL), replacing the older resume in `public/`.
+- **CV PDF:** none. The owner decided on 2026-11-26 that the site has no CV download and no `/resume` route.
 - **Assets and archives:** `/v1` and `/v2` are untouched, except bug fixes.
 
 ---

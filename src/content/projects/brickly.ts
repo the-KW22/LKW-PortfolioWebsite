@@ -10,9 +10,9 @@ export const brickly: Project = {
   name: "Brickly",
   category: "web-design",
   status: "live",
-  year: 2026, // DRAFT: the public repo was created 2026-04-18; owner to confirm
+  year: null, // hidden by owner decision (2026-11-26); nothing renders a year
   tagline: "Real-estate marketing site", // DRAFT
-  summary: "A responsive real-estate marketing site with a glass-style hero, property listings, agent profiles and a journal. A design and front-end exercise with sample content, not a client project.", // DRAFT: from the screenshots; owner to confirm "sample content"
+  summary: "A responsive real-estate marketing site with a glass-style hero, property listings, agent profiles and a journal. A self-initiated design and build exercise with sample content, not a client project.",
   role: "Designed and built the site.", // DRAFT: from the CV ("UI and marketing site designs"); owner to add whether AI tools were used
   stack: [
     // From the public repo's package.json (React, Vite, TypeScript, Tailwind CSS, GSAP, Motion, Lenis).
@@ -62,9 +62,9 @@ export const brickly: Project = {
       {
         id: "problem",
         title: "The brief",
-        lead: "TODO(owner): what was the brief for Brickly? Was it a self-set exercise or for someone?",
+        lead: "A self-initiated design and build exercise, not client work. The agency, listings and agents are sample content.",
         paragraphs: [],
-        draft: true,
+        draft: false, // owner confirmed 2026-11-26
       },
       {
         id: "approach",

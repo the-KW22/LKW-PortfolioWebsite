@@ -5,7 +5,7 @@ import { mkdirSync } from "node:fs";
 const OUT = process.env.SHOTS ?? "";
 if (OUT) mkdirSync(OUT, { recursive: true });
 const browser = await launch();
-const routes = ["/", "/projects", "/projects/coreex", "/projects/moonwave", "/resume", "/nope"];
+const routes = ["/", "/projects", "/projects/coreex", "/projects/moonwave", "/nope"];
 let bad = 0;
 
 console.log("## Horizontal overflow and canvas");

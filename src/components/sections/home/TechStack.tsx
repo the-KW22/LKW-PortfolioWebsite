@@ -1,19 +1,19 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import type { ScrollTrigger } from "@/lib/gsap";
 import { useFinePointer, useMediaQuery, useReducedMotion } from "@/hooks/useMediaQuery";
-import { useScroll } from "@/components/motion/ScrollProvider";
 import { ScrambleText } from "@/components/motion/ScrambleText";
 import { stackCopy } from "@/content/home";
-import { skillGroups, usedIn } from "@/content/skills";
+import { skillGroups } from "@/content/skills";
 import { SectionHead } from "./SectionHead";
 import { useTechRing } from "./useTechRing";
 
 /**
  * 05 Tech stack. One data model, two presentations: the plain grid (always the default, and the only
  * one below 1024px, on touch and with reduced motion) and the desktop 3D ring (useTechRing). Tiles
- * are real buttons in DOM order in both. Hover, keyboard focus and tap/click show "Used in: ...".
+ * are plain labelled list items in DOM order in both; they are not interactive (owner decision,
+ * 2026-11-26), so there are no tab stops inside the ring.
  */
 export function TechStack() {
   const fine = useFinePointer();
@@ -24,22 +24,7 @@ export function TechStack() {
   const pinRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const stRef = useRef<ScrollTrigger | null>(null);
-  const { scrollTo } = useScroll();
   useTechRing(pinRef, stageRef, stRef, ring);
-
-  const [hovered, setHovered] = useState<string | null>(null);
-  const [pinned, setPinned] = useState<string | null>(null);
-  const shown = hovered ?? pinned;
-  const used = shown ? usedIn(shown) : [];
-
-  // Keyboard users tabbing into a ring tile jump straight to the flattened grid.
-  const onFocus = (e: React.FocusEvent<HTMLButtonElement>, name: string) => {
-    setHovered(name);
-    const st = stRef.current;
-    if (st && st.progress < 0.95 && e.currentTarget.matches(":focus-visible")) {
-      scrollTo(st.end, { immediate: true });
-    }
-  };
 
   return (
     <section id="stack" aria-labelledby="stack-title">
@@ -78,48 +63,19 @@ export function TechStack() {
                     data-n={g.skills.length}
                     className="will-change-transform"
                   >
-                    <button
-                      type="button"
-                      aria-pressed={pinned === s.name}
-                      onPointerEnter={(e) => e.pointerType === "mouse" && setHovered(s.name)}
-                      onPointerLeave={() => setHovered(null)}
-                      onFocus={(e) => onFocus(e, s.name)}
-                      onBlur={() => setHovered(null)}
-                      onClick={() => setPinned((p) => (p === s.name ? null : s.name))}
-                      className={`rounded-full border px-4 py-2 text-sm transition-colors aria-pressed:border-violet aria-pressed:bg-violet/15 ${
-                        s.ai
-                          ? "border-lime/50 text-lime hover:border-lime"
-                          : "border-[#2e2d3a] text-[#d8d7e4] hover:border-violet"
+                    <span
+                      className={`block rounded-full border px-4 py-2 text-sm ${
+                        s.ai ? "border-lime/50 text-lime" : "border-[#2e2d3a] text-[#d8d7e4]"
                       }`}
                     >
                       <ScrambleText on="enter" text={s.name} />
-                    </button>
+                    </span>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
         </div>
-        <p
-          aria-live="polite"
-          className="sticky bottom-4 z-10 mt-8 max-w-3xl rounded-xl border border-line bg-[rgba(7,7,10,0.85)] px-4 py-3 text-sm text-mute backdrop-blur md:mt-10"
-        >
-          {shown ? (
-            <>
-              <strong className="font-semibold text-ink">{shown}</strong>
-              {used.length > 0 ? (
-                <>
-                  {" "}
-                  — <span className="text-violet">Used in:</span> {used.join(", ")}
-                </>
-              ) : (
-                <> — {stackCopy.noMatch}</>
-              )}
-            </>
-          ) : (
-            stackCopy.hint
-          )}
-        </p>
       </div>
     </section>
   );
