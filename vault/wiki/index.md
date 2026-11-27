@@ -1,22 +1,28 @@
 ---
 type: overview
-updated: 2026-11-25
-sources: [raw/sessions/2026-11-25-lint-webp-cleanup.md]
+updated: 2026-11-27
+sources: [raw/sessions/2026-11-25-lint-webp-cleanup.md, raw/sessions/2026-11-27-ver3-redesign-build.md]
 ---
 # Wiki index
 
 Schema and operations: `vault/CLAUDE.md`. Chronology: [[log]].
 
 ## Pages
-- [[overview]]: what the site is, stack, working rules.
-- [[site-structure]]: routes, layout, component folders.
-- [[projects-showcase]]: the 8 projects shown and their categories.
-- [[seo-and-metadata]]: metadata, JSON-LD, sitemap.
-- [[image-pipeline]]: WebP decision and rules.
-- [[code-quality]]: lint state, suppressions, gotchas.
-- [[gridscan-webcam-removal]]: why face-api was removed.
-- [[deployment-vercel]]: Vercel project and env var names.
-- [[open-follow-ups]]: what is left to do.
+- [[overview]]: what the site is, status (ver 2.0 live, ver 3.0 in progress), stack, working rules.
+- [[ver3-redesign]]: ver 3.0 goal, Atlas / warp / X-ray concept, look, home sections, rules.
+- [[versioning-and-archives]]: `/`, `/v2`, `/v1`, noindex, protection rules.
+- [[ver3-build-process]]: phases and merge commits, per-phase checks, gotchas.
+- [[ver3-owner-decisions]]: the owner's content, design and performance decisions.
+- [[contact-form]]: Resend form, spam guards, env var names, Resend rules.
+- [[site-structure]]: routes, layout, component folders (ver 3.0 and ver 2.0).
+- [[projects-showcase]]: the five ver 3.0 projects (and the eight on ver 2.0), verified CoreEx stats.
+- [[seo-and-metadata]]: metadata, JSON-LD, sitemap, OG images.
+- [[image-pipeline]]: WebP decision, project media folders.
+- [[code-quality]]: checks, QA scripts, lint gotchas, pitfalls.
+- [[gridscan-webcam-removal]]: why face-api was removed (ver 2.0).
+- [[deployment-vercel]]: Vercel project, domain, previews, env var names.
+- [[open-follow-ups]]: what is left before launch, and the open GitHub issues.
 
 ## Sources
 - [[2026-11-25-lint-webp-cleanup]]
+- [[2026-11-27-ver3-redesign-build]]
