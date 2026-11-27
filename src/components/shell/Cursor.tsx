@@ -11,7 +11,7 @@ import {
 
 const INTERACTIVE = "a,button,[role=button],summary,label,[data-cursor=hover]";
 // Drag cursor: a hollow ring with arrows, so it never covers the content being dragged.
-export const DRAG_ARROWS = "‹ ›";
+export const DRAG_ARROWS = "‹ DRAG ›";
 const TEXT_FIELD = "input,textarea,select,[contenteditable=true]";
 
 function stateFor(target: EventTarget | null): CursorState {
